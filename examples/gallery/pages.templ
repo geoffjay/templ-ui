@@ -1,6 +1,9 @@
 package gallery
 
-import "github.com/geoffjay/templ-ui/internal/registry"
+import (
+	"github.com/geoffjay/templ-ui/internal/registry"
+	"github.com/geoffjay/templ-ui/shiki"
+)
 
 // document renders a full HTML document wrapping the AppShell page shell
 // with the shared head assets: the compiled stylesheet and the shiki
@@ -21,12 +24,16 @@ templ document(title string, body templ.Component) {
 	</html>
 }
 
-// head renders the asset links for the gallery: the compiled Tailwind +
-// daisyUI stylesheet and the shiki bundle. Paths are gallery-relative; the
-// static export copies the built assets next to the HTML files.
+// head renders the asset links for the gallery via the library's Head
+// helper. Paths are root-absolute so they resolve identically from / and
+// from /components/<slug>; the static export copies the built assets under
+// /static/ next to the exported HTML files. The Pages workflow rewrites
+// them to the /templ-ui/ project base at deploy time.
 templ head() {
-	<link rel="stylesheet" href="static/styles.css"/>
-	<script type="module" src="static/shiki.js"></script>
+	@shiki.Head(shiki.HeadConfig{
+		Stylesheet: "/static/styles.css",
+		Shiki:      true,
+	})
 }
 
 // ComponentPage renders the full document for one registry entry.
