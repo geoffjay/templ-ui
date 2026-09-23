@@ -1,0 +1,55 @@
+package daisyui
+
+// LabelConfig configures a daisyUI label. Text is the label text. ForID, when
+// set, renders a <label for="...">; otherwise a <span class="label"> is
+// rendered (use the span form when the label is inside an <input>/<select>
+// wrapper rather than wrapping the field). Class lets callers add extra
+// utility classes.
+type LabelConfig struct {
+	Text  string
+	ForID string
+	Class string
+}
+
+// Label renders a daisyUI label. When ForID is set, a <label for="..."> is
+// emitted; otherwise a <span class="label"> is used.
+templ Label(cfg LabelConfig) {
+	if cfg.ForID != "" {
+		<label for={ cfg.ForID } class={ joinClasses("label", cfg.Class) }>
+			{ cfg.Text }
+		</label>
+	} else {
+		<span class={ joinClasses("label", cfg.Class) }>
+			{ cfg.Text }
+		</span>
+	}
+}
+
+// FloatingLabelConfig configures a daisyUI floating-label. Label is the text
+// shown floating above the input. InputClass is the class string applied to
+// the inner input (e.g. "input input-md"). Class lets callers add extra utility
+// classes to the floating-label wrapper. Placeholder, when set, is the input's
+// placeholder attribute.
+type FloatingLabelConfig struct {
+	Label       string
+	InputType   string
+	InputName   string
+	Placeholder string
+	InputClass  string
+	Class       string
+}
+
+// FloatingLabel renders a daisyUI floating-label wrapping an input. The
+// floating-label class is applied to the <label> wrapper and the inner input
+// uses the provided InputClass.
+templ FloatingLabel(cfg FloatingLabelConfig) {
+	<label class={ joinClasses("floating-label", cfg.Class) }>
+		<span>{ cfg.Label }</span>
+		<input
+			type={ inputTypeAttr(cfg.InputType) }
+			name={ cfg.InputName }
+			placeholder={ cfg.Placeholder }
+			class={ cfg.InputClass }
+		/>
+	</label>
+}

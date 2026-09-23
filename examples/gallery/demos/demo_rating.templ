@@ -1,0 +1,205 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ ratingBody() {
+	@gallery.Section("Rating", `@daisyui.Rating(daisyui.RatingConfig{
+	Name: "rating-1",
+	Items: []daisyui.RatingItem{
+		{Mask: "star", AriaLabel: "1 star"},
+		{Mask: "star", AriaLabel: "2 star", Checked: true},
+		{Mask: "star", AriaLabel: "3 star"},
+		{Mask: "star", AriaLabel: "4 star"},
+		{Mask: "star", AriaLabel: "5 star"},
+	},
+})`, daisyui.Rating(daisyui.RatingConfig{
+		Name: "rating-1",
+		Items: []daisyui.RatingItem{
+			{Mask: "star", AriaLabel: "1 star"},
+			{Mask: "star", AriaLabel: "2 star", Checked: true},
+			{Mask: "star", AriaLabel: "3 star"},
+			{Mask: "star", AriaLabel: "4 star"},
+			{Mask: "star", AriaLabel: "5 star"},
+		},
+	}))
+	@gallery.Section("Read-only Rating", `<div class="rating">
+	<div class="mask mask-star" aria-label="1 star"></div>
+	<div class="mask mask-star" aria-label="2 star"></div>
+	<div class="mask mask-star" aria-label="3 star" aria-current="true"></div>
+	<div class="mask mask-star" aria-label="4 star"></div>
+	<div class="mask mask-star" aria-label="5 star"></div>
+</div>`, templ.Raw(`
+		<div class="rating">
+			<div class="mask mask-star" aria-label="1 star"></div>
+			<div class="mask mask-star" aria-label="2 star"></div>
+			<div class="mask mask-star" aria-label="3 star" aria-current="true"></div>
+			<div class="mask mask-star" aria-label="4 star"></div>
+			<div class="mask mask-star" aria-label="5 star"></div>
+		</div>`))
+	@gallery.Section("mask-star-2 with warning color", `@daisyui.Rating(daisyui.RatingConfig{
+	Name: "rating-2",
+	Items: []daisyui.RatingItem{
+		{Mask: "star-2", AriaLabel: "1 star", ColorClass: "bg-orange-400"},
+		{Mask: "star-2", AriaLabel: "2 star", ColorClass: "bg-orange-400", Checked: true},
+		{Mask: "star-2", AriaLabel: "3 star", ColorClass: "bg-orange-400"},
+		{Mask: "star-2", AriaLabel: "4 star", ColorClass: "bg-orange-400"},
+		{Mask: "star-2", AriaLabel: "5 star", ColorClass: "bg-orange-400"},
+	},
+})`, daisyui.Rating(daisyui.RatingConfig{
+		Name: "rating-2",
+		Items: []daisyui.RatingItem{
+			{Mask: "star-2", AriaLabel: "1 star", ColorClass: "bg-orange-400"},
+			{Mask: "star-2", AriaLabel: "2 star", ColorClass: "bg-orange-400", Checked: true},
+			{Mask: "star-2", AriaLabel: "3 star", ColorClass: "bg-orange-400"},
+			{Mask: "star-2", AriaLabel: "4 star", ColorClass: "bg-orange-400"},
+			{Mask: "star-2", AriaLabel: "5 star", ColorClass: "bg-orange-400"},
+		},
+	}))
+	@gallery.Section("mask-heart with multiple colors", `@daisyui.Rating(daisyui.RatingConfig{
+	Name:  "rating-3",
+	Class: "gap-1",
+	Items: []daisyui.RatingItem{
+		{Mask: "heart", AriaLabel: "1 star", ColorClass: "bg-red-400"},
+		{Mask: "heart", AriaLabel: "2 star", ColorClass: "bg-orange-400", Checked: true},
+		{Mask: "heart", AriaLabel: "3 star", ColorClass: "bg-yellow-400"},
+		{Mask: "heart", AriaLabel: "4 star", ColorClass: "bg-lime-400"},
+		{Mask: "heart", AriaLabel: "5 star", ColorClass: "bg-green-400"},
+	},
+})`, daisyui.Rating(daisyui.RatingConfig{
+		Name:  "rating-3",
+		Class: "gap-1",
+		Items: []daisyui.RatingItem{
+			{Mask: "heart", AriaLabel: "1 star", ColorClass: "bg-red-400"},
+			{Mask: "heart", AriaLabel: "2 star", ColorClass: "bg-orange-400", Checked: true},
+			{Mask: "heart", AriaLabel: "3 star", ColorClass: "bg-yellow-400"},
+			{Mask: "heart", AriaLabel: "4 star", ColorClass: "bg-lime-400"},
+			{Mask: "heart", AriaLabel: "5 star", ColorClass: "bg-green-400"},
+		},
+	}))
+	@gallery.Section("mask-star-2 with green-500 color", `@daisyui.Rating(daisyui.RatingConfig{
+	Name: "rating-4",
+	Items: []daisyui.RatingItem{
+		{Mask: "star-2", AriaLabel: "1 star", ColorClass: "bg-green-500"},
+		{Mask: "star-2", AriaLabel: "2 star", ColorClass: "bg-green-500", Checked: true},
+		{Mask: "star-2", AriaLabel: "3 star", ColorClass: "bg-green-500"},
+		{Mask: "star-2", AriaLabel: "4 star", ColorClass: "bg-green-500"},
+		{Mask: "star-2", AriaLabel: "5 star", ColorClass: "bg-green-500"},
+	},
+})`, daisyui.Rating(daisyui.RatingConfig{
+		Name: "rating-4",
+		Items: []daisyui.RatingItem{
+			{Mask: "star-2", AriaLabel: "1 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", AriaLabel: "2 star", ColorClass: "bg-green-500", Checked: true},
+			{Mask: "star-2", AriaLabel: "3 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", AriaLabel: "4 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", AriaLabel: "5 star", ColorClass: "bg-green-500"},
+		},
+	}))
+	@gallery.Section("Sizes", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Rating(daisyui.RatingConfig{Name: "rating-5", Size: "xs", Items: ratingStarItems("rating-5", "bg-orange-400", 2)})
+	@daisyui.Rating(daisyui.RatingConfig{Name: "rating-6", Size: "sm", Items: ratingStarItems("rating-6", "bg-orange-400", 2)})
+	// ... one per size (md, lg, xl)
+</div>`, ratingSizeRow())
+	@gallery.Section("with rating-hidden", `@daisyui.Rating(daisyui.RatingConfig{
+	Name: "rating-10", Size: "lg",
+	Items: []daisyui.RatingItem{
+		{Hidden: true, AriaLabel: "clear"},
+		{Mask: "star-2", AriaLabel: "1 star"},
+		{Mask: "star-2", AriaLabel: "2 star", Checked: true},
+		{Mask: "star-2", AriaLabel: "3 star"},
+		{Mask: "star-2", AriaLabel: "4 star"},
+		{Mask: "star-2", AriaLabel: "5 star"},
+	},
+})`, daisyui.Rating(daisyui.RatingConfig{
+		Name: "rating-10", Size: "lg",
+		Items: []daisyui.RatingItem{
+			{Hidden: true, AriaLabel: "clear"},
+			{Mask: "star-2", AriaLabel: "1 star"},
+			{Mask: "star-2", AriaLabel: "2 star", Checked: true},
+			{Mask: "star-2", AriaLabel: "3 star"},
+			{Mask: "star-2", AriaLabel: "4 star"},
+			{Mask: "star-2", AriaLabel: "5 star"},
+		},
+	}))
+	@gallery.Section("half stars", `@daisyui.Rating(daisyui.RatingConfig{
+	Name: "rating-11", Size: "lg", Half: true,
+	Items: []daisyui.RatingItem{
+		{Hidden: true, AriaLabel: "clear"},
+		{Mask: "star-2", Modifier: "half-1", AriaLabel: "0.5 star", ColorClass: "bg-green-500"},
+		{Mask: "star-2", Modifier: "half-2", AriaLabel: "1 star", ColorClass: "bg-green-500"},
+		{Mask: "star-2", Modifier: "half-1", AriaLabel: "1.5 star", ColorClass: "bg-green-500", Checked: true},
+		{Mask: "star-2", Modifier: "half-2", AriaLabel: "2 star", ColorClass: "bg-green-500"},
+		// ... one per half step up to 5 star
+	},
+})`, daisyui.Rating(daisyui.RatingConfig{
+		Name: "rating-11", Size: "lg", Half: true,
+		Items: []daisyui.RatingItem{
+			{Hidden: true, AriaLabel: "clear"},
+			{Mask: "star-2", Modifier: "half-1", AriaLabel: "0.5 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", Modifier: "half-2", AriaLabel: "1 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", Modifier: "half-1", AriaLabel: "1.5 star", ColorClass: "bg-green-500", Checked: true},
+			{Mask: "star-2", Modifier: "half-2", AriaLabel: "2 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", Modifier: "half-1", AriaLabel: "2.5 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", Modifier: "half-2", AriaLabel: "3 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", Modifier: "half-1", AriaLabel: "3.5 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", Modifier: "half-2", AriaLabel: "4 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", Modifier: "half-1", AriaLabel: "4.5 star", ColorClass: "bg-green-500"},
+			{Mask: "star-2", Modifier: "half-2", AriaLabel: "5 star", ColorClass: "bg-green-500"},
+		},
+	}))
+}
+
+templ ratingSizeRow() {
+	<div class="flex flex-col gap-2 items-center">
+		@daisyui.Rating(daisyui.RatingConfig{Name: "rating-5", Size: "xs", Items: ratingStarItems("rating-5", "bg-orange-400", 2)})
+		@daisyui.Rating(daisyui.RatingConfig{Name: "rating-6", Size: "sm", Items: ratingStarItems("rating-6", "bg-orange-400", 2)})
+		@daisyui.Rating(daisyui.RatingConfig{Name: "rating-7", Size: "md", Items: ratingStarItems("rating-7", "bg-orange-400", 2)})
+		@daisyui.Rating(daisyui.RatingConfig{Name: "rating-8", Size: "lg", Items: ratingStarItems("rating-8", "bg-orange-400", 2)})
+		@daisyui.Rating(daisyui.RatingConfig{Name: "rating-9", Size: "xl", Items: ratingStarItems("rating-9", "bg-orange-400", 2)})
+	</div>
+}
+
+// ratingStarItems builds a 5-star rating item slice using mask-star-2 and the
+// given background color class, marking the item at checkedIndex (1-based) as
+// checked.
+func ratingStarItems(name, colorClass string, checkedIndex int) []daisyui.RatingItem {
+	items := make([]daisyui.RatingItem, 5)
+	for i := 0; i < 5; i++ {
+		items[i] = daisyui.RatingItem{
+			Mask:       "star-2",
+			ColorClass: colorClass,
+			AriaLabel:  ratingStarAriaLabel(i + 1),
+			Checked:    (i + 1) == checkedIndex,
+		}
+	}
+	return items
+}
+
+func ratingStarAriaLabel(n int) string {
+	switch n {
+	case 1:
+		return "1 star"
+	case 2:
+		return "2 star"
+	case 3:
+		return "3 star"
+	case 4:
+		return "4 star"
+	default:
+		return "5 star"
+	}
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "rating",
+		Name:        "Rating",
+		Description: "Rating is a set of radio buttons that allow the user to rate something.",
+		Category:    "daisyui",
+		Body:        ratingBody,
+	})
+}

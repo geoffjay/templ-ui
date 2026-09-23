@@ -1,0 +1,88 @@
+package daisyui
+
+// FooterLink describes a single link inside a footer column.
+type FooterLink struct {
+	Label string
+	Href  string
+}
+
+// FooterSection describes a column in a footer. Title is rendered as
+// <h6 class="footer-title">. Links, when set, are rendered as link-hover
+// anchors below the title.
+type FooterSection struct {
+	Title string
+	Links []FooterLink
+}
+
+// FooterAside describes the brand/logo section. Body, when set, is rendered
+// inside an <aside> (typically an SVG plus a <p> line of text).
+type FooterAside struct {
+	Body templ.Component
+}
+
+// FooterConfig configures a daisyUI Footer. Direction accepts "horizontal"
+// or "vertical" (default, produces footer-horizontal / footer-vertical). For
+// responsive direction use Class (e.g. "sm:footer-horizontal"). Center, when
+// true, adds footer-center. Aside, when set, renders a brand/logo block as
+// the first child. Sections is the list of nav columns. Copyright, when set,
+// renders a final <aside> with a <p> copyright notice. Class lets callers add
+// extra utility classes (e.g. "p-10 bg-neutral text-neutral-content").
+// Resolver, when set, is used to build all link hrefs.
+type FooterConfig struct {
+	Direction string
+	Center    bool
+	Glass     bool
+	Aside     templ.Component
+	Sections  []FooterSection
+	Copyright string
+	Class     string
+	Resolver  URLResolver
+}
+
+// Footer renders a daisyUI footer (<footer class="footer …">).
+templ Footer(cfg FooterConfig) {
+	<footer class={ footerClass(cfg) }>
+		if cfg.Aside != nil {
+			<aside>
+				@cfg.Aside
+			</aside>
+		}
+		for _, sec := range cfg.Sections {
+			<nav>
+				if sec.Title != "" {
+					<h6 class="footer-title">{ sec.Title }</h6>
+				}
+				for _, link := range sec.Links {
+					<a
+						class="link link-hover"
+						href={ resolveHref(cfg.Resolver, link.Href) }
+					>
+						{ link.Label }
+					</a>
+				}
+			</nav>
+		}
+		if cfg.Copyright != "" {
+			<aside>
+				<p>{ cfg.Copyright }</p>
+			</aside>
+		}
+	</footer>
+}
+
+func footerClass(cfg FooterConfig) string {
+	return joinClasses(
+		"footer",
+		classFor("footer", cfg.Direction),
+		footerCenterClass(cfg.Center),
+		glassClass(cfg.Glass),
+		cfg.Class,
+	)
+}
+
+func footerCenterClass(center bool) string {
+	if center {
+		return "footer-center"
+	}
+	return ""
+}

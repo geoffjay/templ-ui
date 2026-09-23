@@ -1,0 +1,27 @@
+{
+  "name": "templ-ui",
+  "version": "0.0.0",
+  "description": "Frontend toolchain for templ-ui: Tailwind v4 + daisyUI stylesheets and the shiki highlighter bundle.",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build:shiki": "esbuild assets/shiki.js --bundle --format=esm --target=es2022 --outfile=examples/gallery/static/shiki.js",
+    "watch:shiki": "esbuild assets/shiki.js --bundle --format=esm --target=es2022 --outfile=examples/gallery/static/shiki.js --watch",
+    "css": "tailwindcss -i ./assets/styles.css -o ./examples/gallery/static/styles.css",
+    "css:watch": "tailwindcss -i ./assets/styles.css -o ./examples/gallery/static/styles.css --watch",
+    "build": "bun run build:shiki && bun run css"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "4.3.1",
+    "@tailwindcss/typography": "0.5.20",
+    "daisyui": "5.5.23",
+    "tailwindcss": "4.3.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "shiki": "^4.3.0"
+  },
+  "trustedDependencies": [
+    "@parcel/watcher"
+  ]
+}

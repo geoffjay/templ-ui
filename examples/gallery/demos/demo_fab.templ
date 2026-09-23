@@ -1,0 +1,138 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	icons "github.com/iota-uz/icons/phosphor"
+
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "fab",
+		Name:        "FAB / Speed Dial",
+		Description: "FAB (Floating Action Button) stays in the bottom corner of screen. It includes a focusable and accessible element with button role. Clicking or focusing it shows additional buttons (known as Speed Dial buttons) in a vertical arrangement or a flower shape (quarter circle).",
+		Category:    "daisyui",
+		Body:        fabBody,
+	})
+}
+
+// fabFrame wraps a FAB example in a positioned container so each FAB's
+// absolute positioning is scoped to its own section rather than the page.
+// Without this, every FAB stacks in the page's bottom-left corner and only the
+// topmost is interactive. Height mirrors the daisyUI docs (h-54; h-48 for the
+// tooltip variant).
+templ fabFrame(title string, fab templ.Component) {
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">{ title }</h2>
+		<div class="relative h-54">
+			@fab
+		</div>
+	</section>
+}
+
+// fabFrameShort is like fabFrame but with h-48 for the tooltip variant where
+// less vertical space is needed.
+templ fabFrameShort(title string, fab templ.Component) {
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">{ title }</h2>
+		<div class="relative h-48">
+			@fab
+		</div>
+	</section>
+}
+
+// fabCircleItem builds a circular speed-dial action button with a text label.
+templ fabCircleItem(label string) {
+	@daisyui.Button(daisyui.ButtonConfig{Label: label, Size: "lg", Modifier: "circle"})
+}
+
+templ fabBody() {
+	@fabFrame("FAB and Speed Dial (vertical)", daisyui.FAB(daisyui.FABConfig{
+		Trigger: daisyui.FABTrigger{Label: "F", Color: "primary"},
+		Class:   "absolute z-1",
+		Items: []daisyui.FABItem{
+			{Button: fabCircleItem("A")},
+			{Button: fabCircleItem("B")},
+			{Button: fabCircleItem("C")},
+		},
+	}))
+	@fabFrame("FAB and Speed Dial with SVG icons", daisyui.FAB(daisyui.FABConfig{
+		Trigger: daisyui.FABTrigger{
+			Color:    "secondary",
+			Children: icons.Plus(icons.Props{Size: "24", Class: "size-6"}),
+		},
+		Class: "absolute z-1",
+		Items: []daisyui.FABItem{
+			{Button: daisyui.Button(daisyui.ButtonConfig{Size: "lg", Modifier: "circle", Children: icons.Camera(icons.Props{Size: "24", Class: "size-6"})})},
+			{Button: daisyui.Button(daisyui.ButtonConfig{Size: "lg", Modifier: "circle", Children: icons.Image(icons.Props{Size: "24", Class: "size-6"})})},
+			{Button: daisyui.Button(daisyui.ButtonConfig{Size: "lg", Modifier: "circle", Children: icons.Microphone(icons.Props{Size: "24", Class: "size-6"})})},
+		},
+	}))
+	@fabFrame("FAB and Speed Dial with labels", daisyui.FAB(daisyui.FABConfig{
+		Trigger: daisyui.FABTrigger{Label: "F", Color: "success"},
+		Class:   "absolute z-1",
+		Items: []daisyui.FABItem{
+			{Label: "Label B", Button: fabCircleItem("A")},
+			{Label: "Label C", Button: fabCircleItem("B")},
+			{Label: "Label D", Button: fabCircleItem("C")},
+		},
+	}))
+	@fabFrame("FAB and Speed Dial with rectangle buttons", daisyui.FAB(daisyui.FABConfig{
+		Trigger: daisyui.FABTrigger{Label: "F", Color: "success"},
+		Class:   "absolute z-1",
+		Items: []daisyui.FABItem{
+			{Button: daisyui.Button(daisyui.ButtonConfig{Label: "Button A", Size: "lg"})},
+			{Button: daisyui.Button(daisyui.ButtonConfig{Label: "Button B", Size: "lg"})},
+			{Button: daisyui.Button(daisyui.ButtonConfig{Label: "Button C", Size: "lg"})},
+		},
+	}))
+	@fabFrame("FAB and Speed Dial with labels and fab-close button", daisyui.FAB(daisyui.FABConfig{
+		Trigger:     daisyui.FABTrigger{Label: "F", Color: "info"},
+		Class:       "absolute z-1",
+		CloseButton: templ.Raw(`Close <span class="btn btn-circle btn-lg btn-error">✕</span>`),
+		Items: []daisyui.FABItem{
+			{Label: "Label A", Button: fabCircleItem("A")},
+			{Label: "Label B", Button: fabCircleItem("B")},
+			{Label: "Label C", Button: fabCircleItem("C")},
+		},
+	}))
+	@fabFrame("FAB and Speed Dial with labels and fab-main-action Button", daisyui.FAB(daisyui.FABConfig{
+		Trigger:    daisyui.FABTrigger{Label: "F", Color: "primary"},
+		Class:      "absolute z-1",
+		MainAction: templ.Raw(`Main Action <button class="btn btn-circle btn-secondary btn-lg">M</button>`),
+		Items: []daisyui.FABItem{
+			{Label: "Label A", Button: fabCircleItem("A")},
+			{Label: "Label B", Button: fabCircleItem("B")},
+			{Label: "Label C", Button: fabCircleItem("C")},
+		},
+	}))
+	@fabFrame("A single FAB (Floating Action Button)", daisyui.FAB(daisyui.FABConfig{
+		Trigger: daisyui.FABTrigger{Label: "F", Color: "primary"},
+		Class:   "absolute z-1",
+	}))
+	@fabFrame("FAB Flower and Speed Dial", daisyui.FAB(daisyui.FABConfig{
+		Trigger:    daisyui.FABTrigger{Label: "F", Color: "success"},
+		Class:      "absolute z-1",
+		Flower:     true,
+		MainAction: daisyui.Button(daisyui.ButtonConfig{Label: "M", Size: "lg", Modifier: "circle"}),
+		Items: []daisyui.FABItem{
+			{Button: fabCircleItem("A")},
+			{Button: fabCircleItem("B")},
+			{Button: fabCircleItem("C")},
+			{Button: fabCircleItem("D")},
+		},
+	}))
+	@fabFrameShort("FAB and Flower Speed Dial with tooltip", daisyui.FAB(daisyui.FABConfig{
+		Trigger:    daisyui.FABTrigger{Label: "F", Color: "info"},
+		Class:      "absolute z-1",
+		Flower:     true,
+		MainAction: daisyui.Button(daisyui.ButtonConfig{Label: "M", Size: "lg", Modifier: "circle", Color: "success"}),
+		Items: []daisyui.FABItem{
+			{Button: daisyui.Tooltip(daisyui.TooltipConfig{Tip: "Label A", Position: "left", Children: fabCircleItem("A")})},
+			{Button: daisyui.Tooltip(daisyui.TooltipConfig{Tip: "Label B", Position: "left", Children: fabCircleItem("B")})},
+			{Button: daisyui.Tooltip(daisyui.TooltipConfig{Tip: "Label C", Children: fabCircleItem("C")})},
+			{Button: daisyui.Tooltip(daisyui.TooltipConfig{Tip: "Label D", Children: fabCircleItem("D")})},
+		},
+	}))
+}

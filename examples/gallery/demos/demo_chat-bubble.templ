@@ -1,0 +1,136 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ chatBubbleBody() {
+	@gallery.Section("chat-start and chat-end", `<div class="chat chat-start">
+	<div class="chat-bubble">It's over Anakin, <br/>I have the high ground.</div>
+</div>
+@daisyui.ChatBubble(daisyui.ChatBubbleConfig{End: true, Message: "You underestimate my power!"})`, chatBubbleStartEndRow())
+	@gallery.Section("Chat with image", `@daisyui.ChatBubble(daisyui.ChatBubbleConfig{
+	Avatar:  kenobiAvatar(),
+	Message: "It was said that you would, destroy the Sith, not join them.",
+})
+// ... more chat-start bubbles`, chatBubbleWithImageRow())
+	@gallery.Section("Chat with image, header and footer", `@daisyui.ChatBubble(daisyui.ChatBubbleConfig{
+	Avatar:  kenobiAvatar(),
+	Author:  "Obi-Wan Kenobi",
+	Time:    "12:45",
+	Message: "You were the Chosen One!",
+	Footer:  "Delivered",
+})
+// ... a chat-end bubble for Anakin`, chatBubbleWithImageHeaderFooterRow())
+	@gallery.Section("Chat with header and footer", `@daisyui.ChatBubble(daisyui.ChatBubbleConfig{
+	Author:  "Obi-Wan Kenobi",
+	Time:    "2 hours ago",
+	Message: "You were my brother, Anakin.",
+	Footer:  "Seen",
+})
+// ... another chat-start bubble`, chatBubbleWithHeaderFooterRow())
+	@gallery.Section("Chat Bubble with colors", `@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Color: "primary", Message: "What kind of nonsense is this"})
+@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Color: "secondary", Message: "Put me on the Council and not make me a Master!??"})
+@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Color: "accent", Message: "That's never been done in the history of the Jedi."})
+	// ... one per color`, chatBubbleColorsRow())
+	@gallery.Section("Chat Bubble with glass", `@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Message: "You can see through me.", Glass: true})
+@daisyui.ChatBubble(daisyui.ChatBubbleConfig{End: true, Message: "Frosted!", Glass: true})`, gallery.GlassBackdrop(chatBubbleGlassRow()))
+}
+
+templ chatBubbleGlassRow() {
+	<div class="w-full">
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Message: "You can see through me.", Glass: true})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{End: true, Message: "Frosted!", Glass: true})
+	</div>
+}
+
+templ chatBubbleColorsRow() {
+	<div class="w-full">
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Color: "primary", Message: "What kind of nonsense is this"})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Color: "secondary", Message: "Put me on the Council and not make me a Master!??"})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Color: "accent", Message: "That's never been done in the history of the Jedi."})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Color: "neutral", Message: "It's insulting!"})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{End: true, Color: "info", Message: "Calm down, Anakin."})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{End: true, Color: "success", Message: "You have been given a great honor."})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{End: true, Color: "warning", Message: "To be on the Council at your age."})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{End: true, Color: "error", Message: "It's never happened before."})
+	</div>
+}
+
+templ chatBubbleKenobiAvatar() {
+	<div class="w-10 rounded-full">
+		<img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"/>
+	</div>
+}
+
+templ chatBubbleAnakinAvatar() {
+	<div class="w-10 rounded-full">
+		<img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"/>
+	</div>
+}
+
+templ chatBubbleStartEndRow() {
+	<div class="w-full">
+		<div class="chat chat-start">
+			<div class="chat-bubble">It's over Anakin, <br/>I have the high ground.</div>
+		</div>
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{End: true, Message: "You underestimate my power!"})
+	</div>
+}
+
+templ chatBubbleWithImageRow() {
+	<div class="w-full">
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Avatar: chatBubbleKenobiAvatar(), Message: "It was said that you would, destroy the Sith, not join them."})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Avatar: chatBubbleKenobiAvatar(), Message: "It was you who would bring balance to the Force"})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{Avatar: chatBubbleKenobiAvatar(), Message: "Not leave it in Darkness"})
+	</div>
+}
+
+templ chatBubbleWithImageHeaderFooterRow() {
+	<div class="w-full">
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{
+			Avatar:  chatBubbleKenobiAvatar(),
+			Author:  "Obi-Wan Kenobi",
+			Time:    "12:45",
+			Message: "You were the Chosen One!",
+			Footer:  "Delivered",
+		})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{
+			End:     true,
+			Avatar:  chatBubbleAnakinAvatar(),
+			Author:  "Anakin",
+			Time:    "12:46",
+			Message: "I hate you!",
+			Footer:  "Seen at 12:46",
+		})
+	</div>
+}
+
+templ chatBubbleWithHeaderFooterRow() {
+	<div class="w-full">
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{
+			Author:  "Obi-Wan Kenobi",
+			Time:    "2 hours ago",
+			Message: "You were my brother, Anakin.",
+			Footer:  "Seen",
+		})
+		@daisyui.ChatBubble(daisyui.ChatBubbleConfig{
+			Author:  "Obi-Wan Kenobi",
+			Time:    "2 hour ago",
+			Message: "I loved you.",
+			Footer:  "Delivered",
+		})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "chat-bubble",
+		Name:        "Chat bubble",
+		Description: "Chat bubbles are used to show one line of conversation and all its data, including the author image, author name, time, etc.",
+		Category:    "daisyui",
+		Body:        chatBubbleBody,
+	})
+}

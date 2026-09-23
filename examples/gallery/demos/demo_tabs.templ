@@ -1,0 +1,201 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ tabsBody() {
+	@gallery.Section("Tabs", `@daisyui.Tabs(daisyui.TabsConfig{
+	Items: []daisyui.TabItem{
+		{Label: "Tab 1", Active: true},
+		{Label: "Tab 2"},
+		{Label: "Tab 3"},
+	},
+})`, daisyui.Tabs(daisyui.TabsConfig{
+		Items: []daisyui.TabItem{
+			{Label: "Tab 1", Active: true},
+			{Label: "Tab 2"},
+			{Label: "Tab 3"},
+		},
+	}))
+	@gallery.Section("Tabs with box style", `@daisyui.Tabs(daisyui.TabsConfig{
+	Style: "box",
+	Items: []daisyui.TabItem{
+		{Label: "Tab 1", Active: true},
+		{Label: "Tab 2"},
+		{Label: "Tab 3"},
+	},
+})`, daisyui.Tabs(daisyui.TabsConfig{
+		Style: "box",
+		Items: []daisyui.TabItem{
+			{Label: "Tab 1", Active: true},
+			{Label: "Tab 2"},
+			{Label: "Tab 3"},
+		},
+	}))
+	@gallery.Section("Tabs with border style", `@daisyui.Tabs(daisyui.TabsConfig{
+	Style: "border",
+	Items: []daisyui.TabItem{
+		{Label: "Tab 1", Active: true},
+		{Label: "Tab 2"},
+		{Label: "Tab 3"},
+	},
+})`, daisyui.Tabs(daisyui.TabsConfig{
+		Style: "border",
+		Items: []daisyui.TabItem{
+			{Label: "Tab 1", Active: true},
+			{Label: "Tab 2"},
+			{Label: "Tab 3"},
+		},
+	}))
+	@gallery.Section("Tabs with lift style", `@daisyui.Tabs(daisyui.TabsConfig{
+	Style: "lift",
+	Items: []daisyui.TabItem{
+		{Label: "Tab 1", Active: true},
+		{Label: "Tab 2"},
+		{Label: "Tab 3"},
+	},
+})`, daisyui.Tabs(daisyui.TabsConfig{
+		Style: "lift",
+		Items: []daisyui.TabItem{
+			{Label: "Tab 1", Active: true},
+			{Label: "Tab 2"},
+			{Label: "Tab 3"},
+		},
+	}))
+	@gallery.Section("Tabs with hrefs", `@daisyui.Tabs(daisyui.TabsConfig{
+	Items: []daisyui.TabItem{
+		{Label: "Home", Href: "/", Active: true},
+		{Label: "About", Href: "/about"},
+		{Label: "Contact", Href: "/contact"},
+	},
+})`, daisyui.Tabs(daisyui.TabsConfig{
+		Items: []daisyui.TabItem{
+			{Label: "Home", Href: "/", Active: true},
+			{Label: "About", Href: "/about"},
+			{Label: "Contact", Href: "/contact"},
+		},
+	}))
+	@gallery.Section("Tabs with disabled", `@daisyui.Tabs(daisyui.TabsConfig{
+	Items: []daisyui.TabItem{
+		{Label: "Active", Href: "#", Active: true},
+		{Label: "Disabled", Disabled: true},
+		{Label: "Enabled", Href: "#"},
+	},
+})`, daisyui.Tabs(daisyui.TabsConfig{
+		Items: []daisyui.TabItem{
+			{Label: "Active", Href: "#", Active: true},
+			{Label: "Disabled", Disabled: true},
+			{Label: "Enabled", Href: "#"},
+		},
+	}))
+	@gallery.Section("Tabs sizes", `@daisyui.Tabs(daisyui.TabsConfig{
+	Size: "xs",
+	Items: []daisyui.TabItem{{Label: "XS", Active: true}, {Label: "Tab"}, {Label: "Tab"}},
+})
+@daisyui.Tabs(daisyui.TabsConfig{
+	Size: "sm",
+	Items: []daisyui.TabItem{{Label: "SM", Active: true}, {Label: "Tab"}, {Label: "Tab"}},
+})
+// ... one per size (lg, xl)`, tabsSizes())
+	@gallery.Section("Tabs bottom placement", `@daisyui.Tabs(daisyui.TabsConfig{
+	Placement: "bottom",
+	Style:     "box",
+	Items: []daisyui.TabItem{
+		{Label: "Tab 1", Active: true},
+		{Label: "Tab 2"},
+		{Label: "Tab 3"},
+	},
+})`, daisyui.Tabs(daisyui.TabsConfig{
+		Placement: "bottom",
+		Style:     "box",
+		Items: []daisyui.TabItem{
+			{Label: "Tab 1", Active: true},
+			{Label: "Tab 2"},
+			{Label: "Tab 3"},
+		},
+	}))
+	@gallery.Section("Tabs with icons", `@daisyui.Tabs(daisyui.TabsConfig{
+	Style: "box",
+	Items: []daisyui.TabItem{
+		{Label: "Home", Href: "#", Icon: tabsHomeIcon(), Active: true},
+		{Label: "Search", Href: "#", Icon: tabsSearchIcon()},
+		{Label: "Settings", Href: "#", Icon: tabsSettingsIcon()},
+	},
+})`, daisyui.Tabs(daisyui.TabsConfig{
+		Style: "box",
+		Items: []daisyui.TabItem{
+			{Label: "Home", Href: "#", Icon: tabsHomeIcon(), Active: true},
+			{Label: "Search", Href: "#", Icon: tabsSearchIcon()},
+			{Label: "Settings", Href: "#", Icon: tabsSettingsIcon()},
+		},
+	}))
+}
+
+templ tabsSizes() {
+	<div class="flex flex-col gap-4">
+		@daisyui.Tabs(daisyui.TabsConfig{
+			Size: "xs",
+			Items: []daisyui.TabItem{
+				{Label: "XS", Active: true},
+				{Label: "Tab"},
+				{Label: "Tab"},
+			},
+		})
+		@daisyui.Tabs(daisyui.TabsConfig{
+			Size: "sm",
+			Items: []daisyui.TabItem{
+				{Label: "SM", Active: true},
+				{Label: "Tab"},
+				{Label: "Tab"},
+			},
+		})
+		@daisyui.Tabs(daisyui.TabsConfig{
+			Size: "lg",
+			Items: []daisyui.TabItem{
+				{Label: "LG", Active: true},
+				{Label: "Tab"},
+				{Label: "Tab"},
+			},
+		})
+		@daisyui.Tabs(daisyui.TabsConfig{
+			Size: "xl",
+			Items: []daisyui.TabItem{
+				{Label: "XL", Active: true},
+				{Label: "Tab"},
+				{Label: "Tab"},
+			},
+		})
+	</div>
+}
+
+templ tabsHomeIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+	</svg>
+}
+
+templ tabsSearchIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+	</svg>
+}
+
+templ tabsSettingsIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+	</svg>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "tabs",
+		Name:        "Tabs",
+		Description: "Tabs let the user switch between different views.",
+		Category:    "daisyui",
+		Body:        tabsBody,
+	})
+}

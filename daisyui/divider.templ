@@ -1,0 +1,49 @@
+package daisyui
+
+// Divider renders a separator line, optionally with centered text. Direction
+// controls orientation:
+//   - ""           : vertical divider (default)
+//   - "vertical"   : divider-vertical
+//   - "horizontal" : divider-horizontal
+//
+// Color accepts documented suffixes: neutral, primary, secondary, accent,
+// success, warning, info, error (or "" for none), producing e.g.
+// "divider-primary".
+//
+// Placement pushes the label text:
+//   - ""     : center (default)
+//   - "start" : divider-start
+//   - "end"   : divider-end
+templ Divider(label, direction, color, placement, class string) {
+	<div
+		class={ joinClasses(
+			"divider",
+			dividerDirectionClass(direction),
+			classFor("divider", color),
+			dividerPlacementClass(placement),
+			class,
+		) }
+	>
+		{ label }
+	</div>
+}
+
+func dividerDirectionClass(d string) string {
+	switch d {
+	case "horizontal":
+		return "divider-horizontal"
+	case "vertical":
+		return "divider-vertical"
+	default:
+		return ""
+	}
+}
+
+func dividerPlacementClass(p string) string {
+	switch p {
+	case "start", "end":
+		return "divider-" + p
+	default:
+		return ""
+	}
+}

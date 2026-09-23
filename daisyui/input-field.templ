@@ -1,0 +1,105 @@
+package daisyui
+
+// InputConfig configures a daisyUI text input. Type defaults to "text" when
+// empty (any HTML input type works: text, email, password, search, tel, url,
+// number, date, time, datetime-local, etc). Color accepts the documented input
+// color suffixes (neutral, primary, secondary, accent, info, success, warning,
+// error) producing e.g. "input-primary". Style accepts "ghost" (input-ghost).
+// Size accepts "xs", "sm", "md", "lg", "xl" ("md" is the default and omitted).
+// Class lets callers add extra utility classes (e.g. "validator", "grow",
+// "tabular-nums", "w-full").
+type InputConfig struct {
+	Type        string
+	Name        string
+	Placeholder string
+	Value       string
+	Color       string
+	Style       string
+	Size        string
+	Disabled    bool
+	Required    bool
+	ReadOnly    bool
+	Class       string
+}
+
+// Input renders a single daisyUI text input (<input class="input ...">).
+templ Input(cfg InputConfig) {
+	<input
+		type={ inputTypeAttr(cfg.Type) }
+		name={ cfg.Name }
+		placeholder={ cfg.Placeholder }
+		value={ cfg.Value }
+		class={ joinClasses(
+			"input",
+			classFor("input", cfg.Color),
+			inputStyleClass(cfg.Style),
+			inputSizeClass(cfg.Size),
+			cfg.Class,
+		) }
+		disabled?={ cfg.Disabled }
+		required?={ cfg.Required }
+		readonly?={ cfg.ReadOnly }
+	/>
+}
+
+// InputLabelConfig configures a label-wrapped input (the daisyUI pattern of
+// `<label class="input">` containing an icon, the inner input, and optional
+// trailing text/badges). The same Color/Style/Size/Class options as Input
+// apply to the wrapping label. Validator adds the "validator" class to the
+// wrapper.
+type InputLabelConfig struct {
+	Color     string
+	Style     string
+	Size      string
+	Validator bool
+	Class     string
+}
+
+// InputLabel renders a `<label class="input ...">` wrapper and renders the
+// provided children inside it (children typically include an icon and an
+// `<input class="grow">`). This mirrors the daisyUI docs' label-with-icon
+// pattern.
+templ InputLabel(cfg InputLabelConfig, children templ.Component) {
+	<label
+		class={ joinClasses(
+			"input",
+			classFor("input", cfg.Color),
+			inputStyleClass(cfg.Style),
+			inputSizeClass(cfg.Size),
+			validatorClass(cfg.Validator),
+			cfg.Class,
+		) }
+	>
+		@children
+	</label>
+}
+
+func inputTypeAttr(t string) string {
+	if t == "" {
+		return "text"
+	}
+	return t
+}
+
+func inputStyleClass(s string) string {
+	if s == "ghost" {
+		return "input-ghost"
+	}
+	return ""
+}
+
+func inputSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "input-" + s
+	default:
+		return ""
+	}
+}
+
+func validatorClass(v bool) string {
+	if v {
+		return "validator"
+	}
+	return ""
+}

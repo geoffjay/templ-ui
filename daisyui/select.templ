@@ -1,0 +1,85 @@
+package daisyui
+
+// SelectOption describes a single option in a Select. Value is the option's
+// form value (the value attribute); Label is the displayed text. Disabled
+// marks the option disabled. When Label is empty, Value is used as the label.
+type SelectOption struct {
+	Value    string
+	Label    string
+	Disabled bool
+}
+
+// SelectConfig configures a daisyUI select. Color accepts the documented select
+// color suffixes (neutral, primary, secondary, accent, info, success, warning,
+// error) producing e.g. "select-primary". Style accepts "ghost"
+// (select-ghost). Size accepts "xs", "sm", "md", "lg", "xl" ("md" is the
+// default and omitted). Placeholder, when set, renders a disabled selected
+// placeholder <option> at the top (use empty Value to make the placeholder
+// non-submittable). Selected, when non-empty, marks the matching option
+// selected (by Value). Class lets callers add extra utility classes (e.g.
+// "validator", "appearance-none", "join-item").
+type SelectConfig struct {
+	Name        string
+	Placeholder string
+	Options     []SelectOption
+	Selected    string
+	Color       string
+	Style       string
+	Size        string
+	Disabled    bool
+	Required    bool
+	Class       string
+}
+
+// Select renders a daisyUI select element (<select class="select ...">) with
+// the given options.
+templ Select(cfg SelectConfig) {
+	<select
+		name={ cfg.Name }
+		class={ joinClasses(
+			"select",
+			classFor("select", cfg.Color),
+			selectStyleClass(cfg.Style),
+			selectSizeClass(cfg.Size),
+			cfg.Class,
+		) }
+		disabled?={ cfg.Disabled }
+		required?={ cfg.Required }
+	>
+		if cfg.Placeholder != "" {
+			<option disabled selected value="">{ cfg.Placeholder }</option>
+		}
+		for _, opt := range cfg.Options {
+			<option
+				value={ opt.Value }
+				disabled?={ opt.Disabled }
+				selected?={ opt.Value == cfg.Selected && opt.Value != "" }
+			>
+				{ selectOptionLabel(opt) }
+			</option>
+		}
+	</select>
+}
+
+func selectStyleClass(s string) string {
+	if s == "ghost" {
+		return "select-ghost"
+	}
+	return ""
+}
+
+func selectSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "select-" + s
+	default:
+		return ""
+	}
+}
+
+func selectOptionLabel(opt SelectOption) string {
+	if opt.Label != "" {
+		return opt.Label
+	}
+	return opt.Value
+}

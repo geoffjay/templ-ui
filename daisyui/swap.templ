@@ -1,0 +1,63 @@
+package daisyui
+
+// SwapConfig controls a Swap component, which toggles visibility of two child
+// elements using a checkbox or the swap-active class. Effect accepts "rotate"
+// or "flip" (produces "swap-rotate"/"swap-flip"); "" leaves the default. Active
+// forces the swap-on element to display without needing the checkbox (adds
+// "swap-active"). NoCheckbox, when true, omits the hidden <input> (useful when
+// controlling state via the Active flag alone). Class lets callers add extra
+// utility classes (e.g. "btn btn-circle" for the hamburger variant).
+type SwapConfig struct {
+	Effect     string
+	Active     bool
+	NoCheckbox bool
+	Class      string
+}
+
+// Swap renders a labelled swap container with the given on/off children. On
+// is shown when active (checkbox checked or swap-active); Off is shown
+// otherwise.
+templ Swap(cfg SwapConfig, on, off templ.Component) {
+	<label class={ joinClasses("swap", swapEffectClass(cfg.Effect), swapActiveClass(cfg.Active), cfg.Class) }>
+		if !cfg.NoCheckbox {
+			<input type="checkbox" autocomplete="off"/>
+		}
+		<div class="swap-on">
+			@on
+		</div>
+		<div class="swap-off">
+			@off
+		</div>
+	</label>
+}
+
+// SwapDiv renders a swap container (without a checkbox) whose on/off slots are
+// arbitrary children. Use SwapActive to add the swap-active class via JS.
+templ SwapDiv(cfg SwapConfig, on, off templ.Component) {
+	<div class={ joinClasses("swap", swapEffectClass(cfg.Effect), swapActiveClass(cfg.Active), cfg.Class) }>
+		<div class="swap-on">
+			@on
+		</div>
+		<div class="swap-off">
+			@off
+		</div>
+	</div>
+}
+
+func swapEffectClass(e string) string {
+	switch e {
+	case "rotate":
+		return "swap-rotate"
+	case "flip":
+		return "swap-flip"
+	default:
+		return ""
+	}
+}
+
+func swapActiveClass(active bool) string {
+	if active {
+		return "swap-active"
+	}
+	return ""
+}

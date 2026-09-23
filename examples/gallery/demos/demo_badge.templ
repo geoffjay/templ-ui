@@ -1,0 +1,219 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+	icons "github.com/iota-uz/icons/phosphor"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "badge",
+		Name:        "Badge",
+		Description: "Badges are used to inform the user of the status of specific data.",
+		Category:    "daisyui",
+		Body:        badgeBody,
+	})
+}
+
+templ badgeBody() {
+	@gallery.Section("Badge", `@daisyui.Badge(daisyui.BadgeConfig{Text: "Badge"})`, daisyui.Badge(daisyui.BadgeConfig{Text: "Badge"}))
+	@gallery.Section("Badge sizes", `<div class="flex flex-wrap items-center gap-2">
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Xsmall", Size: "xs"})
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Small", Size: "sm"})
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Medium"})
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Large", Size: "lg"})
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Xlarge", Size: "xl"})
+</div>`, badgeDemoSizeRow())
+	@gallery.Section("Badge with colors", `<div class="flex flex-wrap gap-2">
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Primary", Color: "primary"})
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Secondary", Color: "secondary"})
+	// ... one per color
+</div>`, badgeDemoColorRow())
+	@gallery.Section("Badge with soft style", `<div class="flex flex-wrap gap-2">
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Primary", Style: "soft", Color: "primary"})
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Secondary", Style: "soft", Color: "secondary"})
+	// ... one per color
+</div>`, badgeDemoSoftRow())
+	@gallery.Section("Badge with outline style", `<div class="flex flex-wrap gap-2">
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Primary", Style: "outline", Color: "primary"})
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Secondary", Style: "outline", Color: "secondary"})
+	// ... one per color
+</div>`, badgeDemoOutlineRow())
+	@gallery.Section("Badge with dash style", `<div class="flex flex-wrap gap-2">
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Primary", Style: "dash", Color: "primary"})
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "Secondary", Style: "dash", Color: "secondary"})
+	// ... one per color
+</div>`, badgeDemoDashRow())
+	@gallery.Section("Badge ghost", `@daisyui.Badge(daisyui.BadgeConfig{Text: "ghost", Style: "ghost"})`, daisyui.Badge(daisyui.BadgeConfig{Text: "ghost", Style: "ghost"}))
+	@gallery.Section("Empty badge", `<div class="flex flex-wrap items-center gap-2">
+	@daisyui.Badge(daisyui.BadgeConfig{Color: "primary", Size: "lg"})
+	@daisyui.Badge(daisyui.BadgeConfig{Color: "primary"})
+	@daisyui.Badge(daisyui.BadgeConfig{Color: "primary", Size: "sm"})
+	@daisyui.Badge(daisyui.BadgeConfig{Color: "primary", Size: "xs"})
+</div>`, badgeDemoEmptyRow())
+	@gallery.Section("Badge with icon", `<div class="flex flex-wrap gap-2">
+	@daisyui.Badge(daisyui.BadgeConfig{
+		Color:    "info",
+		Children: templ.Raw(...),
+	})
+	@daisyui.Badge(daisyui.BadgeConfig{
+		Color:    "success",
+		Children: templ.Raw(...),
+	})
+</div>`, badgeDemoIconRow())
+	@gallery.Section("Badge in a text", `<div class="grid">
+	<span class="text-xl font-semibold">
+		Heading 1 @daisyui.Badge(daisyui.BadgeConfig{Text: "Badge", Size: "xl"})
+	</span>
+	<span class="text-lg font-semibold">
+		Heading 2 @daisyui.Badge(daisyui.BadgeConfig{Text: "Badge", Size: "lg"})
+	</span>
+	// ... one per heading size
+</div>`, badgeDemoInTextRow())
+	@gallery.Section("Badge in a button", `<div class="flex flex-wrap gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{
+		Label:    "Inbox ",
+		Children: ...,
+	})
+	@daisyui.Button(daisyui.ButtonConfig{
+		Label:    "Inbox ",
+		Children: ...,
+	})
+</div>`, badgeDemoInButtonRow())
+	@gallery.Section("Badge with glass", `@daisyui.Badge(daisyui.BadgeConfig{Text: "Glass", Glass: true})`, gallery.GlassBackdrop(daisyui.Badge(daisyui.BadgeConfig{Text: "Glass", Glass: true})))
+}
+
+templ badgeDemoSizeRow() {
+	<div class="flex flex-wrap items-center gap-2">
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Xsmall", Size: "xs"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Small", Size: "sm"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Medium"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Large", Size: "lg"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Xlarge", Size: "xl"})
+	</div>
+}
+
+templ badgeDemoColorRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Primary", Color: "primary"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Secondary", Color: "secondary"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Accent", Color: "accent"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Neutral", Color: "neutral"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Info", Color: "info"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Success", Color: "success"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Warning", Color: "warning"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Error", Color: "error"})
+	</div>
+}
+
+templ badgeDemoEmptyRow() {
+	<div class="flex flex-wrap items-center gap-2">
+		@daisyui.Badge(daisyui.BadgeConfig{Color: "primary", Size: "lg"})
+		@daisyui.Badge(daisyui.BadgeConfig{Color: "primary"})
+		@daisyui.Badge(daisyui.BadgeConfig{Color: "primary", Size: "sm"})
+		@daisyui.Badge(daisyui.BadgeConfig{Color: "primary", Size: "xs"})
+	</div>
+}
+
+templ badgeDemoInTextRow() {
+	<div class="grid">
+		<span class="text-xl font-semibold">
+			Heading 1
+			@daisyui.Badge(daisyui.BadgeConfig{Text: "Badge", Size: "xl"})
+		</span>
+		<span class="text-lg font-semibold">
+			Heading 2
+			@daisyui.Badge(daisyui.BadgeConfig{Text: "Badge", Size: "lg"})
+		</span>
+		<span class="text-base font-semibold">
+			Heading 3
+			@daisyui.Badge(daisyui.BadgeConfig{Text: "Badge"})
+		</span>
+		<span class="text-sm font-semibold">
+			Heading 4
+			@daisyui.Badge(daisyui.BadgeConfig{Text: "Badge", Size: "sm"})
+		</span>
+		<span class="text-xs font-semibold">
+			Heading 5
+			@daisyui.Badge(daisyui.BadgeConfig{Text: "Badge", Size: "xs"})
+		</span>
+		<p class="text-xs">
+			Paragraph
+			@daisyui.Badge(daisyui.BadgeConfig{Text: "Badge", Size: "xs"})
+		</p>
+	</div>
+}
+
+templ badgeDemoInButtonRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{
+			Children: badgeDemoInboxLabel(""),
+		})
+		@daisyui.Button(daisyui.ButtonConfig{
+			Children: badgeDemoInboxLabel("secondary"),
+		})
+	</div>
+}
+
+templ badgeDemoInboxLabel(color string) {
+	Inbox
+	@daisyui.Badge(daisyui.BadgeConfig{Text: "+99", Size: "sm", Color: color})
+}
+
+templ badgeDemoSoftRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Primary", Style: "soft", Color: "primary"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Secondary", Style: "soft", Color: "secondary"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Accent", Style: "soft", Color: "accent"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Info", Style: "soft", Color: "info"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Success", Style: "soft", Color: "success"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Warning", Style: "soft", Color: "warning"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Error", Style: "soft", Color: "error"})
+	</div>
+}
+
+templ badgeDemoOutlineRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Primary", Style: "outline", Color: "primary"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Secondary", Style: "outline", Color: "secondary"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Accent", Style: "outline", Color: "accent"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Info", Style: "outline", Color: "info"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Success", Style: "outline", Color: "success"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Warning", Style: "outline", Color: "warning"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Error", Style: "outline", Color: "error"})
+	</div>
+}
+
+templ badgeDemoDashRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Primary", Style: "dash", Color: "primary"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Secondary", Style: "dash", Color: "secondary"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Accent", Style: "dash", Color: "accent"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Info", Style: "dash", Color: "info"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Success", Style: "dash", Color: "success"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Warning", Style: "dash", Color: "warning"})
+		@daisyui.Badge(daisyui.BadgeConfig{Text: "Error", Style: "dash", Color: "error"})
+	</div>
+}
+
+templ badgeDemoIconRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Badge(daisyui.BadgeConfig{
+			Color:    "info",
+			Children: badgeDemoIconLabel("Info", icons.Info(icons.Props{Size: "16"})),
+		})
+		@daisyui.Badge(daisyui.BadgeConfig{
+			Color:    "success",
+			Children: badgeDemoIconLabel("Success", icons.CheckCircle(icons.Props{Size: "16"})),
+		})
+	</div>
+}
+
+templ badgeDemoIconLabel(label string, icon templ.Component) {
+	<span class="inline-flex items-center gap-1">
+		@icon
+		{ label }
+	</span>
+}

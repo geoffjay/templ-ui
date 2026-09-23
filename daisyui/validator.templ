@@ -1,0 +1,60 @@
+package daisyui
+
+// ValidatorHintConfig configures a daisyUI validator-hint element. Text, when
+// set, is rendered as the hint text (plain text). Children, when set, is
+// rendered instead of Text (use for rich content with <br/> etc). Hidden,
+// when true, adds the "hidden" class so the hint takes no space until the
+// preceding validator-marked input becomes invalid. Class lets callers add
+// extra utility classes.
+type ValidatorHintConfig struct {
+	Text     string
+	Children templ.Component
+	Hidden   bool
+	Class    string
+}
+
+// ValidatorHint renders a <p class="validator-hint"> with the given content.
+// The "validator" class itself goes on the form element (input, select,
+// textarea, checkbox, toggle) — add it via that element's Class field. This
+// helper just renders the accompanying hint text.
+templ ValidatorHint(cfg ValidatorHintConfig) {
+	<p class={ joinClasses("validator-hint", validatorHintHiddenClass(cfg.Hidden), cfg.Class) }>
+		if cfg.Children != nil {
+			@cfg.Children
+		}
+		{ cfg.Text }
+	</p>
+}
+
+// ValidatorConfig wraps a form element (children) and renders an optional
+// validator-hint after it. Hint, when set, is rendered as a <p
+// class="validator-hint"> after the children. HintHidden, when true, adds the
+// "hidden" class to the hint. HintChildren, when set, is rendered instead of
+// Hint (use for rich content with <br/> etc).
+type ValidatorConfig struct {
+	Hint         string
+	HintChildren templ.Component
+	HintHidden   bool
+}
+
+// Validator renders the given form element (children) followed by an optional
+// validator-hint. The children must carry the "validator" class themselves
+// (e.g. via Input{Class: "validator"}).
+templ Validator(cfg ValidatorConfig, children templ.Component) {
+	@children
+	if cfg.Hint != "" || cfg.HintChildren != nil {
+		<p class={ joinClasses("validator-hint", validatorHintHiddenClass(cfg.HintHidden)) }>
+			if cfg.HintChildren != nil {
+				@cfg.HintChildren
+			}
+			{ cfg.Hint }
+		</p>
+	}
+}
+
+func validatorHintHiddenClass(hidden bool) string {
+	if hidden {
+		return "hidden"
+	}
+	return ""
+}

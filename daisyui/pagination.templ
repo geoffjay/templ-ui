@@ -1,0 +1,80 @@
+package daisyui
+
+import "strconv"
+
+// PaginationConfig configures a daisyUI Pagination (a daisyUI join of
+// buttons). Current is the 1-based active page number. Total is the total
+// number of pages. Size accepts "xs", "sm", "md", "lg", "xl" (produces
+// btn-xs etc; "md" is the default and is omitted). PrevLabel and NextLabel,
+// when set, render prev/next buttons at the start/end of the group (empty
+// skips the button). HrefFor, when set, returns the href for a given page
+// number; when nil the buttons are rendered as <button>s. Class lets callers
+// add extra utility classes (e.g. "grid grid-cols-2" for equal-width
+// outline prev/next). Resolver, when set, is used to build all hrefs.
+type PaginationConfig struct {
+	Current   int
+	Total     int
+	Size      string
+	PrevLabel string
+	NextLabel string
+	HrefFor   func(page int) string
+	Class     string
+	Resolver  URLResolver
+}
+
+// Pagination renders a daisyUI pagination group
+// (<div class="join"><button class="join-item btn">…</div>).
+templ Pagination(cfg PaginationConfig) {
+	<div class={ joinClasses("join", cfg.Class) }>
+		if cfg.PrevLabel != "" {
+			@paginationButton(cfg, paginationBtn{label: cfg.PrevLabel, page: cfg.Current - 1, disabled: cfg.Current <= 1, outline: false})
+		}
+		for p := 1; p <= cfg.Total; p++ {
+			@paginationButton(cfg, paginationBtn{label: strconv.Itoa(p), page: p, active: p == cfg.Current})
+		}
+		if cfg.NextLabel != "" {
+			@paginationButton(cfg, paginationBtn{label: cfg.NextLabel, page: cfg.Current + 1, disabled: cfg.Current >= cfg.Total, outline: false})
+		}
+	</div>
+}
+
+type paginationBtn struct {
+	label    string
+	page     int
+	active   bool
+	disabled bool
+	outline  bool
+}
+
+templ paginationButton(cfg PaginationConfig, b paginationBtn) {
+	if cfg.HrefFor != nil && !b.disabled {
+		<a
+			href={ resolveHref(cfg.Resolver, cfg.HrefFor(b.page)) }
+			class={ paginationClass(cfg, b) }
+		>
+			{ b.label }
+		</a>
+	} else {
+		<button class={ paginationClass(cfg, b) } disabled?={ b.disabled }>
+			{ b.label }
+		</button>
+	}
+}
+
+func paginationClass(cfg PaginationConfig, b paginationBtn) string {
+	var parts []string
+	parts = append(parts, "join-item", "btn")
+	if cfg.Size != "" && cfg.Size != "md" {
+		parts = append(parts, "btn-"+cfg.Size)
+	}
+	if b.outline {
+		parts = append(parts, "btn-outline")
+	}
+	if b.active {
+		parts = append(parts, "btn-active")
+	}
+	if b.disabled {
+		parts = append(parts, "btn-disabled")
+	}
+	return joinClasses(parts...)
+}

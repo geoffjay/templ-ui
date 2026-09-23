@@ -1,0 +1,29 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "link",
+		Name:        "Link",
+		Description: "Link adds the missing underline style to links.",
+		Category:    "daisyui",
+		Body:        linkBody,
+	})
+}
+
+templ linkBody() {
+	@gallery.Section("Link", `@daisyui.Link("", "Click me", "", "", "", nil)`, daisyui.Link("", "Click me", "", "", "", nil))
+	@gallery.Section("Primary color", `@daisyui.Link("", "Click me", "primary", "", "", nil)`, daisyui.Link("", "Click me", "primary", "", "", nil))
+	@gallery.Section("Secondary color", `@daisyui.Link("", "Click me", "secondary", "", "", nil)`, daisyui.Link("", "Click me", "secondary", "", "", nil))
+	@gallery.Section("Accent color", `@daisyui.Link("", "Click me", "accent", "", "", nil)`, daisyui.Link("", "Click me", "accent", "", "", nil))
+	@gallery.Section("Success color", `@daisyui.Link("", "Click me", "success", "", "", nil)`, daisyui.Link("", "Click me", "success", "", "", nil))
+	@gallery.Section("Info color", `@daisyui.Link("", "Click me", "info", "", "", nil)`, daisyui.Link("", "Click me", "info", "", "", nil))
+	@gallery.Section("Warning color", `@daisyui.Link("", "Click me", "warning", "", "", nil)`, daisyui.Link("", "Click me", "warning", "", "", nil))
+	@gallery.Section("Error color", `@daisyui.Link("", "Click me", "error", "", "", nil)`, daisyui.Link("", "Click me", "error", "", "", nil))
+	@gallery.Section("Show underline only on hover", `@daisyui.Link("", "Click me", "", "hover", "", nil)`, daisyui.Link("", "Click me", "", "hover", "", nil))
+}

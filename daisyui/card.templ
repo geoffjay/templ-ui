@@ -1,0 +1,114 @@
+package daisyui
+
+// CardConfig configures a daisyUI Card. ImageSrc, when set, renders a
+// <figure><img></figure> as the first child of the card (use ImageAlt for
+// accessibility and ImageClass to add extra utility classes to <figure>,
+// e.g. "px-10 pt-10"). ImageBottom, when true, renders the figure after the
+// body instead of before it. Title is rendered as <h2 class="card-title">;
+// Desc is rendered as a <p> below the title. Body, when set, replaces the
+// default title/desc/desc and is rendered inside <div class="card-body"> —
+// use this for fully custom bodies (pricing cards, lists, etc.). Actions,
+// when set, is rendered inside a <div class="card-actions"> after the body
+// content.
+//
+// Style accepts "border" or "dash" (produces card-border / card-dash).
+// Modifier accepts "side" or "image-full" (produces card-side / image-full;
+// for the responsive variant use Class, e.g. "lg:card-side"). Size accepts
+// "xs", "sm", "md", "lg", "xl" (produces card-xs, etc; "md" is the default
+// and is omitted). Class lets callers add extra utility classes (e.g.
+// "w-96 bg-base-100 shadow-sm").
+type CardConfig struct {
+	ImageSrc    string
+	ImageAlt    string
+	ImageClass  string
+	ImageBottom bool
+	Title       string
+	Desc        string
+	Body        templ.Component
+	Actions     templ.Component
+	Style       string
+	Modifier    string
+	Size        string
+	Glass       bool
+	Class       string
+}
+
+// Card renders a daisyUI card (<div class="card ...">).
+templ Card(cfg CardConfig) {
+	<div class={ cardClass(cfg) }>
+		if cfg.ImageSrc != "" && !cfg.ImageBottom {
+			@cardFigure(cfg)
+		}
+		<div class="card-body">
+			if cfg.Body != nil {
+				@cfg.Body
+			} else {
+				if cfg.Title != "" {
+					<h2 class="card-title">{ cfg.Title }</h2>
+				}
+				if cfg.Desc != "" {
+					<p>{ cfg.Desc }</p>
+				}
+			}
+			if cfg.Actions != nil {
+				<div class="justify-end card-actions">
+					@cfg.Actions
+				</div>
+			}
+		</div>
+		if cfg.ImageSrc != "" && cfg.ImageBottom {
+			@cardFigure(cfg)
+		}
+	</div>
+}
+
+templ cardFigure(cfg CardConfig) {
+	<figure
+		if cfg.ImageClass != "" {
+			class={ cfg.ImageClass }
+		}
+	>
+		<img src={ templ.SafeURL(cfg.ImageSrc) } alt={ cfg.ImageAlt }/>
+	</figure>
+}
+
+func cardClass(cfg CardConfig) string {
+	return joinClasses(
+		"card",
+		cardStyleClass(cfg.Style),
+		cardModifierClass(cfg.Modifier),
+		cardSizeClass(cfg.Size),
+		glassClass(cfg.Glass),
+		cfg.Class,
+	)
+}
+
+func cardStyleClass(s string) string {
+	switch s {
+	case "border", "dash":
+		return "card-" + s
+	default:
+		return ""
+	}
+}
+
+func cardModifierClass(m string) string {
+	switch m {
+	case "side":
+		return "card-side"
+	case "image-full":
+		return "image-full"
+	default:
+		// Allow the literal "lg:card-side" form too via Class.
+		return ""
+	}
+}
+
+func cardSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "card-" + s
+	default:
+		return ""
+	}
+}

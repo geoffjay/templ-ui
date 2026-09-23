@@ -1,0 +1,50 @@
+package daisyui
+
+// RangeConfig configures a daisyUI range slider. Min, Max, and Step set the
+// corresponding <input type="range"> attributes (Step "0" omits the attribute).
+// Value sets the initial value. Color accepts the documented range color
+// suffixes (neutral, primary, secondary, accent, info, success, warning,
+// error) producing e.g. "range-primary". Size accepts "xs", "sm", "md", "lg",
+// "xl" ("md" is the default and omitted). Class lets callers add extra utility
+// classes (e.g. "[--range-bg:orange]").
+type RangeConfig struct {
+	Name     string
+	Min      string
+	Max      string
+	Step     string
+	Value    string
+	Color    string
+	Size     string
+	Disabled bool
+	Class    string
+}
+
+// Range renders a daisyUI range slider (<input type="range" class="range">).
+templ Range(cfg RangeConfig) {
+	<input
+		type="range"
+		name={ cfg.Name }
+		min={ cfg.Min }
+		max={ cfg.Max }
+		value={ cfg.Value }
+		class={ joinClasses(
+			"range",
+			classFor("range", cfg.Color),
+			rangeSizeClass(cfg.Size),
+			cfg.Class,
+		) }
+		if cfg.Step != "" && cfg.Step != "0" {
+			step={ cfg.Step }
+		}
+		disabled?={ cfg.Disabled }
+	/>
+}
+
+func rangeSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "range-" + s
+	default:
+		return ""
+	}
+}

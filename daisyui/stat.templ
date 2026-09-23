@@ -1,0 +1,94 @@
+package daisyui
+
+// StatItem describes one block inside a Stats container. Title, Value and
+// Desc are rendered as <div class="stat-title">, stat-value, stat-desc. Figure
+// and Actions, when set, render the corresponding stat-figure / stat-actions
+// parts. FigureClass lets callers tint the figure wrapper (e.g.
+// "text-secondary"); leave empty for the default. ValueClass and DescClass
+// let callers tint the value/description (e.g. "text-primary"); ItemClass
+// lets callers adjust the stat block itself (e.g. "place-items-center").
+type StatItem struct {
+	Title       string
+	Value       string
+	Desc        string
+	Figure      templ.Component
+	FigureClass string
+	Actions     templ.Component
+	ValueClass  string
+	DescClass   string
+	ItemClass   string
+}
+
+// StatConfig configures a daisyUI Stats container. Direction accepts
+// "horizontal" or "vertical" (produces stats-horizontal / stats-vertical).
+// For a responsive direction use Class (e.g. "stats-vertical lg:stats-horizontal").
+// Items is the list of stat blocks. Class lets callers add extra utility
+// classes (e.g. "shadow" or "bg-base-100 border border-base-300").
+type StatConfig struct {
+	Direction string
+	Glass     bool
+	Items     []StatItem
+	Class     string
+}
+
+// Stat renders a daisyUI stats container (<div class="stats ...">) with one
+// or more stat blocks.
+templ Stat(cfg StatConfig) {
+	<div class={ statClass(cfg) }>
+		for _, item := range cfg.Items {
+			<div class={ joinClasses("stat", item.ItemClass) }>
+				if item.Figure != nil {
+					if item.FigureClass != "" {
+						<div class={ joinClasses("stat-figure", item.FigureClass) }>
+							@item.Figure
+						</div>
+					} else {
+						<div class="stat-figure">
+							@item.Figure
+						</div>
+					}
+				}
+				if item.Title != "" {
+					<div class="stat-title">{ item.Title }</div>
+				}
+				if item.Value != "" {
+					<div class={ joinClasses("stat-value", item.ValueClass) }>
+						{ item.Value }
+					</div>
+				}
+				if item.Desc != "" {
+					if item.DescClass != "" {
+						<div class={ joinClasses("stat-desc", item.DescClass) }>
+							{ item.Desc }
+						</div>
+					} else {
+						<div class="stat-desc">{ item.Desc }</div>
+					}
+				}
+				if item.Actions != nil {
+					<div class="stat-actions">
+						@item.Actions
+					</div>
+				}
+			</div>
+		}
+	</div>
+}
+
+func statClass(cfg StatConfig) string {
+	return joinClasses(
+		"stats",
+		statDirectionClass(cfg.Direction),
+		glassClass(cfg.Glass),
+		cfg.Class,
+	)
+}
+
+func statDirectionClass(d string) string {
+	switch d {
+	case "horizontal", "vertical":
+		return "stats-" + d
+	default:
+		return ""
+	}
+}

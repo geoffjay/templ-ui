@@ -1,0 +1,58 @@
+package daisyui
+
+// HoverGalleryImage describes a single image inside a daisyUI Hover Gallery.
+// Src is the image URL. Alt is the alt text. Class lets callers add extra
+// utility classes to the <img> (e.g. sizing, rounding). The first image is
+// visible by default; the rest reveal on horizontal hover.
+type HoverGalleryImage struct {
+	Src   string
+	Alt   string
+	Class string
+}
+
+// HoverGalleryConfig configures a daisyUI Hover Gallery. Images is the
+// ordered list of images (the docs note up to 10 images). Element accepts
+// "figure" (default, renders <figure class="hover-gallery …">) or "div"
+// (renders <div class="hover-gallery …">). Class lets callers add extra
+// utility classes to the gallery element (e.g. "max-w-60", "rounded-box").
+type HoverGalleryConfig struct {
+	Images  []HoverGalleryImage
+	Element string
+	Class   string
+}
+
+// HoverGallery renders a daisyUI hover-gallery element containing the given
+// images. The first image is visible by default; hovering horizontally
+// reveals subsequent images.
+templ HoverGallery(cfg HoverGalleryConfig) {
+	if cfg.Element == "div" {
+		<div class={ hoverGalleryClass(cfg) }>
+			@hoverGalleryImages(cfg)
+		</div>
+	} else {
+		<figure class={ hoverGalleryClass(cfg) }>
+			@hoverGalleryImages(cfg)
+		</figure>
+	}
+}
+
+templ hoverGalleryImages(cfg HoverGalleryConfig) {
+	for _, img := range cfg.Images {
+		if img.Class != "" {
+			<img
+				src={ templ.SafeURL(img.Src) }
+				alt={ img.Alt }
+				class={ img.Class }
+			/>
+		} else {
+			<img
+				src={ templ.SafeURL(img.Src) }
+				alt={ img.Alt }
+			/>
+		}
+	}
+}
+
+func hoverGalleryClass(cfg HoverGalleryConfig) string {
+	return joinClasses("hover-gallery", cfg.Class)
+}

@@ -1,0 +1,133 @@
+package daisyui
+
+// diff-view.templ defines a dedicated split-diff component for code review
+// UIs. Unlike the image Diff component, DiffView renders structured line
+// hunks side by side: removed lines on the left (tinted error), added lines
+// on the right (tinted success), with shared context on both sides and a line
+// number gutter.
+//
+// The component takes its own plain input structs (DiffViewLineKind, etc.) so
+// it has no dependency on site-specific model packages, keeping it reusable
+// across sites.
+
+// DiffViewLineKind classifies a line within a diff hunk.
+type DiffViewLineKind string
+
+const (
+	DiffViewAdded   DiffViewLineKind = "added"
+	DiffViewRemoved DiffViewLineKind = "removed"
+	DiffViewContext DiffViewLineKind = "context"
+)
+
+// DiffViewLine is one line of a hunk. OldLineNo is the pre-change line number
+// (0 for added lines); NewLineNo is the post-change line number (0 for removed
+// lines).
+type DiffViewLine struct {
+	Kind      DiffViewLineKind
+	OldLineNo int
+	NewLineNo int
+	Text      string
+}
+
+// DiffViewHunk is a contiguous run of lines. OldStart/NewStart are the starting
+// line numbers in the pre/post-change files.
+type DiffViewHunk struct {
+	OldStart int
+	NewStart int
+	Lines    []DiffViewLine
+}
+
+// DiffViewFile is one changed file.
+type DiffViewFile struct {
+	Path    string
+	OldPath string
+	Added   int
+	Removed int
+	Hunks   []DiffViewHunk
+}
+
+// DiffViewConfig configures a DiffView. Files is the ordered list of changed
+// files to render. Class lets callers add extra utility classes to the outer
+// container.
+type DiffViewConfig struct {
+	Files []DiffViewFile
+	Class string
+}
+
+// DiffView renders a side-by-side code diff. For each file it renders a header
+// (path + added/removed counts) followed by one split row per hunk: the left
+// column shows pre-change lines, the right column shows post-change lines.
+// Removed lines are tinted with error colors and a "-" prefix; added lines
+// with success colors and a "+" prefix; context lines appear on both sides.
+templ DiffView(cfg DiffViewConfig) {
+	<div class={ joinClasses("diff-view flex flex-col gap-4", cfg.Class) }>
+		for _, file := range cfg.Files {
+			@diffViewFile(file)
+		}
+	</div>
+}
+
+templ diffViewFile(file DiffViewFile) {
+	<section class="rounded-box border border-base-300 bg-base-100 overflow-hidden">
+		<header class="flex items-center justify-between gap-2 px-3 py-2 bg-base-200 border-b border-base-300">
+			<span class="font-mono text-sm text-base-content/80 truncate">{ file.Path }</span>
+			<span class="flex items-center gap-1 shrink-0">
+				<span class="badge badge-success badge-sm">+{ file.Added }</span>
+				<span class="badge badge-error badge-sm">-{ file.Removed }</span>
+			</span>
+		</header>
+		for _, hunk := range file.Hunks {
+			@diffViewHunk(hunk)
+		}
+	</section>
+}
+
+templ diffViewHunk(hunk DiffViewHunk) {
+	<div class="grid grid-cols-2 divide-x divide-base-300 font-mono text-sm overflow-x-auto">
+		@diffViewColumn(hunk, true)
+		@diffViewColumn(hunk, false)
+	</div>
+}
+
+// diffViewColumn renders one side of the split. isOld selects the pre-change
+// (left) column vs the post-change (right) column. A line is included on a
+// side when it is context (both sides), removed (left only), or added (right
+// only). The opposite side renders a blank gutter row to keep the two columns
+// row-aligned.
+templ diffViewColumn(hunk DiffViewHunk, isOld bool) {
+	<div class="flex flex-col">
+		for _, line := range hunk.Lines {
+			@diffViewLine(line, isOld)
+		}
+	</div>
+}
+
+templ diffViewLine(line DiffViewLine, isOld bool) {
+	if line.Kind == DiffViewContext {
+		@diffViewRow(line.OldLineNo, line.Text, "text-base-content/70", "", isOld)
+	} else if line.Kind == DiffViewRemoved && isOld {
+		@diffViewRow(line.OldLineNo, line.Text, "bg-error/20 text-error-content", "-", isOld)
+	} else if line.Kind == DiffViewAdded && !isOld {
+		@diffViewRow(line.NewLineNo, line.Text, "bg-success/20 text-success-content", "+", isOld)
+	} else if line.Kind == DiffViewRemoved && !isOld {
+		@diffViewRow(0, "", "", "", isOld)
+	} else if line.Kind == DiffViewAdded && isOld {
+		@diffViewRow(0, "", "", "", isOld)
+	}
+}
+
+// diffViewRow renders a single gutter + content row. no is the line number
+// (0 renders an empty gutter cell); sign is "+", "-", or "".
+templ diffViewRow(no int, text, class, sign string, _ bool) {
+	<div class={ joinClasses("flex items-stretch min-h-6", class) }>
+		<span class="select-none text-right px-2 w-12 shrink-0 text-base-content/40 bg-base-200/50 border-r border-base-300">
+			if no > 0 {
+				{ no }
+			}
+		</span>
+		if sign != "" {
+			<span class="select-none px-1 shrink-0 opacity-70">{ sign }</span>
+		}
+		<span class="px-2 whitespace-pre overflow-x-auto">{ text }</span>
+	</div>
+}

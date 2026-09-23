@@ -1,0 +1,73 @@
+package daisyui
+
+// CollapseMode selects the interaction mechanism for a Collapse:
+// - "focus"    : opens on focus (tabindex), closes on blur
+// - "checkbox" : opens/closes via a hidden checkbox
+// - "details"  : uses native <details>/<summary>
+type CollapseMode string
+
+// CollapseConfig controls a standalone Collapse. Mode defaults to "focus" when
+// empty. Icon accepts "arrow" or "plus" (renders collapse-arrow / collapse-
+// plus); "" omits the icon. Open force-expands ("collapse-open"), Close
+// force-collapses ("collapse-close"); both are ignored in "details" mode
+// (use the <details open> attribute instead via Open). Class lets callers add
+// extra utility classes (background/border/etc).
+type CollapseConfig struct {
+	Mode  CollapseMode
+	Icon  string
+	Open  bool
+	Close bool
+	Glass bool
+	Class string
+}
+
+// Collapse renders a single collapsible region with the given title and
+// content. Title is rendered inside collapse-title; Body inside collapse-
+// content. The interactive element differs by Mode (see CollapseMode docs).
+templ Collapse(cfg CollapseConfig, title, body string) {
+	if cfg.Mode == "details" {
+		<details
+			open?={ cfg.Open }
+			class={ joinClasses("collapse", collapseIconClass(cfg.Icon), glassClass(cfg.Glass), cfg.Class) }
+		>
+			<summary class="collapse-title font-semibold">{ title }</summary>
+			<div class="collapse-content text-sm">{ body }</div>
+		</details>
+	} else if cfg.Mode == "checkbox" {
+		<div class={ joinClasses("collapse", collapseIconClass(cfg.Icon), collapseForceClass(cfg), glassClass(cfg.Glass), cfg.Class) }>
+			<input type="checkbox" autocomplete="off"/>
+			<div class="collapse-title font-semibold">{ title }</div>
+			<div class="collapse-content text-sm">{ body }</div>
+		</div>
+	} else {
+		<div
+			tabindex="0"
+			class={ joinClasses("collapse", collapseIconClass(cfg.Icon), collapseForceClass(cfg), glassClass(cfg.Glass), cfg.Class) }
+		>
+			<div class="collapse-title font-semibold">{ title }</div>
+			<div class="collapse-content text-sm">{ body }</div>
+		</div>
+	}
+}
+
+func collapseIconClass(icon string) string {
+	switch icon {
+	case "arrow":
+		return "collapse-arrow"
+	case "plus":
+		return "collapse-plus"
+	default:
+		return ""
+	}
+}
+
+func collapseForceClass(cfg CollapseConfig) string {
+	switch {
+	case cfg.Close:
+		return "collapse-close"
+	case cfg.Open:
+		return "collapse-open"
+	default:
+		return ""
+	}
+}

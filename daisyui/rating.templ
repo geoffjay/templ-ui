@@ -1,0 +1,76 @@
+package daisyui
+
+// RatingItem describes a single radio in a Rating. Mask accepts the documented
+// mask shape suffixes (star, star-2, heart, etc) producing e.g. "mask-star-2".
+// Modifier accepts "half-1" or "half-2" for half-star ratings. ColorClass is
+// the background color utility class (e.g. "bg-orange-400", "bg-green-500") —
+// it's appended verbatim. AriaLabel, when set, is rendered as aria-label.
+// Checked marks the radio checked. Hidden, when true, renders a rating-hidden
+// radio (used as the first item so users can clear the rating). Class lets
+// callers add any other per-item classes.
+type RatingItem struct {
+	Mask       string
+	Modifier   string
+	ColorClass string
+	AriaLabel  string
+	Checked    bool
+	Hidden     bool
+	Class      string
+}
+
+// RatingConfig configures a daisyUI rating. Name is the shared radio name for
+// the group. Items is the list of rating items (radios). Size accepts "xs",
+// "sm", "md", "lg", "xl" ("md" is the default and omitted). Half adds the
+// rating-half class for half-star ratings. Class lets callers add extra
+// utility classes.
+type RatingConfig struct {
+	Name  string
+	Items []RatingItem
+	Size  string
+	Half  bool
+	Class string
+}
+
+// Rating renders a daisyUI rating — a div.rating containing one radio per
+// item, each masked with the item's Mask shape.
+templ Rating(cfg RatingConfig) {
+	<div
+		class={ joinClasses(
+			"rating",
+			classFor("rating", cfg.Size),
+			ratingHalfClass(cfg.Half),
+			cfg.Class,
+		) }
+	>
+		for _, item := range cfg.Items {
+			<input
+				type="radio"
+				name={ cfg.Name }
+				aria-label={ item.AriaLabel }
+				checked?={ item.Checked }
+				class={ joinClasses(
+					ratingHiddenClass(item.Hidden),
+					"mask",
+					classFor("mask", item.Mask),
+					classFor("mask", item.Modifier),
+					item.ColorClass,
+					item.Class,
+				) }
+			/>
+		}
+	</div>
+}
+
+func ratingHalfClass(half bool) string {
+	if half {
+		return "rating-half"
+	}
+	return ""
+}
+
+func ratingHiddenClass(hidden bool) string {
+	if hidden {
+		return "rating-hidden"
+	}
+	return ""
+}

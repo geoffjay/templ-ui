@@ -1,0 +1,20 @@
+package daisyui
+
+// Kbd renders a single keyboard key/shortcut chip. Size accepts documented
+// kbd size suffixes: xs, sm, md, lg, xl (or "" for none), producing e.g.
+// "kbd-lg". Class lets callers add extra utility classes.
+//
+// KbdCombo renders a sequence of keys joined by "+" separators (each key gets
+// its own <kbd> element, separated by literal "+" text).
+templ Kbd(key, size, class string) {
+	<kbd class={ joinClasses("kbd", classFor("kbd", size), class) }>{ key }</kbd>
+}
+
+templ KbdCombo(keys []string, size, class string) {
+	for i, key := range keys {
+		if i > 0 {
+			{ " + " }
+		}
+		@Kbd(key, size, class)
+	}
+}

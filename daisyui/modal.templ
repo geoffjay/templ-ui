@@ -1,0 +1,237 @@
+package daisyui
+
+import "strings"
+
+// ModalConfig configures a daisyUI Modal. The dialog method (recommended)
+// uses the native HTML <dialog> element; the checkbox method (legacy) uses a
+// hidden <input type="checkbox"> + <label>; the anchor method (legacy) uses
+// an <a href="#id"> + a <div role="dialog">.
+//
+// ID is used as the <dialog> id (dialog method) or the checkbox/div id
+// (checkbox/anchor methods). It must be unique per modal on a page. Title is
+// rendered as an <h3 class="text-lg font-bold">. Body, when set, replaces the
+// default Title + Message body and is rendered inside modal-box — use this
+// for fully custom bodies. Message is rendered as a <p> below the title.
+//
+// BoxClass lets callers add extra utility classes to the modal-box (e.g.
+// "w-11/12 max-w-5xl"). Actions, when set, is rendered inside a
+// <div class="modal-action">. CloseButton, when true, renders a corner close
+// button (✕) inside the modal-box (dialog method only; for checkbox method
+// use Actions with a <label for="ID" class="btn">). Backdrop, when true,
+// adds a backdrop that closes the modal when clicked outside. Open, when
+// true, adds the "modal-open" class (dialog method: renders the <dialog open>;
+// checkbox method: renders the checkbox checked; useful for static demos).
+//
+// Placement accepts any combination of the documented placement classes
+// ("top", "middle", "bottom", "start", "end"); each is prefixed with
+// "modal-". The responsive variant (e.g. "modal-bottom sm:modal-middle") is
+// best set via Class. Class lets callers add extra utility classes on the
+// outer modal element. TriggerLabel, when set, renders a trigger button that
+// opens the modal (dialog method: <button onclick="ID.showModal()">;
+// checkbox method: <label for="ID" class="btn">; anchor method:
+// <a href="#ID" class="btn" rel="external">). TriggerClass lets callers
+// customize the trigger element classes (defaults to "btn").
+type ModalConfig struct {
+	ID           string
+	Method       string
+	Title        string
+	Message      string
+	Body         templ.Component
+	Actions      templ.Component
+	CloseButton  bool
+	Backdrop     bool
+	Open         bool
+	Placement    string
+	BoxClass     string
+	Glass        bool
+	Class        string
+	TriggerLabel string
+	TriggerClass string
+}
+
+// Modal renders a daisyUI modal. The trigger (when TriggerLabel is set) is
+// rendered first, followed by the modal element. Method defaults to "dialog".
+templ Modal(cfg ModalConfig) {
+	if cfg.TriggerLabel != "" {
+		@modalTrigger(cfg)
+	}
+	@modalDialog(cfg)
+}
+
+templ modalTrigger(cfg ModalConfig) {
+	switch modalMethod(cfg.Method) {
+		case "checkbox":
+			<label for={ cfg.ID } class={ modalTriggerClass(cfg) }>{ cfg.TriggerLabel }</label>
+		case "anchor":
+			<a href={ "#" + cfg.ID } class={ modalTriggerClass(cfg) } rel="external">{ cfg.TriggerLabel }</a>
+		default:
+			<button class={ modalTriggerClass(cfg) } onclick={ showModal(cfg.ID) }>{ cfg.TriggerLabel }</button>
+	}
+}
+
+script showModal(id string) {
+	document.getElementById(id).showModal();
+}
+
+templ modalDialog(cfg ModalConfig) {
+	switch modalMethod(cfg.Method) {
+		case "checkbox":
+			@modalCheckbox(cfg)
+		case "anchor":
+			@modalAnchor(cfg)
+		default:
+			@modalHTMLDialog(cfg)
+	}
+}
+
+templ modalHTMLDialog(cfg ModalConfig) {
+	<dialog id={ cfg.ID } class={ modalClass(cfg) } open?={ cfg.Open }>
+		<div class={ modalBoxClass(cfg) }>
+			if cfg.Body != nil {
+				@cfg.Body
+			} else {
+				if cfg.CloseButton {
+					<form method="dialog">
+						<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+					</form>
+				}
+				if cfg.Title != "" {
+					<h3 class="text-lg font-bold">{ cfg.Title }</h3>
+				}
+				if cfg.Message != "" {
+					<p class="py-4">{ cfg.Message }</p>
+				}
+			}
+			if cfg.Actions != nil {
+				<div class="modal-action">
+					@cfg.Actions
+				</div>
+			}
+		</div>
+		if cfg.Backdrop {
+			<form method="dialog" class="modal-backdrop">
+				<button>close</button>
+			</form>
+		}
+	</dialog>
+}
+
+templ modalCheckbox(cfg ModalConfig) {
+	<input type="checkbox" id={ cfg.ID } class="modal-toggle" checked?={ cfg.Open }/>
+	<div class={ modalClass(cfg) } role="dialog">
+		<div class={ modalBoxClass(cfg) }>
+			if cfg.Body != nil {
+				@cfg.Body
+			} else {
+				if cfg.Title != "" {
+					<h3 class="text-lg font-bold">{ cfg.Title }</h3>
+				}
+				if cfg.Message != "" {
+					<p class="py-4">{ cfg.Message }</p>
+				}
+			}
+			if cfg.Actions != nil {
+				<div class="modal-action">
+					@cfg.Actions
+				</div>
+			}
+		</div>
+		if cfg.Backdrop {
+			<label class="modal-backdrop" for={ cfg.ID }>Close</label>
+		}
+	</div>
+}
+
+templ modalAnchor(cfg ModalConfig) {
+	<div class={ modalClass(cfg) } role="dialog" id={ cfg.ID }>
+		<div class={ modalBoxClass(cfg) }>
+			if cfg.Body != nil {
+				@cfg.Body
+			} else {
+				if cfg.Title != "" {
+					<h3 class="text-lg font-bold">{ cfg.Title }</h3>
+				}
+				if cfg.Message != "" {
+					<p class="py-4">{ cfg.Message }</p>
+				}
+			}
+			if cfg.Actions != nil {
+				<div class="modal-action">
+					@cfg.Actions
+				</div>
+			}
+		</div>
+	</div>
+}
+
+func modalMethod(m string) string {
+	switch m {
+	case "checkbox", "anchor":
+		return m
+	default:
+		return "dialog"
+	}
+}
+
+func modalClass(cfg ModalConfig) string {
+	return joinClasses(
+		"modal",
+		modalPlacementClass(cfg.Placement),
+		modalOpenClass(cfg.Open, cfg.Method),
+		cfg.Class,
+	)
+}
+
+// modalPlacementClass splits the placement string into individual segments
+// and prefixes each with "modal-". E.g. "bottom sm:modal-middle" is returned
+// as-is for the responsive prefix; bare tokens like "top" become "modal-top".
+func modalPlacementClass(p string) string {
+	p = strings.TrimSpace(p)
+	if p == "" {
+		return ""
+	}
+	var parts []string
+	start := 0
+	for i := 0; i <= len(p); i++ {
+		if i == len(p) || p[i] == ' ' {
+			seg := p[start:i]
+			if seg == "" {
+				start = i + 1
+				continue
+			}
+			parts = append(parts, modalPlacementSegment(seg))
+			start = i + 1
+		}
+	}
+	return joinClasses(parts...)
+}
+
+// modalPlacementSegment prefixes a single placement token with "modal-"
+// unless it already contains a colon (responsive variant like
+// "sm:modal-middle"), in which case it is returned as-is.
+func modalPlacementSegment(seg string) string {
+	for i := 0; i < len(seg); i++ {
+		if seg[i] == ':' {
+			return seg
+		}
+	}
+	return "modal-" + seg
+}
+
+func modalOpenClass(open bool, method string) string {
+	if open && method != "dialog" {
+		return "modal-open"
+	}
+	return ""
+}
+
+func modalBoxClass(cfg ModalConfig) string {
+	return joinClasses("modal-box", glassClass(cfg.Glass), cfg.BoxClass)
+}
+
+func modalTriggerClass(cfg ModalConfig) string {
+	if cfg.TriggerClass != "" {
+		return cfg.TriggerClass
+	}
+	return "btn"
+}

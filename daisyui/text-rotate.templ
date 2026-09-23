@@ -1,0 +1,60 @@
+package daisyui
+
+import "strconv"
+
+// TextRotateLine describes a single rotated line of text. Text is the line
+// content. Class lets callers tint/space the inner <span> (e.g.
+// "bg-teal-400 text-teal-800 px-2", "font-bold italic px-2"). WordClass, when
+// set, applies extra utility classes to the wrapping line <span> as well.
+type TextRotateLine struct {
+	Text  string
+	Class string
+}
+
+// TextRotateConfig configures a daisyUI Text Rotate. Lines is the ordered
+// list of up to 6 lines that rotate one at a time in an infinite loop.
+// Duration sets the rotation cycle in milliseconds (daisyUI uses the
+// "duration-<ms>" utility; pass e.g. 6000 for 6 seconds; default 10000).
+// InnerClass lets callers add extra utility classes to the inner <span>
+// wrapping the lines (e.g. "justify-items-center"). Class lets callers add
+// extra utility classes to the outer <span class="text-rotate …"> (e.g.
+// "text-7xl font-title", "leading-[2]", "max-md:text-3xl").
+type TextRotateConfig struct {
+	Lines      []TextRotateLine
+	Duration   int
+	InnerClass string
+	Class      string
+}
+
+// TextRotate renders a daisyUI text-rotate element cycling through the given
+// lines. The animation pauses on hover.
+templ TextRotate(cfg TextRotateConfig) {
+	<span class={ textRotateClass(cfg) }>
+		<span class={ cfg.InnerClass }>
+			for _, line := range cfg.Lines {
+				<span class={ line.Class }>{ line.Text }</span>
+			}
+		</span>
+	</span>
+}
+
+func textRotateClass(cfg TextRotateConfig) string {
+	classes := []string{"text-rotate"}
+	if d := textRotateDurationClass(cfg.Duration); d != "" {
+		classes = append(classes, d)
+	}
+	if cfg.Class != "" {
+		classes = append(classes, cfg.Class)
+	}
+	return joinClasses(classes...)
+}
+
+// textRotateDurationClass maps a duration in milliseconds to daisyUI's
+// "duration-<ms>" utility (e.g. 6000 -> "duration-6000"). Zero leaves the
+// default (10s) implicit.
+func textRotateDurationClass(ms int) string {
+	if ms <= 0 {
+		return ""
+	}
+	return "duration-" + strconv.Itoa(ms)
+}

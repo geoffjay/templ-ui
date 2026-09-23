@@ -1,0 +1,19 @@
+package daisyui
+
+// Loading renders a spinner/animation indicating that something is loading.
+// Shape accepts the documented loading styles (spinner, dots, ring, ball,
+// bars, infinity) producing e.g. "loading-spinner". Size accepts documented
+// sizes (xs, sm, md, lg, xl) producing e.g. "loading-lg". Color is passed
+// through unchanged as a Tailwind utility (e.g. "text-primary"); it is not
+// prefixed with "loading-". Class lets callers add extra utility classes.
+templ Loading(shape, size, color, class string) {
+	<span
+		class={ joinClasses(
+			"loading",
+			classFor("loading", shape),
+			classFor("loading", size),
+			color,
+			class,
+		) }
+	></span>
+}

@@ -1,0 +1,55 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ statusBody() {
+	@gallery.Section("Status", `@daisyui.Status("", "", "", "", "")`, daisyui.Status("", "", "", "", ""))
+	@gallery.Section("Status sizes", `@daisyui.Status("", "xs", "", "status", "")
+@daisyui.Status("", "sm", "", "status", "")
+@daisyui.Status("", "md", "", "status", "")
+@daisyui.Status("", "lg", "", "status", "")
+@daisyui.Status("", "xl", "", "status", "")`, statusSizeRow())
+	@gallery.Section("Status with colors", `@daisyui.Status("primary", "", "", "status", "")
+@daisyui.Status("secondary", "", "", "status", "")
+@daisyui.Status("accent", "", "", "status", "")
+@daisyui.Status("neutral", "", "", "status", "")
+@daisyui.Status("info", "", "", "info", "")
+@daisyui.Status("success", "", "", "success", "")
+@daisyui.Status("warning", "", "", "warning", "")
+@daisyui.Status("error", "", "", "error", "")`, statusColorRow())
+	@gallery.Section("Status with ping animation", `@daisyui.Status("error", "", "animate-ping", "status", "")`, daisyui.Status("error", "", "animate-ping", "status", ""))
+	@gallery.Section("Status with bounce animation", `@daisyui.Status("info", "", "animate-bounce", "status", "")`, daisyui.Status("info", "", "animate-bounce", "status", ""))
+}
+
+templ statusSizeRow() {
+	@daisyui.Status("", "xs", "", "status", "")
+	@daisyui.Status("", "sm", "", "status", "")
+	@daisyui.Status("", "md", "", "status", "")
+	@daisyui.Status("", "lg", "", "status", "")
+	@daisyui.Status("", "xl", "", "status", "")
+}
+
+templ statusColorRow() {
+	@daisyui.Status("primary", "", "", "status", "")
+	@daisyui.Status("secondary", "", "", "status", "")
+	@daisyui.Status("accent", "", "", "status", "")
+	@daisyui.Status("neutral", "", "", "status", "")
+	@daisyui.Status("info", "", "", "info", "")
+	@daisyui.Status("success", "", "", "success", "")
+	@daisyui.Status("warning", "", "", "warning", "")
+	@daisyui.Status("error", "", "", "error", "")
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "status",
+		Name:        "Status",
+		Description: "Status is a really small icon to visually show the current status of an element, like online, offline, error, etc.",
+		Category:    "daisyui",
+		Body:        statusBody,
+	})
+}

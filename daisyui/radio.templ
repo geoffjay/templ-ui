@@ -1,0 +1,90 @@
+package daisyui
+
+// RadioOption describes a single radio in a Radio group. Value is the radio's
+// form value. Label, when set, is rendered as an aria-label attribute for
+// accessibility. Class lets callers add per-radio utility classes (e.g. mask
+// classes for rating-style radios: "mask mask-star-2 bg-orange-400"). Checked
+// marks the radio checked.
+type RadioOption struct {
+	Value   string
+	Label   string
+	Class   string
+	Checked bool
+}
+
+// RadioConfig configures a group of daisyUI radios sharing a Name. Color
+// accepts the documented radio color suffixes (neutral, primary, secondary,
+// accent, info, success, warning, error) producing e.g. "radio-primary". Size
+// accepts "xs", "sm", "md", "lg", "xl" ("md" is the default and omitted).
+// Class lets callers add extra utility classes applied to every radio (in
+// addition to any per-option Class).
+//
+// For a single radio input, use RadioSingle instead.
+type RadioConfig struct {
+	Name    string
+	Options []RadioOption
+	Color   string
+	Size    string
+	Class   string
+}
+
+// Radio renders a group of daisyUI radio inputs (one <input type="radio"> per
+// option), all sharing the same Name.
+templ Radio(cfg RadioConfig) {
+	for _, opt := range cfg.Options {
+		<input
+			type="radio"
+			name={ cfg.Name }
+			value={ opt.Value }
+			checked?={ opt.Checked }
+			aria-label={ opt.Label }
+			class={ joinClasses(
+				"radio",
+				classFor("radio", cfg.Color),
+				radioSizeClass(cfg.Size),
+				cfg.Class,
+				opt.Class,
+			) }
+		/>
+	}
+}
+
+// RadioSingleConfig configures a single daisyUI radio input.
+type RadioSingleConfig struct {
+	Name     string
+	Value    string
+	Label    string
+	Color    string
+	Size     string
+	Checked  bool
+	Disabled bool
+	Class    string
+}
+
+// RadioSingle renders a single daisyUI radio input. Use this for standalone
+// radios; use Radio for a group sharing a name.
+templ RadioSingle(cfg RadioSingleConfig) {
+	<input
+		type="radio"
+		name={ cfg.Name }
+		value={ cfg.Value }
+		checked?={ cfg.Checked }
+		aria-label={ cfg.Label }
+		class={ joinClasses(
+			"radio",
+			classFor("radio", cfg.Color),
+			radioSizeClass(cfg.Size),
+			cfg.Class,
+		) }
+		disabled?={ cfg.Disabled }
+	/>
+}
+
+func radioSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "radio-" + s
+	default:
+		return ""
+	}
+}

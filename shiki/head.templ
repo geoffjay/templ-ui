@@ -1,0 +1,41 @@
+package shiki
+
+// CodeConfig is defined in code.templ; this file holds the Head component.
+
+// HeadConfig configures the assets emitted by Head. Stylesheet is the URL of
+// the application's compiled Tailwind + daisyUI stylesheet (see
+// assets/styles.css in templ-ui for the required Tailwind v4 build inputs:
+// `@import "tailwindcss"`, the daisyUI plugin with the themes your app uses,
+// and the library-owned `.glass` / `.component-preview` rules when using
+// Glass components). Shiki enables the code-highlighter script: when true
+// the shiki bundle referenced by ScriptSrc is loaded once in the head
+// instead of per code block.
+type HeadConfig struct {
+	Stylesheet string
+	Shiki      bool
+}
+
+// Head renders the common document-head assets for applications using
+// templ-ui components: the compiled stylesheet link and (optionally) the
+// shiki highlighter module script. Embed it inside a templ <head> element:
+//
+//	templ layout(title string) {
+//		<!DOCTYPE html>
+//		<html>
+//			<head>
+//				@shiki.Head(shiki.HeadConfig{Stylesheet: "/static/styles.css", Shiki: true})
+//				<title>{ title }</title>
+//			</head>
+//			...
+//
+// Loading the module script in the head (rather than only per Code instance)
+// lets the highlighter start fetching while the body parses; the browser
+// still deduplicates the src when Code components emit their own script tag.
+templ Head(cfg HeadConfig) {
+	if cfg.Stylesheet != "" {
+		<link rel="stylesheet" href={ templ.URL(cfg.Stylesheet) }/>
+	}
+	if cfg.Shiki {
+		<script type="module" src={ ScriptSrc }></script>
+	}
+}

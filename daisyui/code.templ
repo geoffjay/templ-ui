@@ -1,0 +1,44 @@
+package daisyui
+
+// CodeLine describes one <pre> line inside a Code mockup. Prefix, when set,
+// is rendered as the data-prefix attribute (e.g. "$", ">", "1"); leave empty
+// for lines without a prefix. Text is the line content. Class lets callers
+// tint the line (e.g. "text-success", "bg-warning text-warning-content").
+type CodeLine struct {
+	Prefix string
+	Text   string
+	Class  string
+}
+
+// CodeConfig configures a daisyUI Code mockup. Lines is the ordered list of
+// <pre><code> lines. Class lets callers add extra utility classes to the
+// outer <div class="mockup-code"> (e.g. "w-full", "bg-primary text-primary-content").
+type CodeConfig struct {
+	Lines []CodeLine
+	Class string
+}
+
+// Code renders a daisyUI code mockup (<div class="mockup-code ...">).
+templ Code(cfg CodeConfig) {
+	<div class={ codeClass(cfg) }>
+		for _, line := range cfg.Lines {
+			<pre
+				if line.Prefix != "" {
+					data-prefix={ line.Prefix }
+				}
+				if line.Class != "" {
+					class={ line.Class }
+				}
+			>
+				<code>{ line.Text }</code>
+			</pre>
+		}
+	</div>
+}
+
+func codeClass(cfg CodeConfig) string {
+	return joinClasses(
+		"mockup-code",
+		cfg.Class,
+	)
+}

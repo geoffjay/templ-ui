@@ -1,0 +1,94 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ codeBody() {
+	@gallery.Section("mockup code with line prefix", `@daisyui.Code(daisyui.CodeConfig{
+	Class: "w-full",
+	Lines: []daisyui.CodeLine{
+		{Prefix: "$", Text: "npm i daisyui"},
+	},
+})`, daisyui.Code(daisyui.CodeConfig{
+		Class: "w-full",
+		Lines: []daisyui.CodeLine{
+			{Prefix: "$", Text: "npm i daisyui"},
+		},
+	}))
+	@gallery.Section("Multi line", `@daisyui.Code(daisyui.CodeConfig{
+	Class: "w-full",
+	Lines: []daisyui.CodeLine{
+		{Prefix: "$", Text: "npm i daisyui"},
+		{Prefix: ">", Text: "installing...", Class: "text-warning"},
+		{Prefix: ">", Text: "Done!", Class: "text-success"},
+	},
+})`, daisyui.Code(daisyui.CodeConfig{
+		Class: "w-full",
+		Lines: []daisyui.CodeLine{
+			{Prefix: "$", Text: "npm i daisyui"},
+			{Prefix: ">", Text: "installing...", Class: "text-warning"},
+			{Prefix: ">", Text: "Done!", Class: "text-success"},
+		},
+	}))
+	@gallery.Section("Highlighted line", `@daisyui.Code(daisyui.CodeConfig{
+	Class: "w-full",
+	Lines: []daisyui.CodeLine{
+		{Prefix: "1", Text: "npm i daisyui"},
+		{Prefix: "2", Text: "installing..."},
+		{Prefix: "3", Text: "Error!", Class: "bg-warning text-warning-content"},
+	},
+})`, daisyui.Code(daisyui.CodeConfig{
+		Class: "w-full",
+		Lines: []daisyui.CodeLine{
+			{Prefix: "1", Text: "npm i daisyui"},
+			{Prefix: "2", Text: "installing..."},
+			{Prefix: "3", Text: "Error!", Class: "bg-warning text-warning-content"},
+		},
+	}))
+	@gallery.Section("Long line will scroll", `@daisyui.Code(daisyui.CodeConfig{
+	Class: "w-full",
+	Lines: []daisyui.CodeLine{
+		{Prefix: "~", Text: "Magnam dolore beatae necessitatibus nemopsum itaque sit. Et porro quae qui et et dolore ratione."},
+	},
+})`, daisyui.Code(daisyui.CodeConfig{
+		Class: "w-full",
+		Lines: []daisyui.CodeLine{
+			{Prefix: "~", Text: "Magnam dolore beatae necessitatibus nemopsum itaque sit. Et porro quae qui et et dolore ratione."},
+		},
+	}))
+	@gallery.Section("Without prefix", `@daisyui.Code(daisyui.CodeConfig{
+	Class: "w-full",
+	Lines: []daisyui.CodeLine{
+		{Text: "without prefix"},
+	},
+})`, daisyui.Code(daisyui.CodeConfig{
+		Class: "w-full",
+		Lines: []daisyui.CodeLine{
+			{Text: "without prefix"},
+		},
+	}))
+	@gallery.Section("With color", `@daisyui.Code(daisyui.CodeConfig{
+	Class: "bg-primary text-primary-content w-full",
+	Lines: []daisyui.CodeLine{
+		{Text: "can be any color!"},
+	},
+})`, daisyui.Code(daisyui.CodeConfig{
+		Class: "bg-primary text-primary-content w-full",
+		Lines: []daisyui.CodeLine{
+			{Text: "can be any color!"},
+		},
+	}))
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "code",
+		Name:        "Code mockup",
+		Description: "Code mockup is used to show a block of code in a box that looks like a code editor.",
+		Category:    "daisyui",
+		Body:        codeBody,
+	})
+}

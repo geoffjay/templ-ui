@@ -1,0 +1,106 @@
+package daisyui
+
+// TabItem describes a single tab. Label is the visible text. Href, when
+// set, renders the tab as an anchor (<a role="tab">); when empty it renders a
+// <button role="tab">. Active, when true, adds tab-active. Disabled, when
+// true, adds tab-disabled (and removes the href). Icon, when set, is
+// rendered before the label.
+type TabItem struct {
+	Label    string
+	Href     string
+	Active   bool
+	Disabled bool
+	Icon     templ.Component
+}
+
+// TabsConfig configures a daisyUI Tabs group. Style accepts "box", "border",
+// or "lift" (produces tabs-box, tabs-border, tabs-lift). Placement accepts
+// "top" (default, omitted) or "bottom" (produces tabs-bottom). Size accepts
+// "xs", "sm", "md", "lg", "xl" (produces tabs-xs, etc; "md" is the default
+// and is omitted). Class lets callers add extra utility classes. Resolver,
+// when set, is used to build all hrefs.
+type TabsConfig struct {
+	Items     []TabItem
+	Style     string
+	Placement string
+	Size      string
+	Class     string
+	Resolver  URLResolver
+}
+
+// Tabs renders a daisyUI tabs group (<div role="tablist" class="tabs …">).
+templ Tabs(cfg TabsConfig) {
+	<div role="tablist" class={ tabsClass(cfg) }>
+		for _, item := range cfg.Items {
+			@tabItem(item, cfg)
+		}
+	</div>
+}
+
+templ tabItem(item TabItem, cfg TabsConfig) {
+	if item.Href != "" && !item.Disabled {
+		<a role="tab" class={ tabClass(item) } href={ resolveHref(cfg.Resolver, item.Href) }>
+			if item.Icon != nil {
+				@item.Icon
+			}
+			{ item.Label }
+		</a>
+	} else {
+		<button role="tab" class={ tabClass(item) } disabled?={ item.Disabled }>
+			if item.Icon != nil {
+				@item.Icon
+			}
+			{ item.Label }
+		</button>
+	}
+}
+
+func tabsClass(cfg TabsConfig) string {
+	return joinClasses(
+		"tabs",
+		tabsStyleClass(cfg.Style),
+		classFor("tabs", cfg.Placement),
+		tabsSizeClass(cfg.Size),
+		cfg.Class,
+	)
+}
+
+func tabClass(item TabItem) string {
+	return joinClasses(
+		"tab",
+		tabsActiveClass(item.Active),
+		tabsDisabledClass(item.Disabled),
+	)
+}
+
+func tabsStyleClass(s string) string {
+	switch s {
+	case "box", "border", "lift":
+		return "tabs-" + s
+	default:
+		return ""
+	}
+}
+
+func tabsSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "tabs-" + s
+	default:
+		return ""
+	}
+}
+
+func tabsActiveClass(active bool) string {
+	if active {
+		return "tab-active"
+	}
+	return ""
+}
+
+func tabsDisabledClass(disabled bool) string {
+	if disabled {
+		return "tab-disabled"
+	}
+	return ""
+}

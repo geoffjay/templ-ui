@@ -1,0 +1,131 @@
+package daisyui
+
+import "strings"
+
+// DropdownItem describes a single entry rendered inside a dropdown's
+// dropdown-content. Label is the visible text. Href, when set, renders the
+// entry as an anchor; otherwise a <button>.
+type DropdownItem struct {
+	Label string
+	Href  string
+}
+
+// DropdownConfig configures a daisyUI Dropdown. Label is the trigger button
+// text. Items, when set, is rendered as a daisyUI menu inside the
+// dropdown-content (mutually exclusive with Content). Placement accepts any
+// combination of the documented placement classes ("start", "center",
+// "end", "top", "bottom", "left", "right"); each is prefixed with
+// "dropdown-". Modifier accepts "hover", "open", or "close" (produces
+// dropdown-hover, dropdown-open, dropdown-close). UseDetails, when true,
+// renders the trigger via <details>/<summary> (instead of the CSS-focus
+// <div tabindex> pattern). Content, when set, is rendered as the
+// dropdown-content (overrides Items). TriggerClass lets callers customize the
+// trigger element classes (defaults to "btn m-1"). ContentClass lets callers
+// customize the dropdown-content classes (defaults to a menu styling). Class
+// lets callers add extra utility classes on the outer container. Resolver,
+// when set, is used to build all item hrefs.
+type DropdownConfig struct {
+	Label        string
+	Items        []DropdownItem
+	Placement    string
+	Modifier     string
+	UseDetails   bool
+	Content      templ.Component
+	TriggerClass string
+	ContentClass string
+	Class        string
+	Resolver     URLResolver
+}
+
+// Dropdown renders a daisyUI dropdown. By default uses the CSS-focus pattern
+// (<div class="dropdown"><div tabindex="0" role="button">…</div>…</div>); set
+// UseDetails to true to use the <details>/<summary> pattern instead.
+templ Dropdown(cfg DropdownConfig) {
+	<div class={ dropdownClass(cfg) }>
+		if cfg.UseDetails {
+			<details>
+				<summary class={ dropdownTriggerClass(cfg) }>{ cfg.Label }</summary>
+				<div class={ dropdownContentClass(cfg) } tabindex="-1">
+					@dropdownBody(cfg)
+				</div>
+			</details>
+		} else {
+			<div tabindex="0" role="button" class={ dropdownTriggerClass(cfg) }>{ cfg.Label }</div>
+			<div tabindex="-1" class={ dropdownContentClass(cfg) }>
+				@dropdownBody(cfg)
+			</div>
+		}
+	</div>
+}
+
+templ dropdownBody(cfg DropdownConfig) {
+	if cfg.Content != nil {
+		@cfg.Content
+	} else {
+		<ul class="menu">
+			for _, item := range cfg.Items {
+				<li>
+					if item.Href != "" {
+						<a href={ resolveHref(cfg.Resolver, item.Href) }>{ item.Label }</a>
+					} else {
+						<button>{ item.Label }</button>
+					}
+				</li>
+			}
+		</ul>
+	}
+}
+
+func dropdownClass(cfg DropdownConfig) string {
+	return joinClasses(
+		"dropdown",
+		dropdownPlacementClass(cfg.Placement),
+		classFor("dropdown", cfg.Modifier),
+		cfg.Class,
+	)
+}
+
+// dropdownPlacementClass splits the placement string into individual segments
+// and prefixes each with "dropdown-". E.g. "top end" -> "dropdown-top
+// dropdown-end".
+func dropdownPlacementClass(p string) string {
+	p = strings.TrimSpace(p)
+	if p == "" {
+		return ""
+	}
+	var parts []string
+	start := 0
+	for i := 0; i <= len(p); i++ {
+		if i == len(p) || p[i] == ' ' {
+			seg := p[start:i]
+			if seg != "" {
+				parts = append(parts, "dropdown-"+seg)
+			}
+			start = i + 1
+		}
+	}
+	return joinClasses(parts...)
+}
+
+func dropdownTriggerClass(cfg DropdownConfig) string {
+	if cfg.TriggerClass != "" {
+		return cfg.TriggerClass
+	}
+	return "btn m-1"
+}
+
+func dropdownContentClass(cfg DropdownConfig) string {
+	if cfg.ContentClass != "" {
+		return joinClasses("dropdown-content", cfg.ContentClass)
+	}
+	return joinClasses(
+		"dropdown-content",
+		"menu",
+		"bg-base-100",
+		"rounded-box",
+		"z-1",
+		"w-52",
+		"p-2",
+		"shadow-sm",
+	)
+}

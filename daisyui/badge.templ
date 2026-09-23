@@ -1,0 +1,60 @@
+package daisyui
+
+// BadgeConfig configures a daisyUI Badge. Text is the badge label. Color
+// accepts the documented badge color suffixes (neutral, primary, secondary,
+// accent, info, success, warning, error) producing e.g. "badge-primary".
+// Style accepts "outline", "dash", "soft", or "ghost" (produces badge-outline,
+// badge-dash, badge-soft, badge-ghost). Size accepts "xs", "sm", "md", "lg",
+// "xl" ("md" is the default and is omitted). Children, when set, replaces the
+// text content (use for icons + text or custom content). Class lets callers
+// add extra utility classes.
+type BadgeConfig struct {
+	Text     string
+	Color    string
+	Style    string
+	Size     string
+	Glass    bool
+	Class    string
+	Children templ.Component
+}
+
+// Badge renders a daisyUI badge (<span class="badge ...">). When Children is
+// set it is rendered in place of Text.
+templ Badge(cfg BadgeConfig) {
+	<span class={ badgeClass(cfg) }>
+		if cfg.Children != nil {
+			@cfg.Children
+		} else {
+			{ cfg.Text }
+		}
+	</span>
+}
+
+func badgeClass(cfg BadgeConfig) string {
+	return joinClasses(
+		"badge",
+		classFor("badge", cfg.Color),
+		badgeStyleClass(cfg.Style),
+		badgeSizeClass(cfg.Size),
+		glassClass(cfg.Glass),
+		cfg.Class,
+	)
+}
+
+func badgeStyleClass(s string) string {
+	switch s {
+	case "outline", "dash", "soft", "ghost":
+		return "badge-" + s
+	default:
+		return ""
+	}
+}
+
+func badgeSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "badge-" + s
+	default:
+		return ""
+	}
+}

@@ -1,0 +1,18 @@
+package daisyui
+
+// FieldsetConfig configures a daisyUI fieldset. Legend is rendered inside a
+// <legend class="fieldset-legend">. Class lets callers add extra utility
+// classes (e.g. "w-xs", "bg-base-200 border border-base-300 p-4 rounded-box").
+type FieldsetConfig struct {
+	Legend string
+	Class  string
+}
+
+// Fieldset renders a daisyUI fieldset with a legend and the provided children
+// (the form inputs and labels).
+templ Fieldset(cfg FieldsetConfig, children templ.Component) {
+	<fieldset class={ joinClasses("fieldset", cfg.Class) }>
+		<legend class="fieldset-legend">{ cfg.Legend }</legend>
+		@children
+	</fieldset>
+}

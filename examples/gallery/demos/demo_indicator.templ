@@ -1,0 +1,222 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ indicatorBody() {
+	@gallery.Section("Status Indicator", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Class: "status status-success"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Class: "status status-success"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 rounded bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("Badge as indicator", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Class: "badge badge-primary", Children: templ.Raw("New")},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Class: "badge badge-primary", Children: templ.Raw("New")},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 rounded bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("for button", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Class: "badge badge-secondary", Children: templ.Raw("12")},
+	},
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "inbox"}),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Class: "badge badge-secondary", Children: templ.Raw("12")},
+		},
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "inbox"}),
+	}))
+	@gallery.Section("for an input", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Class: "badge", Children: templ.Raw("Required")},
+	},
+	Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address", Class: "input-bordered"}),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Class: "badge", Children: templ.Raw("Required")},
+		},
+		Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address", Class: "input-bordered"}),
+	}))
+	@gallery.Section("A button as an indicator for a card", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Class: "my-6 mx-10",
+	Items: []daisyui.IndicatorItemConfig{
+		{Vertical: "bottom", Children: daisyui.Button(daisyui.ButtonConfig{Label: "Apply", Color: "primary"})},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Class: "my-6 mx-10",
+		Items: []daisyui.IndicatorItemConfig{
+			{Vertical: "bottom", Children: daisyui.Button(daisyui.ButtonConfig{Label: "Apply", Color: "primary"})},
+		},
+		Children: templ.Raw(`<div class="border border-base-300 shadow-sm card bg-base-100"><div class="card-body"><h2 class="card-title">Job Title</h2><p>Rerum reiciendis beatae tenetur excepturi</p></div></div>`),
+	}))
+	@gallery.Section("in center of an image", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Class: "max-w-xs",
+	Items: []daisyui.IndicatorItemConfig{
+		{Horizontal: "center", Vertical: "middle", Class: "badge", Children: templ.Raw("Only available for Pro users")},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Class: "max-w-xs",
+		Items: []daisyui.IndicatorItemConfig{
+			{Horizontal: "center", Vertical: "middle", Class: "badge", Children: templ.Raw("Only available for Pro users")},
+		},
+		Children: templ.Raw(`<img alt="Tailwind CSS examples" class="rounded" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" />`),
+	}))
+	@gallery.Section("indicator-top (default) indicator-start", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Horizontal: "start", Class: "badge badge-secondary"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Horizontal: "start", Class: "badge badge-secondary"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("indicator-top (default) indicator-center", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Horizontal: "center", Class: "badge badge-secondary"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Horizontal: "center", Class: "badge badge-secondary"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("indicator-top (default) indicator-end (default)", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Class: "badge badge-secondary"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Class: "badge badge-secondary"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("indicator-middle indicator-start", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Horizontal: "start", Vertical: "middle", Class: "badge badge-secondary"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Horizontal: "start", Vertical: "middle", Class: "badge badge-secondary"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("indicator-middle indicator-center", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Horizontal: "center", Vertical: "middle", Class: "badge badge-secondary"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Horizontal: "center", Vertical: "middle", Class: "badge badge-secondary"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("indicator-middle indicator-end (default)", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Vertical: "middle", Class: "badge badge-secondary"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Vertical: "middle", Class: "badge badge-secondary"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("indicator-bottom indicator-start", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Horizontal: "start", Vertical: "bottom", Class: "badge badge-secondary"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Horizontal: "start", Vertical: "bottom", Class: "badge badge-secondary"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("indicator-bottom indicator-center", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Horizontal: "center", Vertical: "bottom", Class: "badge badge-secondary"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Horizontal: "center", Vertical: "bottom", Class: "badge badge-secondary"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("indicator-bottom indicator-end (default)", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Vertical: "bottom", Class: "badge badge-secondary"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Vertical: "bottom", Class: "badge badge-secondary"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 bg-base-300 place-items-center">content</div>`),
+	}))
+	@gallery.Section("multiple indicators", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Horizontal: "start", Vertical: "top", Class: "badge", Children: templ.Raw("↖︎")},
+		{Horizontal: "center", Vertical: "top", Class: "badge", Children: templ.Raw("↑")},
+		{Class: "badge", Children: templ.Raw("↗︎")},
+		// ... one per position
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Horizontal: "start", Vertical: "top", Class: "badge", Children: templ.Raw("↖︎")},
+			{Horizontal: "center", Vertical: "top", Class: "badge", Children: templ.Raw("↑")},
+			{Class: "badge", Children: templ.Raw("↗︎")},
+			{Horizontal: "start", Vertical: "middle", Class: "badge", Children: templ.Raw("←")},
+			{Horizontal: "center", Vertical: "middle", Class: "badge", Children: templ.Raw("●")},
+			{Vertical: "middle", Class: "badge", Children: templ.Raw("→")},
+			{Horizontal: "start", Vertical: "bottom", Class: "badge", Children: templ.Raw("↙︎")},
+			{Horizontal: "center", Vertical: "bottom", Class: "badge", Children: templ.Raw("↓")},
+			{Vertical: "bottom", Class: "badge", Children: templ.Raw("↘︎")},
+		},
+		Children: templ.Raw(`<div class="grid w-60 h-32 bg-base-300 place-items-center">Box</div>`),
+	}))
+	@gallery.Section("Responsive", `@daisyui.Indicator(daisyui.IndicatorConfig{
+	Items: []daisyui.IndicatorItemConfig{
+		{Horizontal: "start", Class: "badge badge-secondary indicator-start sm:indicator-middle md:indicator-bottom lg:indicator-center xl:indicator-end"},
+	},
+	Children: templ.Raw(...),
+})`, daisyui.Indicator(daisyui.IndicatorConfig{
+		Items: []daisyui.IndicatorItemConfig{
+			{Horizontal: "start", Class: "badge badge-secondary indicator-start sm:indicator-middle md:indicator-bottom lg:indicator-center xl:indicator-end"},
+		},
+		Children: templ.Raw(`<div class="grid w-32 h-32 rounded bg-base-300 place-items-center">content</div>`),
+	}))
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "indicator",
+		Name:        "Indicator",
+		Description: "Indicators are used to place an element on the corner of another element.",
+		Category:    "daisyui",
+		Body:        indicatorBody,
+	})
+}

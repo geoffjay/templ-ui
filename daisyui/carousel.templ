@@ -1,0 +1,174 @@
+package daisyui
+
+import "strings"
+
+// CarouselSlide describes a single slide inside a daisyUI Carousel. ID, when
+// set, is rendered as the carousel-item's id (used by the indicator and
+// next/prev patterns via anchor links). Src, when set, renders an <img>
+// inside the carousel-item (use Alt for accessibility and ImageClass to add
+// extra utility classes to the <img>, e.g. "w-full" or "rounded-box"). Full,
+// when true, adds the "w-full" class to the carousel-item (full-width
+// slides). Width, when set, is rendered as the carousel-item width class
+// (e.g. "w-1/2" for half-width slides). Content, when set, replaces the
+// default <img> and is rendered inside the carousel-item — use this for
+// custom slide content (e.g. images with next/prev controls). Class lets
+// callers add extra utility classes to the carousel-item.
+type CarouselSlide struct {
+	ID         string
+	Src        string
+	Alt        string
+	ImageClass string
+	Full       bool
+	Width      string
+	Content    templ.Component
+	Class      string
+}
+
+// CarouselConfig configures a daisyUI Carousel. Slides is the list of
+// CarouselSlide items rendered inside the carousel. Snap accepts "start"
+// (default), "center", or "end" (produces carousel-start / carousel-center /
+// carousel-end). Direction accepts "horizontal" (default) or "vertical"
+// (produces carousel-vertical). Class lets callers add extra utility classes
+// to the outer carousel container (e.g. "rounded-box", "w-64", "h-96",
+// "max-w-md p-4 space-x-4 bg-neutral"). Indicators, when true, renders a row
+// of numbered indicator buttons below the carousel (requires each slide to
+// have an ID). Controls, when true, renders next/prev buttons on each slide
+// (requires each slide to have an ID; overrides per-slide Content).
+type CarouselConfig struct {
+	Slides     []CarouselSlide
+	Snap       string
+	Direction  string
+	Class      string
+	Indicators bool
+	Controls   bool
+}
+
+// Carousel renders a daisyUI carousel (<div class="carousel …">). Each slide
+// is rendered as <div class="carousel-item …">. When Controls is true, each
+// slide is wrapped with next/prev anchor buttons (the slide's Content is
+// ignored in favour of the slide's Src image).
+templ Carousel(cfg CarouselConfig) {
+	<div class={ carouselClass(cfg) }>
+		for i, slide := range cfg.Slides {
+			@carouselItem(i, slide, cfg)
+		}
+	</div>
+	if cfg.Indicators && len(cfg.Slides) > 0 {
+		@carouselIndicators(cfg)
+	}
+}
+
+templ carouselItem(i int, slide CarouselSlide, cfg CarouselConfig) {
+	if cfg.Controls && slide.ID != "" {
+		<div id={ slide.ID } class={ carouselItemClass(slide, cfg) + " relative" }>
+			@carouselSlideBody(slide)
+			@carouselControls(i, cfg)
+		</div>
+	} else {
+		<div
+			class={ carouselItemClass(slide, cfg) }
+			if slide.ID != "" {
+				id={ slide.ID }
+			}
+		>
+			@carouselSlideBody(slide)
+		</div>
+	}
+}
+
+templ carouselSlideBody(slide CarouselSlide) {
+	if slide.Content != nil {
+		@slide.Content
+	} else if slide.Src != "" {
+		<img src={ templ.SafeURL(slide.Src) } alt={ slide.Alt } class={ slide.ImageClass }/>
+	}
+}
+
+templ carouselControls(i int, cfg CarouselConfig) {
+	<div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+		<a href={ carouselControlHref(i-1, cfg.Slides) } class="btn btn-circle">❮</a>
+		<a href={ carouselControlHref(i+1, cfg.Slides) } class="btn btn-circle">❯</a>
+	</div>
+}
+
+templ carouselIndicators(cfg CarouselConfig) {
+	<div class="flex w-full justify-center gap-2 py-2">
+		for _, slide := range cfg.Slides {
+			<a href={ "#" + slide.ID } class="btn btn-xs">{ carouselIndicatorLabel(slide) }</a>
+		}
+	</div>
+}
+
+func carouselClass(cfg CarouselConfig) string {
+	return joinClasses(
+		"carousel",
+		carouselSnapClass(cfg.Snap),
+		carouselDirectionClass(cfg.Direction),
+		cfg.Class,
+	)
+}
+
+func carouselItemClass(slide CarouselSlide, cfg CarouselConfig) string {
+	classes := []string{"carousel-item"}
+	if slide.Full {
+		classes = append(classes, "w-full")
+	}
+	if slide.Width != "" {
+		classes = append(classes, slide.Width)
+	}
+	if slide.Class != "" {
+		classes = append(classes, slide.Class)
+	}
+	return joinClasses(classes...)
+}
+
+func carouselSnapClass(s string) string {
+	switch strings.TrimSpace(s) {
+	case "center":
+		return "carousel-center"
+	case "end":
+		return "carousel-end"
+	default:
+		// "start" is the default; daisyUI applies it implicitly so we
+		// don't emit a class for it (matches the docs).
+		return ""
+	}
+}
+
+func carouselDirectionClass(s string) string {
+	switch strings.TrimSpace(s) {
+	case "vertical":
+		return "carousel-vertical"
+	default:
+		return ""
+	}
+}
+
+// carouselControlHref returns the anchor href for the next/prev control,
+// wrapping around at the ends.
+func carouselControlHref(i int, slides []CarouselSlide) string {
+	if len(slides) == 0 {
+		return "#"
+	}
+	n := len(slides)
+	if i < 0 {
+		i = n - 1
+	}
+	if i >= n {
+		i = 0
+	}
+	slide := slides[i]
+	if slide.ID == "" {
+		return "#"
+	}
+	return "#" + slide.ID
+}
+
+// carouselIndicatorLabel returns the slide's id (or a fallback ordinal) as
+// the indicator button label.
+func carouselIndicatorLabel(slide CarouselSlide) string {
+	if slide.ID != "" {
+		return slide.ID
+	}
+	return "•"
+}

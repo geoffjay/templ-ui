@@ -1,0 +1,45 @@
+package daisyui
+
+// StepItem describes a single step in a steps list. Label is the visible
+// text. Color accepts the documented step color suffixes (neutral, primary,
+// secondary, accent, info, success, warning, error) and produces e.g.
+// "step-primary". Icon, when set, is rendered inside a
+// <span class="step-icon"> before the label (overrides the numeric marker).
+// DataContent, when set, is rendered as the data-content attribute (e.g.
+// "?", "✓", "").
+type StepItem struct {
+	Label       string
+	Color       string
+	Icon        templ.Component
+	DataContent string
+}
+
+// StepsConfig configures a daisyUI Steps list. Direction accepts "vertical"
+// or "horizontal" (produces steps-vertical / steps-horizontal). For
+// responsive direction use Class (e.g. "steps-vertical lg:steps-horizontal").
+// Class lets callers add extra utility classes (e.g. wrap in a scrollable
+// container externally).
+type StepsConfig struct {
+	Items     []StepItem
+	Direction string
+	Class     string
+}
+
+// Steps renders a daisyUI steps list (<ul class="steps">…</ul>).
+templ Steps(cfg StepsConfig) {
+	<ul class={ joinClasses("steps", classFor("steps", cfg.Direction), cfg.Class) }>
+		for _, item := range cfg.Items {
+			<li
+				class={ joinClasses("step", classFor("step", item.Color)) }
+				data-content={ item.DataContent }
+			>
+				if item.Icon != nil {
+					<span class="step-icon">
+						@item.Icon
+					</span>
+				}
+				{ item.Label }
+			</li>
+		}
+	</ul>
+}

@@ -1,0 +1,192 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ radioBody() {
+	@gallery.Section("Radio", `@daisyui.Radio(daisyui.RadioConfig{
+	Name: "radio-1",
+	Options: []daisyui.RadioOption{
+		{Value: "a", Checked: true},
+		{Value: "b"},
+	},
+})`, daisyui.Radio(daisyui.RadioConfig{
+		Name: "radio-1",
+		Options: []daisyui.RadioOption{
+			{Value: "a", Checked: true},
+			{Value: "b"},
+		},
+	}))
+	@gallery.Section("Radio sizes", `<div class="flex gap-4">
+	@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2", Size: "xs", Checked: true})
+	@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2.1", Size: "sm", Checked: true})
+	@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2.2", Size: "md", Checked: true})
+	@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2.3", Size: "lg", Checked: true})
+	@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2.4", Size: "xl", Checked: true})
+</div>`, radioSizesRow())
+	@gallery.Section("Neutral color", `@daisyui.Radio(daisyui.RadioConfig{
+	Name:  "radio-3",
+	Color: "neutral",
+	Options: []daisyui.RadioOption{
+		{Value: "a", Checked: true},
+		{Value: "b"},
+	},
+})`, daisyui.Radio(daisyui.RadioConfig{
+		Name:  "radio-3",
+		Color: "neutral",
+		Options: []daisyui.RadioOption{
+			{Value: "a", Checked: true},
+			{Value: "b"},
+		},
+	}))
+	@gallery.Section("Primary color", `@daisyui.Radio(daisyui.RadioConfig{
+	Name:  "radio-4",
+	Color: "primary",
+	Options: []daisyui.RadioOption{
+		{Value: "a", Checked: true},
+		{Value: "b"},
+	},
+})`, daisyui.Radio(daisyui.RadioConfig{
+		Name:  "radio-4",
+		Color: "primary",
+		Options: []daisyui.RadioOption{
+			{Value: "a", Checked: true},
+			{Value: "b"},
+		},
+	}))
+	@gallery.Section("Secondary color", `@daisyui.Radio(daisyui.RadioConfig{
+	Name:  "radio-5",
+	Color: "secondary",
+	Options: []daisyui.RadioOption{
+		{Value: "a", Checked: true},
+		{Value: "b"},
+	},
+})`, daisyui.Radio(daisyui.RadioConfig{
+		Name:  "radio-5",
+		Color: "secondary",
+		Options: []daisyui.RadioOption{
+			{Value: "a", Checked: true},
+			{Value: "b"},
+		},
+	}))
+	@gallery.Section("Accent color", `@daisyui.Radio(daisyui.RadioConfig{
+	Name:  "radio-6",
+	Color: "accent",
+	Options: []daisyui.RadioOption{
+		{Value: "a", Checked: true},
+		{Value: "b"},
+	},
+})`, daisyui.Radio(daisyui.RadioConfig{
+		Name:  "radio-6",
+		Color: "accent",
+		Options: []daisyui.RadioOption{
+			{Value: "a", Checked: true},
+			{Value: "b"},
+		},
+	}))
+	@gallery.Section("Success color", `@daisyui.Radio(daisyui.RadioConfig{
+	Name:  "radio-7",
+	Color: "success",
+	Options: []daisyui.RadioOption{
+		{Value: "a", Checked: true},
+		{Value: "b"},
+	},
+})`, daisyui.Radio(daisyui.RadioConfig{
+		Name:  "radio-7",
+		Color: "success",
+		Options: []daisyui.RadioOption{
+			{Value: "a", Checked: true},
+			{Value: "b"},
+		},
+	}))
+	@gallery.Section("Warning color", `@daisyui.Radio(daisyui.RadioConfig{
+	Name:  "radio-8",
+	Color: "warning",
+	Options: []daisyui.RadioOption{
+		{Value: "a", Checked: true},
+		{Value: "b"},
+	},
+})`, daisyui.Radio(daisyui.RadioConfig{
+		Name:  "radio-8",
+		Color: "warning",
+		Options: []daisyui.RadioOption{
+			{Value: "a", Checked: true},
+			{Value: "b"},
+		},
+	}))
+	@gallery.Section("Info color", `@daisyui.Radio(daisyui.RadioConfig{
+	Name:  "radio-9",
+	Color: "info",
+	Options: []daisyui.RadioOption{
+		{Value: "a", Checked: true},
+		{Value: "b"},
+	},
+})`, daisyui.Radio(daisyui.RadioConfig{
+		Name:  "radio-9",
+		Color: "info",
+		Options: []daisyui.RadioOption{
+			{Value: "a", Checked: true},
+			{Value: "b"},
+		},
+	}))
+	@gallery.Section("Error color", `@daisyui.Radio(daisyui.RadioConfig{
+	Name:  "radio-10",
+	Color: "error",
+	Options: []daisyui.RadioOption{
+		{Value: "a", Checked: true},
+		{Value: "b"},
+	},
+})`, daisyui.Radio(daisyui.RadioConfig{
+		Name:  "radio-10",
+		Color: "error",
+		Options: []daisyui.RadioOption{
+			{Value: "a", Checked: true},
+			{Value: "b"},
+		},
+	}))
+	@gallery.Section("Disabled", `<div class="flex gap-4">
+	@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-11", Disabled: true, Checked: true})
+	@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-11", Disabled: true})
+</div>`, radioDisabledRow())
+	@gallery.Section("Radio with custom colors", `<div class="flex gap-4">
+	@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-12", Class: "bg-red-100 border-red-300 checked:bg-red-200 checked:text-red-600 checked:border-red-600", Checked: true})
+	@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-12", Class: "bg-blue-100 border-blue-300 checked:bg-blue-200 checked:text-blue-600 checked:border-blue-600", Checked: true})
+</div>`, radioCustomColorsRow())
+}
+
+templ radioSizesRow() {
+	<div class="flex gap-4">
+		@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2", Size: "xs", Checked: true})
+		@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2.1", Size: "sm", Checked: true})
+		@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2.2", Size: "md", Checked: true})
+		@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2.3", Size: "lg", Checked: true})
+		@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-2.4", Size: "xl", Checked: true})
+	</div>
+}
+
+templ radioDisabledRow() {
+	<div class="flex gap-4">
+		@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-11", Disabled: true, Checked: true})
+		@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-11", Disabled: true})
+	</div>
+}
+
+templ radioCustomColorsRow() {
+	<div class="flex gap-4">
+		@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-12", Class: "bg-red-100 border-red-300 checked:bg-red-200 checked:text-red-600 checked:border-red-600", Checked: true})
+		@daisyui.RadioSingle(daisyui.RadioSingleConfig{Name: "radio-12", Class: "bg-blue-100 border-blue-300 checked:bg-blue-200 checked:text-blue-600 checked:border-blue-600", Checked: true})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "radio",
+		Name:        "Radio",
+		Description: "Radio buttons allow the user to select one option from a set.",
+		Category:    "daisyui",
+		Body:        radioBody,
+	})
+}

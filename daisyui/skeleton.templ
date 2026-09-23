@@ -1,0 +1,27 @@
+package daisyui
+
+// SkeletonConfig configures a daisyUI Skeleton placeholder. Class lets
+// callers add extra utility classes (e.g. "w-32 h-32", "rounded-full",
+// "h-4 w-28"). Text, when set, renders the skeleton as an inline span with
+// the skeleton-text modifier (animated gradient text). Children, when set,
+// replaces the self-closing form (use for custom inner content).
+type SkeletonConfig struct {
+	Class    string
+	Text     string
+	Children templ.Component
+}
+
+// Skeleton renders a daisyUI skeleton placeholder (<div class="skeleton
+// ...">). When Text is set the component renders as an inline <span> with the
+// skeleton-text modifier; when Children is set it renders inside the div.
+templ Skeleton(cfg SkeletonConfig) {
+	if cfg.Text != "" {
+		<span class={ joinClasses("skeleton", "skeleton-text", cfg.Class) }>{ cfg.Text }</span>
+	} else {
+		<div class={ joinClasses("skeleton", cfg.Class) }>
+			if cfg.Children != nil {
+				@cfg.Children
+			}
+		</div>
+	}
+}

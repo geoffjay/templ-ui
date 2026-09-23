@@ -1,0 +1,65 @@
+package shiki
+
+import "strings"
+
+// ScriptSrc is the URL of the shiki client bundle that progressively
+// enhances [data-shiki] code blocks. Applications serve the bundle (built by
+// `make assets` in templ-ui) at any path and override this variable before
+// rendering — e.g. shiki.ScriptSrc = "/assets/shiki.js". The default matches
+// the path used by templ-ui's own gallery.
+var ScriptSrc = "/static/shiki.js"
+
+// CodeConfig configures a shiki-powered code block. Code is the raw source
+// text to highlight (rendered as plain text server-side and enhanced by the
+// shiki.js script client-side). Lang is the shiki language id (e.g. "go",
+// "html", "bash", "templ"); an empty value falls back to "text". Theme is the
+// shiki theme name (e.g. "nord", "github-dark", "vitesse-dark"); an empty
+// value falls back to "nord" in the client script. Class adds extra utility
+// classes to the outer <pre>.
+type CodeConfig struct {
+	Code  string
+	Lang  string
+	Theme string
+	Class string
+}
+
+// Code renders a <pre data-shiki ...><code>...</code></pre> block. The code
+// text is rendered escaped so it is readable before JavaScript runs; the
+// shiki.js module script (served from ScriptSrc) progressively enhances
+// every [data-shiki] element on the page by replacing it with shiki's
+// highlighted HTML. The module script is deduplicated by the browser (a
+// module script with the same src is fetched and executed once even if the
+// tag appears multiple times), so embedding it per component instance is safe.
+templ Code(cfg CodeConfig) {
+	<pre
+		data-shiki
+		data-lang={ langOrDefault(cfg.Lang) }
+		data-theme={ cfg.Theme }
+		class={ joinClasses("shiki-code", cfg.Class) }
+	>
+		<code>{ cfg.Code }</code>
+	</pre>
+	<script type="module" src={ ScriptSrc }></script>
+}
+
+// langOrDefault returns the language id, defaulting to "text" when empty.
+func langOrDefault(lang string) string {
+	lang = strings.TrimSpace(lang)
+	if lang == "" {
+		return "text"
+	}
+	return lang
+}
+
+// joinClasses trims and joins the given classes with a single space, skipping
+// empty entries.
+func joinClasses(classes ...string) string {
+	var out []string
+	for _, c := range classes {
+		c = strings.TrimSpace(c)
+		if c != "" {
+			out = append(out, c)
+		}
+	}
+	return strings.Join(out, " ")
+}

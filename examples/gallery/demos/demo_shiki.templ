@@ -1,0 +1,52 @@
+package demos
+
+import (
+	"fmt"
+
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+	"github.com/geoffjay/templ-ui/shiki"
+)
+
+const shikiDefaultCode = `package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Hello, shiki!")
+}`
+const shikiDarkCode = `"$ bun add -D shiki\n$ make plugins"`
+
+func shikiTemplCode(lang, theme, code string) string {
+	templ := fmt.Sprintf(`@shiki.Code(shiki.CodeConfig{
+  Lang: "%s",
+  Theme: "%s",
+  Code: %s,
+})
+  `, lang, theme, code)
+
+	return templ
+}
+
+templ shikiBody() {
+	@gallery.Section("Go", shikiTemplCode("go", "nord", "`"+shikiDefaultCode+"`"), shiki.Code(shiki.CodeConfig{
+		Lang:  "go",
+		Theme: "nord",
+		Code:  shikiDefaultCode,
+	}))
+	@gallery.Section("Dark theme", shikiTemplCode("bash", "github-dark", shikiDarkCode), shiki.Code(shiki.CodeConfig{
+		Lang:  "bash",
+		Theme: "github-dark",
+		Code:  "$ bun add -D shiki\n$ make plugins",
+	}))
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "shiki",
+		Name:        "Shiki",
+		Description: "A pure code block with syntax highlighting powered by shiki.",
+		Category:    "shiki",
+		Body:        shikiBody,
+	})
+}

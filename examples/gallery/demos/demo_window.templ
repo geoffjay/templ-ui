@@ -1,0 +1,59 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ windowBody() {
+	@gallery.Section("Window mockup with border", `@daisyui.Window(daisyui.WindowConfig{
+	Bordered: true,
+	Children: windowContent(),
+})`, daisyui.Window(daisyui.WindowConfig{
+		Bordered: true,
+		Children: windowContent(),
+	}))
+	@gallery.Section("Window mockup with background color", `@daisyui.Window(daisyui.WindowConfig{
+	Bordered:   true,
+	Background: true,
+	Children:   windowContent(),
+})`, daisyui.Window(daisyui.WindowConfig{
+		Bordered:   true,
+		Background: true,
+		Children:   windowContent(),
+	}))
+	@gallery.Section("Window with taller custom content", `@daisyui.Window(daisyui.WindowConfig{
+	Bordered:  true,
+	BodyClass: "h-48 p-4",
+	Children:  windowCustomContent(),
+})`, daisyui.Window(daisyui.WindowConfig{
+		Bordered:  true,
+		BodyClass: "h-48 p-4",
+		Children:  windowCustomContent(),
+	}))
+}
+
+templ windowContent() {
+	<div class="grid place-content-center text-xl font-semibold">Hello!</div>
+}
+
+templ windowCustomContent() {
+	<div class="grid place-items-center gap-2">
+		<svg class="w-10 h-10 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+			<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+		</svg>
+		<div class="text-lg font-bold">Window content</div>
+		<p class="text-sm text-base-content/70">Resize the body with BodyClass.</p>
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "window",
+		Name:        "Window mockup",
+		Description: "Window mockup is used to show a box that looks like an operating system window.",
+		Category:    "daisyui",
+		Body:        windowBody,
+	})
+}

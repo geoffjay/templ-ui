@@ -1,0 +1,21 @@
+package daisyui
+
+// Status renders a tiny colored status dot. Color accepts documented suffixes
+// (neutral, primary, secondary, accent, info, success, warning, error)
+// producing e.g. "status-primary". Size accepts documented sizes (xs, sm, md,
+// lg, xl) producing e.g. "status-sm". Anim accepts "ping", "bounce", or "" —
+// passed through unchanged (these are Tailwind utilities, not status-
+// prefixed). Title becomes the aria-label. Class lets callers add extra
+// utility classes.
+templ Status(color, size, anim, title, class string) {
+	<div
+		aria-label={ title }
+		class={ joinClasses(
+			"status",
+			classFor("status", color),
+			classFor("status", size),
+			anim,
+			class,
+		) }
+	></div>
+}

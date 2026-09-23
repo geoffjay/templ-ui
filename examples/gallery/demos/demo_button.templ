@@ -1,0 +1,245 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+	icons "github.com/iota-uz/icons/phosphor"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "button",
+		Name:        "Button",
+		Description: "Buttons allow the user to take actions or make choices.",
+		Category:    "daisyui",
+		Body:        buttonBody,
+	})
+}
+
+templ buttonBody() {
+	@gallery.Section("Button", `@daisyui.Button(daisyui.ButtonConfig{Label: "Default"})`, daisyui.Button(daisyui.ButtonConfig{Label: "Default"}))
+	@gallery.Section("Button sizes", `<div class="flex flex-wrap items-center gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Xsmall", Size: "xs"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Small", Size: "sm"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Medium"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Large", Size: "lg"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Xlarge", Size: "xl"})
+</div>`, buttonDemoSizeRow())
+	@gallery.Section("Responsive button", `@daisyui.Button(daisyui.ButtonConfig{
+	Label: "Responsive",
+	Class: "btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl",
+})`, daisyui.Button(daisyui.ButtonConfig{
+		Label: "Responsive",
+		Class: "btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl",
+	}))
+	@gallery.Section("Button colors", `<div class="flex flex-wrap gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Neutral", Color: "neutral"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Color: "primary"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Secondary", Color: "secondary"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Accent", Color: "accent"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Info", Color: "info"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Success", Color: "success"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Warning", Color: "warning"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Error", Color: "error"})
+</div>`, buttonDemoColorRow())
+	@gallery.Section("Soft buttons", `<div class="flex flex-wrap gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Default", Style: "soft"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Style: "soft", Color: "primary"})
+	// ... one per color
+</div>`, buttonDemoSoftRow())
+	@gallery.Section("Outline buttons", `<div class="flex flex-wrap gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Default", Style: "outline"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Style: "outline", Color: "primary"})
+	// ... one per color
+</div>`, buttonDemoOutlineRow())
+	@gallery.Section("Dash buttons", `<div class="flex flex-wrap gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Default", Style: "dash"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Style: "dash", Color: "primary"})
+	// ... one per color
+</div>`, buttonDemoDashRow())
+	@gallery.Section("Active buttons", `<div class="flex flex-wrap gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Default", Active: true})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Color: "primary", Active: true})
+	// ... one per color
+</div>`, buttonDemoActiveRow())
+	@gallery.Section("Ghost and link", `<div class="flex flex-wrap gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Ghost", Style: "ghost"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Link", Style: "link"})
+</div>`, buttonDemoGhostLinkRow())
+	@gallery.Section("Wide button", `@daisyui.Button(daisyui.ButtonConfig{Label: "Wide", Modifier: "wide"})`, daisyui.Button(daisyui.ButtonConfig{Label: "Wide", Modifier: "wide"}))
+	@gallery.Section("Buttons with any HTML tags", `<div class="flex flex-wrap items-center gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Link", Href: "/components/button/"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Button", Type: "submit"})
+	// input/radio/checkbox/reset variants kept as raw markup below
+	<input type="button" value="Input" class="btn"/>
+	<input type="submit" value="Submit" class="btn"/>
+	<form style="display:contents" autocomplete="off">
+		<input type="radio" aria-label="Radio" class="btn"/>
+		<input type="checkbox" aria-label="Checkbox" class="btn"/>
+		<input type="reset" value="Reset" class="btn"/>
+	</form>
+</div>`, buttonDemoAnyTagRow())
+	@gallery.Section("Disabled buttons", `<div class="flex flex-wrap gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Disabled using attribute", Disabled: true})
+	// class-name disabled (tabindex/aria-disabled) kept as raw markup
+	<button class="btn btn-disabled" tabindex="-1" aria-disabled="true">Disabled using class name</button>
+</div>`, buttonDemoDisabledRow())
+	@gallery.Section("Square and circle", `<div class="flex flex-wrap items-center gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{
+		Modifier: "square",
+		Children: icons.Heart(icons.Props{Size: "20", Variant: icons.Filled}),
+	})
+	@daisyui.Button(daisyui.ButtonConfig{
+		Modifier: "circle",
+		Children: icons.Heart(icons.Props{Size: "20", Variant: icons.Filled}),
+	})
+</div>`, buttonDemoSquareCircleRow())
+	@gallery.Section("Button with icon", `@daisyui.Button(daisyui.ButtonConfig{
+	Label:    "Like",
+	Children: icons.Heart(icons.Props{Size: "20", Variant: icons.Filled}),
+})`, daisyui.Button(daisyui.ButtonConfig{
+		Label:    "Like",
+		Children: icons.Heart(icons.Props{Size: "20", Variant: icons.Filled}),
+	}))
+	@gallery.Section("Button block", `@daisyui.Button(daisyui.ButtonConfig{Label: "block", Modifier: "block"})`, daisyui.Button(daisyui.ButtonConfig{Label: "block", Modifier: "block"}))
+	@gallery.Section("Button with loading spinner", `<div class="flex flex-wrap items-center gap-2">
+	@daisyui.Button(daisyui.ButtonConfig{
+		Modifier: "square",
+		Children: daisyui.Loading("spinner", "", "", ""),
+	})
+	@daisyui.Button(daisyui.ButtonConfig{
+		Label:    "loading",
+		Children: daisyui.Loading("spinner", "", "", ""),
+	})
+</div>`, buttonDemoLoadingRow())
+}
+
+templ buttonDemoSizeRow() {
+	<div class="flex flex-wrap items-center gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Xsmall", Size: "xs"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Small", Size: "sm"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Medium"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Large", Size: "lg"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Xlarge", Size: "xl"})
+	</div>
+}
+
+templ buttonDemoGhostLinkRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Ghost", Style: "ghost"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Link", Style: "link"})
+	</div>
+}
+
+templ buttonDemoAnyTagRow() {
+	<div class="flex flex-wrap items-center gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Link", Href: "/components/button/"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Button", Type: "submit"})
+		<input type="button" value="Input" class="btn"/>
+		<input type="submit" value="Submit" class="btn"/>
+		<form style="display:contents" autocomplete="off">
+			<input type="radio" aria-label="Radio" class="btn"/>
+			<input type="checkbox" aria-label="Checkbox" class="btn"/>
+			<input type="reset" value="Reset" class="btn"/>
+		</form>
+	</div>
+}
+
+templ buttonDemoDisabledRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Disabled using attribute", Disabled: true})
+		<button class="btn btn-disabled" tabindex="-1" aria-disabled="true">Disabled using class name</button>
+	</div>
+}
+
+templ buttonDemoSquareCircleRow() {
+	<div class="flex flex-wrap items-center gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{
+			Modifier: "square",
+			Children: icons.Heart(icons.Props{Size: "20", Variant: icons.Filled}),
+		})
+		@daisyui.Button(daisyui.ButtonConfig{
+			Modifier: "circle",
+			Children: icons.Heart(icons.Props{Size: "20", Variant: icons.Filled}),
+		})
+	</div>
+}
+
+templ buttonDemoLoadingRow() {
+	<div class="flex flex-wrap items-center gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{
+			Modifier: "square",
+			Children: daisyui.Loading("spinner", "", "", ""),
+		})
+		@daisyui.Button(daisyui.ButtonConfig{
+			Label:    "loading",
+			Children: daisyui.Loading("spinner", "", "", ""),
+		})
+	</div>
+}
+
+templ buttonDemoColorRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Neutral", Color: "neutral"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Color: "primary"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Secondary", Color: "secondary"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Accent", Color: "accent"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Info", Color: "info"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Success", Color: "success"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Warning", Color: "warning"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Error", Color: "error"})
+	</div>
+}
+
+templ buttonDemoSoftRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Default", Style: "soft"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Style: "soft", Color: "primary"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Secondary", Style: "soft", Color: "secondary"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Accent", Style: "soft", Color: "accent"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Info", Style: "soft", Color: "info"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Success", Style: "soft", Color: "success"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Warning", Style: "soft", Color: "warning"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Error", Style: "soft", Color: "error"})
+	</div>
+}
+
+templ buttonDemoOutlineRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Default", Style: "outline"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Style: "outline", Color: "primary"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Secondary", Style: "outline", Color: "secondary"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Accent", Style: "outline", Color: "accent"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Info", Style: "outline", Color: "info"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Success", Style: "outline", Color: "success"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Warning", Style: "outline", Color: "warning"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Error", Style: "outline", Color: "error"})
+	</div>
+}
+
+templ buttonDemoDashRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Default", Style: "dash"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Style: "dash", Color: "primary"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Secondary", Style: "dash", Color: "secondary"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Accent", Style: "dash", Color: "accent"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Info", Style: "dash", Color: "info"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Success", Style: "dash", Color: "success"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Warning", Style: "dash", Color: "warning"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Error", Style: "dash", Color: "error"})
+	</div>
+}
+
+templ buttonDemoActiveRow() {
+	<div class="flex flex-wrap gap-2">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Default", Active: true})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Primary", Color: "primary", Active: true})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Secondary", Color: "secondary", Active: true})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Accent", Color: "accent", Active: true})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Info", Color: "info", Active: true})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Success", Color: "success", Active: true})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Warning", Color: "warning", Active: true})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Error", Color: "error", Active: true})
+	</div>
+}

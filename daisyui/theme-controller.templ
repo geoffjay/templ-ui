@@ -1,0 +1,40 @@
+package daisyui
+
+// ThemeControllerConfig controls a theme-controller input. AsRadio renders a
+// radio input sharing the given Name (so picking one theme clears the others);
+// otherwise a checkbox is emitted. InputClass applies an input shape class
+// (e.g. "toggle", "checkbox", "radio radio-sm") — the caller is responsible
+// for the shape; "theme-controller" is always appended automatically. Value is
+// the daisyUI theme name to apply when the input is checked. Checked pre-
+// checks the input. Class lets callers add extra utility classes.
+type ThemeControllerConfig struct {
+	AsRadio    bool
+	Name       string
+	Value      string
+	Checked    bool
+	InputClass string
+	Class      string
+}
+
+// ThemeController renders an <input> with the theme-controller class. When
+// checked, the page adopts the input's Value as its daisyUI theme.
+templ ThemeController(cfg ThemeControllerConfig) {
+	if cfg.AsRadio {
+		<input
+			type="radio"
+			name={ cfg.Name }
+			value={ cfg.Value }
+			checked?={ cfg.Checked }
+			autocomplete="off"
+			class={ joinClasses(cfg.InputClass, "theme-controller", cfg.Class) }
+		/>
+	} else {
+		<input
+			type="checkbox"
+			value={ cfg.Value }
+			checked?={ cfg.Checked }
+			autocomplete="off"
+			class={ joinClasses(cfg.InputClass, "theme-controller", cfg.Class) }
+		/>
+	}
+}

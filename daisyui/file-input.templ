@@ -1,0 +1,56 @@
+package daisyui
+
+// FileInputConfig configures a daisyUI file input. Color accepts the documented
+// file-input color suffixes (neutral, primary, secondary, accent, info,
+// success, warning, error) producing e.g. "file-input-primary". Style accepts
+// "ghost" (file-input-ghost). Size accepts "xs", "sm", "md", "lg", "xl" ("md"
+// is the default and omitted). Accept sets the accept attribute (a
+// comma-separated list of file types/MIME types). Multiple, when true, sets the
+// multiple attribute. Class lets callers add extra utility classes.
+type FileInputConfig struct {
+	Name     string
+	Accept   string
+	Multiple bool
+	Color    string
+	Style    string
+	Size     string
+	Disabled bool
+	Class    string
+}
+
+// FileInput renders a daisyUI file input (<input type="file"
+// class="file-input">).
+templ FileInput(cfg FileInputConfig) {
+	<input
+		type="file"
+		name={ cfg.Name }
+		class={ joinClasses(
+			"file-input",
+			classFor("file-input", cfg.Color),
+			fileInputStyleClass(cfg.Style),
+			fileInputSizeClass(cfg.Size),
+			cfg.Class,
+		) }
+		if cfg.Accept != "" {
+			accept={ cfg.Accept }
+		}
+		multiple?={ cfg.Multiple }
+		disabled?={ cfg.Disabled }
+	/>
+}
+
+func fileInputStyleClass(s string) string {
+	if s == "ghost" {
+		return "file-input-ghost"
+	}
+	return ""
+}
+
+func fileInputSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "file-input-" + s
+	default:
+		return ""
+	}
+}

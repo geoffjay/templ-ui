@@ -1,0 +1,64 @@
+package daisyui
+
+// TooltipConfig configures a daisyUI Tooltip. Tip is the tooltip text set as
+// the data-tip attribute. Position accepts "top", "bottom", "left", "right"
+// (produces tooltip-top, etc; "top" is the daisyUI default and is omitted).
+// Color accepts the documented tooltip color suffixes (primary, secondary,
+// accent, info, success, warning, error) producing e.g. "tooltip-primary".
+// Open, when true, forces the tooltip open (adds tooltip-open). Content, when
+// set, is rendered inside a <div class="tooltip-content"> for rich tooltip
+// content (overrides the plain data-tip text visually). Class lets callers
+// add extra utility classes (e.g. responsive "lg:tooltip"). Children is the
+// element the tooltip wraps (e.g. a button).
+type TooltipConfig struct {
+	Tip      string
+	Position string
+	Color    string
+	Open     bool
+	Content  templ.Component
+	Class    string
+	Children templ.Component
+}
+
+// Tooltip renders a daisyUI tooltip (<div class="tooltip ..."
+// data-tip="...">). When Content is set a <div class="tooltip-content"> is
+// rendered before the children for rich tooltip content.
+templ Tooltip(cfg TooltipConfig) {
+	<div
+		class={ joinClasses(
+			"tooltip",
+			tooltipPositionClass(cfg.Position),
+			classFor("tooltip", cfg.Color),
+			tooltipOpenClass(cfg.Open),
+			cfg.Class,
+		) }
+		data-tip={ cfg.Tip }
+	>
+		if cfg.Content != nil {
+			<div class="tooltip-content">
+				@cfg.Content
+			</div>
+		}
+		if cfg.Children != nil {
+			@cfg.Children
+		}
+	</div>
+}
+
+func tooltipPositionClass(p string) string {
+	switch p {
+	case "bottom", "left", "right":
+		return "tooltip-" + p
+	case "top":
+		return ""
+	default:
+		return ""
+	}
+}
+
+func tooltipOpenClass(open bool) string {
+	if open {
+		return "tooltip-open"
+	}
+	return ""
+}

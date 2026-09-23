@@ -1,0 +1,94 @@
+package demos
+
+import (
+	"strconv"
+
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ paginationBody() {
+	@gallery.Section("Pagination", `@daisyui.Pagination(daisyui.PaginationConfig{
+	Current: 1,
+	Total:   5,
+})`, daisyui.Pagination(daisyui.PaginationConfig{
+		Current: 1,
+		Total:   5,
+	}))
+	@gallery.Section("Pagination with active middle page", `@daisyui.Pagination(daisyui.PaginationConfig{
+	Current: 3,
+	Total:   5,
+})`, daisyui.Pagination(daisyui.PaginationConfig{
+		Current: 3,
+		Total:   5,
+	}))
+	@gallery.Section("Pagination with prev/next", `@daisyui.Pagination(daisyui.PaginationConfig{
+	Current:   2,
+	Total:     5,
+	PrevLabel: "«",
+	NextLabel: "»",
+})`, daisyui.Pagination(daisyui.PaginationConfig{
+		Current:   2,
+		Total:     5,
+		PrevLabel: "«",
+		NextLabel: "»",
+	}))
+	@gallery.Section("Pagination with prev/next at edges (disabled)", `@daisyui.Pagination(daisyui.PaginationConfig{
+	Current:   1,
+	Total:     5,
+	PrevLabel: "«",
+	NextLabel: "»",
+})`, daisyui.Pagination(daisyui.PaginationConfig{
+		Current:   1,
+		Total:     5,
+		PrevLabel: "«",
+		NextLabel: "»",
+	}))
+	@gallery.Section("Pagination with hrefs", `@daisyui.Pagination(daisyui.PaginationConfig{
+	Current: 2,
+	Total:    5,
+	HrefFor:  func(page int) string { return "/page/" + strconv.Itoa(page) },
+})`, daisyui.Pagination(daisyui.PaginationConfig{
+		Current: 2,
+		Total:   5,
+		HrefFor: func(page int) string { return "/page/" + strconv.Itoa(page) },
+	}))
+	@gallery.Section("Pagination sizes", `<div class="flex flex-col gap-4">
+	@daisyui.Pagination(daisyui.PaginationConfig{Current: 2, Total: 5, Size: "xs"})
+	@daisyui.Pagination(daisyui.PaginationConfig{Current: 2, Total: 5, Size: "sm"})
+	// ... one per size (lg, xl)
+</div>`, paginationSizesRow())
+	@gallery.Section("Pagination with outline grid prev/next", `@daisyui.Pagination(daisyui.PaginationConfig{
+	Current:   1,
+	Total:     1,
+	PrevLabel: "Previous",
+	NextLabel: "Next",
+	Class:     "grid grid-cols-2",
+})`, daisyui.Pagination(daisyui.PaginationConfig{
+		Current:   1,
+		Total:     1,
+		PrevLabel: "Previous",
+		NextLabel: "Next",
+		Class:     "grid grid-cols-2",
+	}))
+}
+
+templ paginationSizesRow() {
+	<div class="flex flex-col gap-4">
+		@daisyui.Pagination(daisyui.PaginationConfig{Current: 2, Total: 5, Size: "xs"})
+		@daisyui.Pagination(daisyui.PaginationConfig{Current: 2, Total: 5, Size: "sm"})
+		@daisyui.Pagination(daisyui.PaginationConfig{Current: 2, Total: 5, Size: "lg"})
+		@daisyui.Pagination(daisyui.PaginationConfig{Current: 2, Total: 5, Size: "xl"})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "pagination",
+		Name:        "Pagination",
+		Description: "Pagination is a group of buttons that let the user navigate across pages.",
+		Category:    "daisyui",
+		Body:        paginationBody,
+	})
+}

@@ -1,0 +1,114 @@
+/*
+ Library stylesheet template for applications consuming templ-ui.
+
+ Copy this file into your application's CSS entry point (or import it) and
+ build with Tailwind CSS v4:
+
+     bunx tailwindcss -i ./assets/styles.css -o ./static/styles.css
+
+ Requirements documented in docs/USAGE.md:
+  - Tailwind CSS v4 (`@import "tailwindcss"`) — daisyUI 5 is a Tailwind v4
+    plugin and generates its components layer from it.
+  - The daisyUI plugin listing every theme your app switches between
+    (daisyUI emits CSS custom properties per theme; unlisted themes are not
+    available at runtime).
+  - The `.glass` and `.component-preview` rules below are owned by templ-ui
+    (used by the Glass flag on several components); they must be part of
+    your compiled stylesheet.
+  - The optional `@tailwindcss/typography` plugin when rendering prose
+    content (the documentation layout).
+*/
+
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark,
+    coffee,
+    pastel,
+    dim,
+    retro,
+    dracula,
+    business,
+    nord,
+    sunset,
+    abyss,
+    nord-dark;
+}
+
+/* User styles */
+
+:root {
+  font-family: Manrope, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.component-preview {
+  box-shadow: 0 0 0 1px var(--color-base-300) inset;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-base-200),
+    var(--color-base-200) 13px,
+    var(--color-base-300) 13px,
+    var(--color-base-300) 14px
+  );
+  background-size: 40px 40px;
+}
+
+/* glass: a translucent, blurred surface treatment that adapts to the active
+   daisyUI theme. Apply via the Glass flag on supporting components or by
+   passing Class: "glass" to any element. Works best over non-solid
+   backgrounds (images, gradients, other glass layers). */
+.glass {
+  background-color: color-mix(in oklch, var(--color-base-100) 18%, transparent);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid
+    color-mix(in oklch, var(--color-base-content) 14%, transparent);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  position: relative;
+  /* daisyUI layers an SVG noise texture as background-image on many component
+     classes, gated by the theme's --noise variable (kanagawa themes set
+     --noise: 1). That texture reads as a grainy gradient over glass and
+     hides the translucent blur, so neutralize it on .glass. */
+  background-image: none;
+}
+
+/* Subtle top-edge highlight to read as "frosted". */
+.glass::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--color-base-content) 40%, transparent),
+    transparent
+  );
+  pointer-events: none;
+}
+
+@supports not (
+    (backdrop-filter: blur(1px)) or
+    (-webkit-backdrop-filter: blur(1px))
+  ) {
+  .glass {
+    /* No backdrop-filter support: fall back to a more opaque surface. */
+    background-color: var(--color-base-100);
+  }
+}

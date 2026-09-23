@@ -1,0 +1,83 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/containers"
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+	icons "github.com/iota-uz/icons/phosphor"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "appshell",
+		Name:        "AppShell",
+		Description: "A full-height application shell with a fixed navbar, a three-state collapsible sidebar, and theme persistence.",
+		Category:    "containers",
+		Body:        appshellBody,
+	})
+}
+
+templ appshellBody() {
+	@gallery.Section("AppShell", `@containers.AppShell(containers.AppShellConfig{
+	Title: "My App",
+	MenuItems: []daisyui.MenuItem{
+		{Label: "Dashboard", Href: "#dashboard", Icon: icons.House(icons.Props{Size: "20", Variant: icons.Regular})},
+		{Label: "Settings", Href: "#settings", Icon: icons.Gear(icons.Props{Size: "20", Variant: icons.Regular})},
+	},
+	Content: appshellDemoContent(),
+	Theme: containers.ThemeConfig{
+		LightTheme: "nord",
+		DarkTheme:  "nord-dark",
+		StorageKey: "appshell-demo.theme",
+	},
+})`, appshellDemoFrame())
+	@gallery.Section("Sidebar sections", `NavSections: []containers.NavSection{
+	{Title: "Main", Items: []daisyui.MenuItem{...}},
+	{Title: "Admin", Items: []daisyui.MenuItem{...}},
+}`, appshellDemoFrame())
+}
+
+// appshellDemoFrame embeds a live AppShell in a bordered, scaled frame so
+// the h-screen container fits inside a gallery preview section.
+templ appshellDemoFrame() {
+	<div class="border border-base-300 rounded-box overflow-hidden h-[32rem] relative">
+		<div class="absolute inset-0 [&>div]:!h-full">
+			@containers.AppShell(containers.AppShellConfig{
+				Title:     "My App",
+				TitleHref: "#",
+				MenuItems: appshellDemoMenu(),
+				Content:   appshellDemoContent(),
+				Theme: containers.ThemeConfig{
+					LightTheme: "nord",
+					DarkTheme:  "nord-dark",
+					StorageKey: "appshell-demo.theme",
+				},
+			})
+		</div>
+	</div>
+}
+
+// appshellDemoMenu builds the sidebar menu for the live AppShell preview.
+func appshellDemoMenu() []daisyui.MenuItem {
+	return []daisyui.MenuItem{
+		{Label: "Dashboard", Href: "#dashboard", Icon: icons.House(icons.Props{Size: "20", Variant: icons.Regular})},
+		{Label: "Components", Href: "#components", Icon: icons.Cube(icons.Props{Size: "20", Variant: icons.Regular})},
+		{Label: "Analytics", Href: "#analytics", Icon: icons.ChartBar(icons.Props{Size: "20", Variant: icons.Regular})},
+		{Label: "Settings", Href: "#settings", Icon: icons.Gear(icons.Props{Size: "20", Variant: icons.Regular})},
+	}
+}
+
+// appshellDemoContent renders the AppShell main-region content for the
+// preview.
+templ appshellDemoContent() {
+	<div class="p-8 space-y-4">
+		<h2 class="text-2xl font-bold text-primary">Dashboard</h2>
+		<p class="text-base-content/70">
+			The main content region scrolls independently behind the fixed
+			navbar. Toggle the sidebar with the header icon; collapse it with
+			the bottom caret; switch themes with the sun/moon toggle.
+		</p>
+		@daisyui.Button(daisyui.ButtonConfig{Label: "A button", Color: "primary"})
+	</div>
+}

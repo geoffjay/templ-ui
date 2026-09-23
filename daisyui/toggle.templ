@@ -1,0 +1,44 @@
+package daisyui
+
+// ToggleConfig configures a daisyUI toggle (a styled checkbox switch). Color
+// accepts the documented toggle color suffixes (neutral, primary, secondary,
+// accent, info, success, warning, error) producing e.g. "toggle-primary".
+// Size accepts "xs", "sm", "md", "lg", "xl" ("md" is the default and omitted).
+// Class lets callers add extra utility classes (e.g. "validator",
+// "theme-controller", custom color classes).
+type ToggleConfig struct {
+	Name     string
+	Value    string
+	Checked  bool
+	Color    string
+	Size     string
+	Disabled bool
+	Class    string
+}
+
+// Toggle renders a daisyUI toggle switch (<input type="checkbox"
+// class="toggle">).
+templ Toggle(cfg ToggleConfig) {
+	<input
+		type="checkbox"
+		name={ cfg.Name }
+		value={ cfg.Value }
+		checked?={ cfg.Checked }
+		class={ joinClasses(
+			"toggle",
+			classFor("toggle", cfg.Color),
+			toggleSizeClass(cfg.Size),
+			cfg.Class,
+		) }
+		disabled?={ cfg.Disabled }
+	/>
+}
+
+func toggleSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "toggle-" + s
+	default:
+		return ""
+	}
+}

@@ -1,0 +1,45 @@
+package daisyui
+
+// Hover3DConfig configures a daisyUI Hover 3D card. The hover-3d wrapper
+// places 8 hover zones on top of the content (the wrapper renders the 8
+// empty <div>s required by daisyUI automatically). Href, when set, renders
+// the wrapper as an <a class="hover-3d …"> linking the whole card (the
+// recommended pattern for interactive cards); when empty the wrapper is a
+// plain <div>. Class lets callers add extra utility classes to the wrapper
+// (e.g. "my-12 mx-2", "cursor-pointer"). Children is the content (use
+// non-interactive content only — wrap interactive behaviour in the Href).
+type Hover3DConfig struct {
+	Href     string
+	Class    string
+	Children templ.Component
+}
+
+// Hover3DCard renders a daisyUI hover-3d wrapper plus its 8 required empty
+// <div> hover zones.
+templ Hover3DCard(cfg Hover3DConfig) {
+	if cfg.Href != "" {
+		<a
+			href={ templ.SafeURL(cfg.Href) }
+			class={ hover3DClass(cfg) }
+		>
+			@hover3DBody(cfg)
+		</a>
+	} else {
+		<div class={ hover3DClass(cfg) }>
+			@hover3DBody(cfg)
+		</div>
+	}
+}
+
+templ hover3DBody(cfg Hover3DConfig) {
+	if cfg.Children != nil {
+		@cfg.Children
+	}
+	for range 8 {
+		<div></div>
+	}
+}
+
+func hover3DClass(cfg Hover3DConfig) string {
+	return joinClasses("hover-3d", cfg.Class)
+}

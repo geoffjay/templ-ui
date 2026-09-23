@@ -1,0 +1,148 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ footerBody() {
+	@gallery.Section("Footer", `@daisyui.Footer(daisyui.FooterConfig{
+	Sections: []daisyui.FooterSection{
+		{Title: "Services", Links: []daisyui.FooterLink{{Label: "Branding", Href: "#"}, {Label: "Design", Href: "#"}, {Label: "Marketing", Href: "#"}, {Label: "Advertisement", Href: "#"}}},
+		{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "/about"}, {Label: "Contact", Href: "/contact"}, {Label: "Jobs", Href: "#"}, {Label: "Press kit", Href: "#"}}},
+		{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms of use", Href: "#"}, {Label: "Privacy policy", Href: "#"}, {Label: "Cookie policy", Href: "#"}}},
+	},
+})`, daisyui.Footer(daisyui.FooterConfig{
+		Sections: []daisyui.FooterSection{
+			{Title: "Services", Links: []daisyui.FooterLink{{Label: "Branding", Href: "#"}, {Label: "Design", Href: "#"}, {Label: "Marketing", Href: "#"}, {Label: "Advertisement", Href: "#"}}},
+			{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "/about"}, {Label: "Contact", Href: "/contact"}, {Label: "Jobs", Href: "#"}, {Label: "Press kit", Href: "#"}}},
+			{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms of use", Href: "#"}, {Label: "Privacy policy", Href: "#"}, {Label: "Cookie policy", Href: "#"}}},
+		},
+	}))
+	@gallery.Section("Footer with logo/aside", `@daisyui.Footer(daisyui.FooterConfig{
+	Aside: footerAside(),
+	Sections: []daisyui.FooterSection{
+		{Title: "Services", Links: []daisyui.FooterLink{{Label: "Branding", Href: "#"}, {Label: "Design", Href: "#"}}},
+		{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+		{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+	},
+})`, daisyui.Footer(daisyui.FooterConfig{
+		Aside: footerDemoAside(),
+		Sections: []daisyui.FooterSection{
+			{Title: "Services", Links: []daisyui.FooterLink{{Label: "Branding", Href: "#"}, {Label: "Design", Href: "#"}}},
+			{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+			{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+		},
+	}))
+	@gallery.Section("Footer with copyright", `@daisyui.Footer(daisyui.FooterConfig{
+	Copyright: "Copyright © 2026 - All rights reserved by ACME Industries",
+	Sections: []daisyui.FooterSection{
+		{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+		{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+	},
+})`, daisyui.Footer(daisyui.FooterConfig{
+		Copyright: "Copyright © 2026 - All rights reserved by ACME Industries",
+		Sections: []daisyui.FooterSection{
+			{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+			{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+		},
+	}))
+	@gallery.Section("Footer centered", `@daisyui.Footer(daisyui.FooterConfig{
+	Center: true,
+	Sections: []daisyui.FooterSection{
+		{Title: "Company", Links: []daisyui.FooterLink{{Label: "About us", Href: "#"}, {Label: "Contact", Href: "#"}, {Label: "Jobs", Href: "#"}}},
+		{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+	},
+	Copyright: "Copyright © 2026 - All right reserved by ACME Industries Ltd",
+})`, daisyui.Footer(daisyui.FooterConfig{
+		Center: true,
+		Sections: []daisyui.FooterSection{
+			{Title: "Company", Links: []daisyui.FooterLink{{Label: "About us", Href: "#"}, {Label: "Contact", Href: "#"}, {Label: "Jobs", Href: "#"}}},
+			{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+		},
+		Copyright: "Copyright © 2026 - All right reserved by ACME Industries Ltd",
+	}))
+	@gallery.Section("Footer horizontal direction", `@daisyui.Footer(daisyui.FooterConfig{
+	Direction: "horizontal",
+	Aside:     footerAside(),
+	Sections: []daisyui.FooterSection{
+		{Title: "Services", Links: []daisyui.FooterLink{{Label: "Branding", Href: "#"}, {Label: "Design", Href: "#"}}},
+		{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+		{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+	},
+	Copyright: "Copyright © 2026 - All rights reserved",
+})`, daisyui.Footer(daisyui.FooterConfig{
+		Direction: "horizontal",
+		Aside:     footerDemoAside(),
+		Sections: []daisyui.FooterSection{
+			{Title: "Services", Links: []daisyui.FooterLink{{Label: "Branding", Href: "#"}, {Label: "Design", Href: "#"}}},
+			{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+			{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+		},
+		Copyright: "Copyright © 2026 - All rights reserved",
+	}))
+	@gallery.Section("Footer with colored background", `@daisyui.Footer(daisyui.FooterConfig{
+	Class: "p-10 bg-neutral text-neutral-content",
+	Sections: []daisyui.FooterSection{
+		{Title: "Services", Links: []daisyui.FooterLink{{Label: "Branding", Href: "#"}, {Label: "Design", Href: "#"}}},
+		{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+		{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+	},
+	Copyright: "Copyright © 2026 - All rights reserved",
+})`, daisyui.Footer(daisyui.FooterConfig{
+		Class: "p-10 bg-neutral text-neutral-content",
+		Sections: []daisyui.FooterSection{
+			{Title: "Services", Links: []daisyui.FooterLink{{Label: "Branding", Href: "#"}, {Label: "Design", Href: "#"}}},
+			{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+			{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+		},
+		Copyright: "Copyright © 2026 - All rights reserved",
+	}))
+	@gallery.Section("Footer responsive direction", `@daisyui.Footer(daisyui.FooterConfig{
+	Class: "sm:footer-horizontal",
+	Sections: []daisyui.FooterSection{
+		{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+		{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+	},
+})`, daisyui.Footer(daisyui.FooterConfig{
+		Class: "sm:footer-horizontal",
+		Sections: []daisyui.FooterSection{
+			{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+			{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+		},
+	}))
+	@gallery.Section("Footer with glass", `@daisyui.Footer(daisyui.FooterConfig{
+	Glass: true,
+	Sections: []daisyui.FooterSection{
+		{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+		{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+	},
+	Copyright: "Copyright © 2026 - All rights reserved",
+})`, gallery.GlassBackdrop(daisyui.Footer(daisyui.FooterConfig{
+		Glass: true,
+		Sections: []daisyui.FooterSection{
+			{Title: "Company", Links: []daisyui.FooterLink{{Label: "About", Href: "#"}, {Label: "Contact", Href: "#"}}},
+			{Title: "Legal", Links: []daisyui.FooterLink{{Label: "Terms", Href: "#"}, {Label: "Privacy", Href: "#"}}},
+		},
+		Copyright: "Copyright © 2026 - All rights reserved",
+	})))
+}
+
+templ footerDemoAside() {
+	<svg width="50" height="50" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="fill-current">
+		<path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.015.331-2.127-.209-2.456-1.229l-.841-2.515-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.015.331-2.127-.209-2.456-1.229l-.841-2.515-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.015.331-2.127-.209-2.456-1.229l-.841-2.515-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.015.331-2.127-.209-2.456-1.229l-.841-2.515L2 14.5l1.681-.561L3.392 12H1V8h3.392L3.681 5.439 2 4.5l1.681-.561L1.84.71C1.509-.301.431-.841-.59-.51c-1.02.331-1.56 1.35-1.23 2.36l.84 2.51L2 4.5 1.681 5.561 3.392 8H1v4h3.392l-1.681 1.56L2 14.5l2.52.84L2 16.5z"></path>
+		<path d="M24 12.5l-1.681.561L22.608 15H25v-4h-3.392l1.681-1.56L25 8.5l-2.52-.84L25 6.5l1.681-.561L24.608 4H23V0h-3.392l1.681-1.56L23 -3l2.52.84L23 -1.5l1.681.561L24.608 1H23v4h1.608l.84-2.51c.331-1.02 1.351-1.56 2.36-1.23 1.02.331 1.56 1.35 1.23 2.36l-.84 2.51L27 4.5l-1.681.561L27 6.5l-2.52.84L27 8.5l-1.681.561L27 10.5l-2.52.84L27 12.5z"></path>
+	</svg>
+	<p>ACME Industries Ltd.<br/>Providing reliable tech since 1990</p>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "footer",
+		Name:        "Footer",
+		Description: "Footer is used to show site-wide information at the bottom of a page.",
+		Category:    "daisyui",
+		Body:        footerBody,
+	})
+}

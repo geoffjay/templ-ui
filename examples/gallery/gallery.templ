@@ -1,0 +1,138 @@
+package gallery
+
+import (
+	"strings"
+
+	"github.com/geoffjay/templ-ui/containers"
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/internal/registry"
+	"github.com/geoffjay/templ-ui/shiki"
+)
+
+// pageShell renders a component page inside the shared gallery layout:
+// the AppShell container with the sidebar listing every registry entry,
+// grouped by category. The AppShell's theme toggle switches between the
+// nord and nord-dark daisyUI themes, persisted to localStorage.
+templ pageShell(title, description string, body templ.Component) {
+	@containers.AppShell(containers.AppShellConfig{
+		Title:       "templ-ui",
+		TitleHref:   "/",
+		NavSections: navSections(),
+		Content:     pageMain(title, description, body),
+		Theme: containers.ThemeConfig{
+			LightTheme: "nord",
+			DarkTheme:  "nord-dark",
+			StorageKey: "templ-ui.theme",
+		},
+	})
+}
+
+// navSections builds the AppShell sidebar navigation from the registry,
+// grouped by category, with the current page's active state left to the
+// caller's browser (links are plain; AppShell marks active items).
+func navSections() []containers.NavSection {
+	byCategory := make(map[string][]daisyui.MenuItem)
+	var order []string
+	for _, e := range registry.Sorted() {
+		if _, ok := byCategory[e.Category]; !ok {
+			order = append(order, e.Category)
+		}
+		byCategory[e.Category] = append(byCategory[e.Category], daisyui.MenuItem{
+			Label: e.Name,
+			Href:  "/components/" + e.Slug,
+		})
+	}
+	sections := make([]containers.NavSection, 0, len(order))
+	for _, cat := range order {
+		sections = append(sections, containers.NavSection{
+			Title: cat,
+			Items: byCategory[cat],
+		})
+	}
+	return sections
+}
+
+// pageMain renders the component page's main content container with its
+// title heading and description, wrapping the page body.
+templ pageMain(title, description string, body templ.Component) {
+	<main class="p-8 w-full max-w-6xl mx-auto space-y-8">
+		<h1 class="text-3xl font-bold text-primary">{ title }</h1>
+		<p class="text-base-content/70">{ description }</p>
+		@body
+	</main>
+}
+
+// Section renders a single component example (exported for the demos
+// package). It shows a daisyUI tab strip with two tabs: "preview" (the live
+// rendered component) and "templ" (the templ source used to produce the
+// preview). The tabs are pure-CSS radio tabs, so switching between them
+// requires no JavaScript. code is the templ snippet shown verbatim under the
+// "templ" tab.
+templ Section(title, code string, body templ.Component) {
+	<section class="space-y-4 rounded-box p-4 shadow-sm component-preview">
+		<h2 class="text-2xl font-semibold">{ title }</h2>
+		<div role="tablist" class="tabs tabs-lift">
+			<input
+				type="radio"
+				name={ tabGroup(title) }
+				role="tab"
+				class="tab"
+				aria-label="preview"
+				checked
+			/>
+			<div role="tabpanel" class="tab-content border-base-300 bg-base-100 p-4">
+				@body
+			</div>
+			<input
+				type="radio"
+				name={ tabGroup(title) }
+				role="tab"
+				class="tab"
+				aria-label="templ"
+			/>
+			<div role="tabpanel" class="tab-content border-base-300 bg-base-100 p-4">
+				@shiki.Code(shiki.CodeConfig{
+					Lang:  "templ",
+					Theme: "nord",
+					Code:  strings.TrimSpace(code),
+					Class: "border border-1 border-base-300 rounded-box p-4",
+				})
+			</div>
+		</div>
+	</section>
+}
+
+// GlassBackdrop renders a vibrant multi-stop radial-gradient backdrop with a
+// child glass component layered on top, so the glass effect (translucency +
+// backdrop blur) is clearly visible. A radial gradient is used (rather than
+// linear) so it doesn't visually interfere with the linear ::before highlight
+// on the .glass class. Without a detailed backdrop behind it, glass over a
+// flat bg-base surface shows nothing to blur or see through.
+// (Exported for the demos package.)
+templ GlassBackdrop(child templ.Component) {
+	<div
+		class="relative overflow-hidden rounded-box p-6 min-h-64 flex items-center justify-center"
+		style="background: radial-gradient(circle at 20% 30%, #6366f1 0%, transparent 50%), radial-gradient(circle at 80% 20%, #ec4899 0%, transparent 50%), radial-gradient(circle at 50% 80%, #14b8a6 0%, transparent 50%), #1e1b4b;"
+	>
+		<div class="max-w-sm w-full">
+			@child
+		</div>
+	</div>
+}
+
+// tabGroup derives a radio group name from a section title so that each
+// section's preview/templ tabs toggle independently of every other section
+// on the page. Titles are unique within a page, which keeps the names unique.
+func tabGroup(title string) string {
+	var b strings.Builder
+	b.WriteString("tab-")
+	for _, r := range strings.ToLower(title) {
+		switch {
+		case r >= 'a' && r <= 'z', r >= '0' && r <= '9':
+			b.WriteRune(r)
+		default:
+			b.WriteByte('-')
+		}
+	}
+	return b.String()
+}

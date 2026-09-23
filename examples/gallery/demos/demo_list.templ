@@ -1,0 +1,147 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "list",
+		Name:        "List",
+		Description: "List is a vertical layout to display information in rows.",
+		Category:    "daisyui",
+		Body:        listBody,
+	})
+}
+
+templ listBody() {
+	@gallery.Section("List (second column grows - default)", `@daisyui.List(daisyui.ListConfig{
+	Class:  "bg-base-100 rounded-box shadow-md",
+	Header: listHeader(),
+	Items: []daisyui.ListItem{
+		listSongRow(".../1@94.webp", "Dio Lupa", "Remaining Reason"),
+		// ... one row per song
+	},
+})`, daisyui.List(daisyui.ListConfig{
+		Class:  "bg-base-100 rounded-box shadow-md",
+		Header: listHeader(),
+		Items: []daisyui.ListItem{
+			listSongRow("https://img.daisyui.com/images/profile/demo/1@94.webp", "Dio Lupa", "Remaining Reason"),
+			listSongRow("https://img.daisyui.com/images/profile/demo/4@94.webp", "Ellie Beilish", "Bears of a fever"),
+			listSongRow("https://img.daisyui.com/images/profile/demo/3@94.webp", "Sabrino Gardener", "Cappuccino"),
+		},
+	}))
+	@gallery.Section("List (third column grows)", `@daisyui.List(daisyui.ListConfig{
+	Class:  "bg-base-100 rounded-box shadow-md",
+	Header: listHeader(),
+	Items: []daisyui.ListItem{
+		listNumberedRow("01", ".../1@94.webp", "Dio Lupa", "Remaining Reason"),
+		// ... one numbered row per song
+	},
+})`, daisyui.List(daisyui.ListConfig{
+		Class:  "bg-base-100 rounded-box shadow-md",
+		Header: listHeader(),
+		Items: []daisyui.ListItem{
+			listNumberedRow("01", "https://img.daisyui.com/images/profile/demo/1@94.webp", "Dio Lupa", "Remaining Reason"),
+			listNumberedRow("02", "https://img.daisyui.com/images/profile/demo/4@94.webp", "Ellie Beilish", "Bears of a fever"),
+			listNumberedRow("03", "https://img.daisyui.com/images/profile/demo/3@94.webp", "Sabrino Gardener", "Cappuccino"),
+		},
+	}))
+	@gallery.Section("List (third column wraps to next row)", `@daisyui.List(daisyui.ListConfig{
+	Class:  "bg-base-100 rounded-box shadow-md",
+	Header: listHeader(),
+	Items: []daisyui.ListItem{
+		listWrapRow(".../1@94.webp", "Dio Lupa", "Remaining Reason", "Long description that wraps to the next row..."),
+		// ... one wrapping row per song
+	},
+})`, daisyui.List(daisyui.ListConfig{
+		Class:  "bg-base-100 rounded-box shadow-md",
+		Header: listHeader(),
+		Items: []daisyui.ListItem{
+			listWrapRow("https://img.daisyui.com/images/profile/demo/1@94.webp", "Dio Lupa", "Remaining Reason", `"Remaining Reason" became an instant hit, praised for its haunting sound and emotional depth. A viral performance brought it widespread recognition, making it one of Dio Lupa's most iconic tracks.`),
+			listWrapRow("https://img.daisyui.com/images/profile/demo/4@94.webp", "Ellie Beilish", "Bears of a fever", `"Bears of a Fever" captivated audiences with its intense energy and mysterious lyrics. Its popularity skyrocketed after fans shared it widely online, earning Ellie critical acclaim.`),
+			listWrapRow("https://img.daisyui.com/images/profile/demo/3@94.webp", "Sabrino Gardener", "Cappuccino", `"Cappuccino" quickly gained attention for its smooth melody and relatable themes. The song's success propelled Sabrino into the spotlight, solidifying their status as a rising star.`),
+		},
+	}))
+	@gallery.Section("List with glass", `@daisyui.List(daisyui.ListConfig{
+	Glass:  true,
+	Class:  "rounded-box",
+	Header: listHeader(),
+	Items: []daisyui.ListItem{
+		listSongRow(".../1@94.webp", "Dio Lupa", "Remaining Reason"),
+		// ... one row per song
+	},
+})`, gallery.GlassBackdrop(daisyui.List(daisyui.ListConfig{
+		Glass:  true,
+		Class:  "rounded-box",
+		Header: listHeader(),
+		Items: []daisyui.ListItem{
+			listSongRow("https://img.daisyui.com/images/profile/demo/1@94.webp", "Dio Lupa", "Remaining Reason"),
+			listSongRow("https://img.daisyui.com/images/profile/demo/4@94.webp", "Ellie Beilish", "Bears of a fever"),
+			listSongRow("https://img.daisyui.com/images/profile/demo/3@94.webp", "Sabrino Gardener", "Cappuccino"),
+		},
+	})))
+}
+
+templ listHeader() {
+	Most played songs this week
+}
+
+func listSongRow(img, name, title string) daisyui.ListItem {
+	return daisyui.ListItem{
+		Items: []templ.Component{
+			listThumb(img),
+			listNameBlock(name, title),
+			listPlayButton(),
+			listLikeButton(),
+		},
+	}
+}
+
+func listNumberedRow(num, img, name, title string) daisyui.ListItem {
+	return daisyui.ListItem{
+		Items: []templ.Component{
+			templ.Raw(`<div class="text-4xl font-thin opacity-30 tabular-nums">` + num + `</div>`),
+			listThumb(img),
+			daisyui.ListColGrow(listNameBlock(name, title)),
+			listPlayButton(),
+		},
+	}
+}
+
+func listWrapRow(img, name, title, desc string) daisyui.ListItem {
+	return daisyui.ListItem{
+		Items: []templ.Component{
+			listThumb(img),
+			listNameBlock(name, title),
+			daisyui.ListColWrap(templ.Raw(desc)),
+			listPlayButton(),
+			listLikeButton(),
+		},
+	}
+}
+
+templ listThumb(src string) {
+	<div><img class="size-10 rounded-box" src={ templ.SafeURL(src) } alt="Tailwind CSS list item"/></div>
+}
+
+templ listNameBlock(name, title string) {
+	<div>
+		<div>{ name }</div>
+		<div class="text-xs uppercase font-semibold opacity-60">{ title }</div>
+	</div>
+}
+
+templ listPlayButton() {
+	<button class="btn btn-square btn-ghost">
+		<svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"><path d="M6 3L20 12 6 21 6 3z"></path></g></svg>
+	</button>
+}
+
+templ listLikeButton() {
+	<button class="btn btn-square btn-ghost">
+		<svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></g></svg>
+	</button>
+}

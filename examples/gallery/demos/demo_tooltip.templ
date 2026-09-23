@@ -1,0 +1,129 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ tooltipBody() {
+	@gallery.Section("Tooltip", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip:      "hello",
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "Hover me"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip:      "hello",
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "Hover me"}),
+	}))
+	@gallery.Section("Tooltip with tooltip-content", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Content:  templ.Raw(...),
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "Hover me"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Content:  templ.Raw(`<div class="animate-bounce text-orange-400 -rotate-10 text-2xl font-black">Wow!</div>`),
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "Hover me"}),
+	}))
+	@gallery.Section("Force open", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip:      "hello",
+	Open:     true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "Force open"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip:      "hello",
+		Open:     true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "Force open"}),
+	}))
+	@gallery.Section("Top", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "hello", Position: "top", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "Top"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "hello", Position: "top", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "Top"}),
+	}))
+	@gallery.Section("Bottom", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "hello", Position: "bottom", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "Bottom"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "hello", Position: "bottom", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "Bottom"}),
+	}))
+	@gallery.Section("Left", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "hello", Position: "left", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "Left"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "hello", Position: "left", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "Left"}),
+	}))
+	@gallery.Section("Right", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "hello", Position: "right", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "Right"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "hello", Position: "right", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "Right"}),
+	}))
+	@gallery.Section("Primary color", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "primary", Color: "primary", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "primary", Color: "primary"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "primary", Color: "primary", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "primary", Color: "primary"}),
+	}))
+	@gallery.Section("Secondary color", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "secondary", Color: "secondary", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "secondary", Color: "secondary"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "secondary", Color: "secondary", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "secondary", Color: "secondary"}),
+	}))
+	@gallery.Section("Accent color", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "accent", Color: "accent", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "accent", Color: "accent"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "accent", Color: "accent", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "accent", Color: "accent"}),
+	}))
+	@gallery.Section("Info color", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "info", Color: "info", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "info", Color: "info"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "info", Color: "info", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "info", Color: "info"}),
+	}))
+	@gallery.Section("Success color", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "success", Color: "success", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "success", Color: "success"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "success", Color: "success", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "success", Color: "success"}),
+	}))
+	@gallery.Section("Warning color", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "warning", Color: "warning", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "warning", Color: "warning"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "warning", Color: "warning", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "warning", Color: "warning"}),
+	}))
+	@gallery.Section("Error color", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip: "error", Color: "error", Open: true,
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "error", Color: "error"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip: "error", Color: "error", Open: true,
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "error", Color: "error"}),
+	}))
+	@gallery.Section("Responsive tooltip. only show for large screen", `@daisyui.Tooltip(daisyui.TooltipConfig{
+	Tip:      "hello",
+	Class:    "lg:tooltip",
+	Children: daisyui.Button(daisyui.ButtonConfig{Label: "Hover me"}),
+})`, daisyui.Tooltip(daisyui.TooltipConfig{
+		Tip:      "hello",
+		Class:    "lg:tooltip",
+		Children: daisyui.Button(daisyui.ButtonConfig{Label: "Hover me"}),
+	}))
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "tooltip",
+		Name:        "Tooltip",
+		Description: "Tooltip can be used to show a message when hovering over an element.",
+		Category:    "daisyui",
+		Body:        tooltipBody,
+	})
+}

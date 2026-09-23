@@ -1,0 +1,394 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+const cardImg = "https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+const cardImg2 = "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
+const cardImg3 = "https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp"
+
+templ cardBody() {
+	@gallery.Section(
+		"Card",
+		`@daisyui.Card(daisyui.CardConfig{
+  ImageSrc: cardImg,
+  ImageAlt: "Shoes",
+  Title:    "Card Title",
+  Desc:     "A card component has a figure, a body part, and inside body there are title and actions parts",
+  Class:    "w-96 bg-base-100 shadow-sm",
+  Actions:  daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+})`,
+		daisyui.Card(daisyui.CardConfig{
+			ImageSrc: cardImg,
+			ImageAlt: "Shoes",
+			Title:    "Card Title",
+			Desc:     "A card component has a figure, a body part, and inside body there are title and actions parts",
+			Class:    "w-96 bg-base-100 shadow-sm",
+			Actions:  daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+		}),
+	)
+	@gallery.Section(
+		"Pricing card",
+		`@daisyui.Card(daisyui.CardConfig{
+  Class: "w-96 bg-base-100 shadow-sm",
+  Body:  pricingCardBody(),
+})
+
+// pricingCardBody renders:
+<span class="badge badge-xs badge-warning">Most Popular</span>
+<div class="flex justify-between">
+  <h2 class="text-3xl font-bold">Premium</h2>
+  <span class="text-xl">$29/mo</span>
+</div>
+<ul class="mt-6 flex flex-col gap-2 text-xs">
+  <li>
+    <svg class="size-4 me-2 inline-block text-success" ...></svg>
+    <span>High-resolution image generation</span>
+  </li>
+  // ... one per feature
+</ul>
+
+<div class="mt-6">
+  @daisyui.Button(daisyui.ButtonConfig{Label: "Subscribe", Color: "primary", Modifier: "block"})
+</div>`,
+		daisyui.Card(daisyui.CardConfig{
+			Class: "w-96 bg-base-100 shadow-sm",
+			Body:  cardDemoPricingCardBody(),
+		}),
+	)
+	@gallery.Section("Card sizes", `<div class="grid gap-6">
+@daisyui.Card(daisyui.CardConfig{
+  Size:    "xs",
+  Class:   "w-96 bg-base-100 shadow-sm",
+  Title:   "Xsmall Card",
+  Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+  Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+})
+@daisyui.Card(daisyui.CardConfig{
+  Size:    "sm",
+  Class:   "w-96 bg-base-100 shadow-sm",
+  Title:   "Small Card",
+  Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+  Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+})
+// ... one per size (md, lg, xl)
+</div>`, cardDemoSizes())
+	@gallery.Section("Card with a card-border", `@daisyui.Card(daisyui.CardConfig{
+	Style:   "border",
+	Class:   "w-96 bg-base-100",
+	Title:   "Card Title",
+	Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+	Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+})`, daisyui.Card(daisyui.CardConfig{
+		Style:   "border",
+		Class:   "w-96 bg-base-100",
+		Title:   "Card Title",
+		Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+		Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+	}))
+	@gallery.Section("Card with a dash border", `@daisyui.Card(daisyui.CardConfig{
+	Style:   "dash",
+	Class:   "w-96 bg-base-100",
+	Title:   "Card Title",
+	Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+	Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+})`, daisyui.Card(daisyui.CardConfig{
+		Style:   "dash",
+		Class:   "w-96 bg-base-100",
+		Title:   "Card Title",
+		Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+		Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+	}))
+	@gallery.Section("Card with badge", `@daisyui.Card(daisyui.CardConfig{
+	ImageSrc: cardImg,
+	ImageAlt: "Shoes",
+	Class:    "w-96 bg-base-100 shadow-sm",
+	Body:     cardBadgeBody(),
+})
+
+// cardBadgeBody renders:
+<h2 class="card-title">
+	Card Title
+	<div class="badge badge-secondary">NEW</div>
+</h2>
+<p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
+<div class="justify-end card-actions">
+	<div class="badge badge-outline">Fashion</div>
+	<div class="badge badge-outline">Products</div>
+</div>`, daisyui.Card(daisyui.CardConfig{
+		ImageSrc: cardImg,
+		ImageAlt: "Shoes",
+		Class:    "w-96 bg-base-100 shadow-sm",
+		Body:     cardDemoBadgeBody(),
+	}))
+	@gallery.Section("Card with bottom image", `@daisyui.Card(daisyui.CardConfig{
+	ImageSrc:    cardImg,
+	ImageAlt:    "Shoes",
+	ImageBottom: true,
+	Title:       "Card Title",
+	Desc:        "A card component has a figure, a body part, and inside body there are title and actions parts",
+	Class:       "w-96 bg-base-100 shadow-sm",
+})`, daisyui.Card(daisyui.CardConfig{
+		ImageSrc:    cardImg,
+		ImageAlt:    "Shoes",
+		ImageBottom: true,
+		Title:       "Card Title",
+		Desc:        "A card component has a figure, a body part, and inside body there are title and actions parts",
+		Class:       "w-96 bg-base-100 shadow-sm",
+	}))
+	@gallery.Section("Card with centered content and paddings", `@daisyui.Card(daisyui.CardConfig{
+	ImageSrc:   cardImg,
+	ImageAlt:   "Shoes",
+	ImageClass: "px-10 pt-10",
+	Title:      "Card Title",
+	Desc:       "A card component has a figure, a body part, and inside body there are title and actions parts",
+	Class:      "w-96 bg-base-100 shadow-sm",
+	Actions:    daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+})`, daisyui.Card(daisyui.CardConfig{
+		ImageSrc:   cardImg,
+		ImageAlt:   "Shoes",
+		ImageClass: "px-10 pt-10",
+		Title:      "Card Title",
+		Desc:       "A card component has a figure, a body part, and inside body there are title and actions parts",
+		Class:      "w-96 bg-base-100 shadow-sm",
+		Actions:    daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+	}))
+	@gallery.Section("Card with image overlay", `@daisyui.Card(daisyui.CardConfig{
+	ImageSrc: cardImg,
+	ImageAlt: "Shoes",
+	Modifier: "image-full",
+	Title:    "Card Title",
+	Desc:     "A card component has a figure, a body part, and inside body there are title and actions parts",
+	Class:    "w-96 bg-base-100 shadow-sm",
+	Actions:  daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+})`, daisyui.Card(daisyui.CardConfig{
+		ImageSrc: cardImg,
+		ImageAlt: "Shoes",
+		Modifier: "image-full",
+		Title:    "Card Title",
+		Desc:     "A card component has a figure, a body part, and inside body there are title and actions parts",
+		Class:    "w-96 bg-base-100 shadow-sm",
+		Actions:  daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+	}))
+	@gallery.Section("Card with no image", `@daisyui.Card(daisyui.CardConfig{
+	Class:   "w-96 bg-base-100 shadow-sm",
+	Title:   "Card title!",
+	Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+	Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+})`, daisyui.Card(daisyui.CardConfig{
+		Class:   "w-96 bg-base-100 shadow-sm",
+		Title:   "Card title!",
+		Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+		Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+	}))
+	@gallery.Section("Card with custom color", `@daisyui.Card(daisyui.CardConfig{
+	Class:   "w-96 bg-primary text-primary-content",
+	Title:   "Card title!",
+	Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+	Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now"}),
+})`, daisyui.Card(daisyui.CardConfig{
+		Class:   "w-96 bg-primary text-primary-content",
+		Title:   "Card title!",
+		Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+		Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now"}),
+	}))
+	@gallery.Section("Centered card with neutral color", `@daisyui.Card(daisyui.CardConfig{
+	Class: "w-96 bg-neutral text-neutral-content",
+	Body:  cookiesBody(),
+})
+
+// cookiesBody renders:
+<div class="items-center text-center">
+	<h2 class="card-title">Cookies!</h2>
+	<p>We are using cookies for no reason.</p>
+	<div class="justify-end card-actions">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Accept", Color: "primary"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Deny", Style: "ghost"})
+	</div>
+</div>`, daisyui.Card(daisyui.CardConfig{
+		Class: "w-96 bg-neutral text-neutral-content",
+		Body:  cardDemoCookiesBody(),
+	}))
+	@gallery.Section("Card with action on top", `@daisyui.Card(daisyui.CardConfig{
+	Class: "w-96 bg-base-100 shadow-sm",
+	Body:  cardActionOnTopBody(),
+})
+
+// cardActionOnTopBody renders:
+<div>
+	<div class="justify-end card-actions">
+		<button class="btn btn-square btn-sm">
+			<svg class="h-6 w-6" ...></svg>
+		</button>
+	</div>
+	<p>We are using cookies for no reason.</p>
+</div>`, daisyui.Card(daisyui.CardConfig{
+		Class: "w-96 bg-base-100 shadow-sm",
+		Body:  cardDemoActionOnTopBody(),
+	}))
+	@gallery.Section("Card with image on side", `@daisyui.Card(daisyui.CardConfig{
+	ImageSrc: cardImg2,
+	ImageAlt: "Movie",
+	Modifier: "side",
+	Class:    "bg-base-100 shadow-sm",
+	Title:    "New movie is released!",
+	Desc:     "Click the button to watch on Jetflix app.",
+	Actions:  daisyui.Button(daisyui.ButtonConfig{Label: "Watch", Color: "primary"}),
+})`, daisyui.Card(daisyui.CardConfig{
+		ImageSrc: cardImg2,
+		ImageAlt: "Movie",
+		Modifier: "side",
+		Class:    "bg-base-100 shadow-sm",
+		Title:    "New movie is released!",
+		Desc:     "Click the button to watch on Jetflix app.",
+		Actions:  daisyui.Button(daisyui.ButtonConfig{Label: "Watch", Color: "primary"}),
+	}))
+	@gallery.Section("Responsive card (vertical on small screen, horizontal on large screen)", `@daisyui.Card(daisyui.CardConfig{
+	ImageSrc: cardImg3,
+	ImageAlt: "Album",
+	Class:    "lg:card-side bg-base-100 shadow-sm",
+	Title:    "New album is released!",
+	Desc:     "Click the button to listen on Spotiwhy app.",
+	Actions:  daisyui.Button(daisyui.ButtonConfig{Label: "Listen", Color: "primary"}),
+})`, daisyui.Card(daisyui.CardConfig{
+		ImageSrc: cardImg3,
+		ImageAlt: "Album",
+		Class:    "lg:card-side bg-base-100 shadow-sm",
+		Title:    "New album is released!",
+		Desc:     "Click the button to listen on Spotiwhy app.",
+		Actions:  daisyui.Button(daisyui.ButtonConfig{Label: "Listen", Color: "primary"}),
+	}))
+	@gallery.Section("Card with glass", `@daisyui.Card(daisyui.CardConfig{
+	Glass:  true,
+	Class:  "w-96 text-base-content",
+	Title:  "Glass card",
+	Desc:   "A translucent, blurred surface that adapts to the active theme.",
+	Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+})`, gallery.GlassBackdrop(daisyui.Card(daisyui.CardConfig{
+		Glass:   true,
+		Class:   "w-96 text-base-content",
+		Title:   "Glass card",
+		Desc:    "A translucent, blurred surface that adapts to the active theme.",
+		Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+	})))
+}
+
+templ cardDemoPricingCardBody() {
+	<span class="badge badge-xs badge-warning">Most Popular</span>
+	<div class="flex justify-between">
+		<h2 class="text-3xl font-bold">Premium</h2>
+		<span class="text-xl">$29/mo</span>
+	</div>
+	<ul class="mt-6 flex flex-col gap-2 text-xs">
+		<li>
+			<svg xmlns="http://www.w3.org/2000/svg" class="size-4 me-2 inline-block text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+			<span>High-resolution image generation</span>
+		</li>
+		<li>
+			<svg xmlns="http://www.w3.org/2000/svg" class="size-4 me-2 inline-block text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+			<span>Customizable style templates</span>
+		</li>
+		<li>
+			<svg xmlns="http://www.w3.org/2000/svg" class="size-4 me-2 inline-block text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+			<span>Batch processing capabilities</span>
+		</li>
+		<li class="opacity-50">
+			<svg xmlns="http://www.w3.org/2000/svg" class="size-4 me-2 inline-block text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+			<span class="line-through">Seamless cloud integration</span>
+		</li>
+		<li class="opacity-50">
+			<svg xmlns="http://www.w3.org/2000/svg" class="size-4 me-2 inline-block text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+			<span class="line-through">Real-time collaboration tools</span>
+		</li>
+	</ul>
+	<div class="mt-6">
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Subscribe", Color: "primary", Modifier: "block"})
+	</div>
+}
+
+templ cardDemoBadgeBody() {
+	<h2 class="card-title">
+		Card Title
+		<div class="badge badge-secondary">NEW</div>
+	</h2>
+	<p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
+	<div class="justify-end card-actions">
+		<div class="badge badge-outline">Fashion</div>
+		<div class="badge badge-outline">Products</div>
+	</div>
+}
+
+templ cardDemoCookiesBody() {
+	<div class="items-center text-center">
+		<h2 class="card-title">Cookies!</h2>
+		<p>We are using cookies for no reason.</p>
+		<div class="justify-end card-actions">
+			@daisyui.Button(daisyui.ButtonConfig{Label: "Accept", Color: "primary"})
+			@daisyui.Button(daisyui.ButtonConfig{Label: "Deny", Style: "ghost"})
+		</div>
+	</div>
+}
+
+templ cardDemoActionOnTopBody() {
+	<div>
+		<div class="justify-end card-actions">
+			<button class="btn btn-square btn-sm">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+			</button>
+		</div>
+		<p>We are using cookies for no reason.</p>
+	</div>
+}
+
+templ cardDemoSizes() {
+	<div class="grid gap-6">
+		@daisyui.Card(daisyui.CardConfig{
+			Size:    "xs",
+			Class:   "w-96 bg-base-100 shadow-sm",
+			Title:   "Xsmall Card",
+			Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+			Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+		})
+		@daisyui.Card(daisyui.CardConfig{
+			Size:    "sm",
+			Class:   "w-96 bg-base-100 shadow-sm",
+			Title:   "Small Card",
+			Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+			Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+		})
+		@daisyui.Card(daisyui.CardConfig{
+			Size:    "md",
+			Class:   "w-96 bg-base-100 shadow-sm",
+			Title:   "Medium Card",
+			Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+			Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+		})
+		@daisyui.Card(daisyui.CardConfig{
+			Size:    "lg",
+			Class:   "w-96 bg-base-100 shadow-sm",
+			Title:   "Large Card",
+			Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+			Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+		})
+		@daisyui.Card(daisyui.CardConfig{
+			Size:    "xl",
+			Class:   "w-96 bg-base-100 shadow-sm",
+			Title:   "Xlarge Card",
+			Desc:    "A card component has a figure, a body part, and inside body there are title and actions parts",
+			Actions: daisyui.Button(daisyui.ButtonConfig{Label: "Buy Now", Color: "primary"}),
+		})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "card",
+		Name:        "Card",
+		Description: "Cards are used to group and display content in a way that is easily readable.",
+		Category:    "daisyui",
+		Body:        cardBody,
+	})
+}

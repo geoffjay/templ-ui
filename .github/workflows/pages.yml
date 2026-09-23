@@ -1,0 +1,77 @@
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build gallery site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Set up bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install templ CLI
+        run: go install github.com/a-h/templ/cmd/templ@v0.3.1020
+
+      - name: Generate templ sources
+        run: templ generate
+
+      - name: Install JS dependencies
+        run: bun install
+
+      - name: Build frontend assets
+        run: bun run build
+
+      - name: Export static site
+        run: go run ./examples/gallery/cmd/export site
+
+      - name: Fix asset paths for project pages
+        # GitHub Pages serves this repo at /<repo>/, so rewrite the
+        # gallery-relative asset URLs to the repo-relative base. The site is
+        # self-contained under site/ afterwards.
+        run: |
+          BASE="/templ-ui"
+          find site -name '*.html' -exec sed -i \
+            -e "s|href=\"static/|href=\"$BASE/static/|g" \
+            -e "s|src=\"static/|src=\"$BASE/static/|g" \
+            -e "s|href=\"/components/|href=\"$BASE/components/|g" \
+            -e "s|href=\"/\"|href=\"$BASE/\"|g" \
+            {} +
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

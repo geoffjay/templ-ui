@@ -1,0 +1,185 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+const carouselImg1 = "https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp"
+const carouselImg2 = "https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp"
+const carouselImg3 = "https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp"
+const carouselImg4 = "https://img.daisyui.com/images/stock/photo-1494253109108-2e30c049369b.webp"
+const carouselImg5 = "https://img.daisyui.com/images/stock/photo-1550258987-190a2d41a8ba.webp"
+const carouselImg6 = "https://img.daisyui.com/images/stock/photo-1559181567-c3190ca9959b.webp"
+const carouselImg7 = "https://img.daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.webp"
+const carouselIndicatorImg1 = "https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
+const carouselIndicatorImg2 = "https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
+const carouselIndicatorImg3 = "https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
+const carouselIndicatorImg4 = "https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
+
+func carouselSlides() []daisyui.CarouselSlide {
+	return []daisyui.CarouselSlide{
+		{Src: carouselImg1, Alt: "Carousel slider"},
+		{Src: carouselImg2, Alt: "Carousel slider"},
+		{Src: carouselImg3, Alt: "Carousel slider"},
+		{Src: carouselImg4, Alt: "Carousel slider"},
+		{Src: carouselImg5, Alt: "Carousel slider"},
+		{Src: carouselImg6, Alt: "Carousel slider"},
+		{Src: carouselImg7, Alt: "Carousel slider"},
+	}
+}
+
+func carouselFullSlides() []daisyui.CarouselSlide {
+	return []daisyui.CarouselSlide{
+		{Src: carouselImg1, Alt: "Tailwind CSS carousel component", Full: true, ImageClass: "w-full"},
+		{Src: carouselImg2, Alt: "Tailwind CSS carousel component", Full: true, ImageClass: "w-full"},
+		{Src: carouselImg3, Alt: "Tailwind CSS carousel component", Full: true, ImageClass: "w-full"},
+		{Src: carouselImg4, Alt: "Tailwind CSS carousel component", Full: true, ImageClass: "w-full"},
+		{Src: carouselImg5, Alt: "Tailwind CSS carousel component", Full: true, ImageClass: "w-full"},
+		{Src: carouselImg6, Alt: "Tailwind CSS carousel component", Full: true, ImageClass: "w-full"},
+		{Src: carouselImg7, Alt: "Tailwind CSS carousel component", Full: true, ImageClass: "w-full"},
+	}
+}
+
+func carouselHalfSlides() []daisyui.CarouselSlide {
+	return []daisyui.CarouselSlide{
+		{Src: carouselImg1, Alt: "Tailwind CSS slide plugin", Width: "w-1/2", ImageClass: "w-full"},
+		{Src: carouselImg2, Alt: "Tailwind CSS slide plugin", Width: "w-1/2", ImageClass: "w-full"},
+		{Src: carouselImg3, Alt: "Tailwind CSS slide plugin", Width: "w-1/2", ImageClass: "w-full"},
+		{Src: carouselImg4, Alt: "Tailwind CSS slide plugin", Width: "w-1/2", ImageClass: "w-full"},
+		{Src: carouselImg5, Alt: "Tailwind CSS slide plugin", Width: "w-1/2", ImageClass: "w-full"},
+		{Src: carouselImg6, Alt: "Tailwind CSS slide plugin", Width: "w-1/2", ImageClass: "w-full"},
+		{Src: carouselImg7, Alt: "Tailwind CSS slide plugin", Width: "w-1/2", ImageClass: "w-full"},
+	}
+}
+
+func carouselVerticalSlides() []daisyui.CarouselSlide {
+	return []daisyui.CarouselSlide{
+		{Src: carouselImg1, Alt: "Free Tailwind CSS Slider", Class: "h-full"},
+		{Src: carouselImg2, Alt: "Free Tailwind CSS Slider", Class: "h-full"},
+		{Src: carouselImg3, Alt: "Free Tailwind CSS Slider", Class: "h-full"},
+		{Src: carouselImg4, Alt: "Free Tailwind CSS Slider", Class: "h-full"},
+		{Src: carouselImg5, Alt: "Free Tailwind CSS Slider", Class: "h-full"},
+		{Src: carouselImg6, Alt: "Free Tailwind CSS Slider", Class: "h-full"},
+		{Src: carouselImg7, Alt: "Free Tailwind CSS Slider", Class: "h-full"},
+	}
+}
+
+func carouselFullBleedSlides() []daisyui.CarouselSlide {
+	return []daisyui.CarouselSlide{
+		{Src: carouselImg1, Alt: "Tailwind CSS component", ImageClass: "rounded-box"},
+		{Src: carouselImg2, Alt: "Tailwind CSS component", ImageClass: "rounded-box"},
+		{Src: carouselImg3, Alt: "Tailwind CSS component", ImageClass: "rounded-box"},
+		{Src: carouselImg4, Alt: "Tailwind CSS component", ImageClass: "rounded-box"},
+		{Src: carouselImg5, Alt: "Tailwind CSS component", ImageClass: "rounded-box"},
+		{Src: carouselImg6, Alt: "Tailwind CSS component", ImageClass: "rounded-box"},
+		{Src: carouselImg7, Alt: "Tailwind CSS component", ImageClass: "rounded-box"},
+	}
+}
+
+func carouselIndicatorSlides() []daisyui.CarouselSlide {
+	return []daisyui.CarouselSlide{
+		{ID: "item1", Src: carouselIndicatorImg1, Alt: "Tailwind CSS gallery", Full: true, ImageClass: "w-full"},
+		{ID: "item2", Src: carouselIndicatorImg2, Alt: "Tailwind CSS gallery", Full: true, ImageClass: "w-full"},
+		{ID: "item3", Src: carouselIndicatorImg3, Alt: "Tailwind CSS gallery", Full: true, ImageClass: "w-full"},
+		{ID: "item4", Src: carouselIndicatorImg4, Alt: "Tailwind CSS gallery", Full: true, ImageClass: "w-full"},
+	}
+}
+
+func carouselNextPrevSlides() []daisyui.CarouselSlide {
+	return []daisyui.CarouselSlide{
+		{ID: "slide1", Src: carouselIndicatorImg1, Alt: "Tailwind CSS slide example", Full: true, ImageClass: "w-full"},
+		{ID: "slide2", Src: carouselIndicatorImg2, Alt: "Tailwind CSS slide example", Full: true, ImageClass: "w-full"},
+		{ID: "slide3", Src: carouselIndicatorImg3, Alt: "Tailwind CSS slide example", Full: true, ImageClass: "w-full"},
+		{ID: "slide4", Src: carouselIndicatorImg4, Alt: "Tailwind CSS slide example", Full: true, ImageClass: "w-full"},
+	}
+}
+
+templ carouselBody() {
+	@gallery.Section("Snap to start (default)", `@daisyui.Carousel(daisyui.CarouselConfig{
+	Class:  "rounded-box",
+	Slides: carouselSlides(),
+})`, daisyui.Carousel(daisyui.CarouselConfig{
+		Class:  "rounded-box",
+		Slides: carouselSlides(),
+	}))
+	@gallery.Section("Snap to center", `@daisyui.Carousel(daisyui.CarouselConfig{
+	Snap:   "center",
+	Class:  "rounded-box",
+	Slides: carouselSlides(),
+})`, daisyui.Carousel(daisyui.CarouselConfig{
+		Snap:   "center",
+		Class:  "rounded-box",
+		Slides: carouselSlides(),
+	}))
+	@gallery.Section("Snap to end", `@daisyui.Carousel(daisyui.CarouselConfig{
+	Snap:   "end",
+	Class:  "rounded-box",
+	Slides: carouselSlides(),
+})`, daisyui.Carousel(daisyui.CarouselConfig{
+		Snap:   "end",
+		Class:  "rounded-box",
+		Slides: carouselSlides(),
+	}))
+	@gallery.Section("Carousel with full width items", `@daisyui.Carousel(daisyui.CarouselConfig{
+	Class:  "w-64 rounded-box",
+	Slides: carouselFullSlides(),
+})`, daisyui.Carousel(daisyui.CarouselConfig{
+		Class:  "w-64 rounded-box",
+		Slides: carouselFullSlides(),
+	}))
+	@gallery.Section("Vertical carousel", `@daisyui.Carousel(daisyui.CarouselConfig{
+	Direction: "vertical",
+	Class:     "h-96 rounded-box",
+	Slides:    carouselVerticalSlides(),
+})`, daisyui.Carousel(daisyui.CarouselConfig{
+		Direction: "vertical",
+		Class:     "h-96 rounded-box",
+		Slides:    carouselVerticalSlides(),
+	}))
+	@gallery.Section("Carousel with half width items", `@daisyui.Carousel(daisyui.CarouselConfig{
+	Class:  "w-96 rounded-box",
+	Slides: carouselHalfSlides(),
+})`, daisyui.Carousel(daisyui.CarouselConfig{
+		Class:  "w-96 rounded-box",
+		Slides: carouselHalfSlides(),
+	}))
+	@gallery.Section("Full-bleed carousel", `@daisyui.Carousel(daisyui.CarouselConfig{
+	Snap:   "center",
+	Class: "max-w-md p-4 space-x-4 bg-neutral rounded-box",
+	Slides: carouselFullBleedSlides(),
+})`, daisyui.Carousel(daisyui.CarouselConfig{
+		Snap:   "center",
+		Class:  "max-w-md p-4 space-x-4 bg-neutral rounded-box",
+		Slides: carouselFullBleedSlides(),
+	}))
+	@gallery.Section("Carousel with indicator buttons", `@daisyui.Carousel(daisyui.CarouselConfig{
+	Class:      "w-full",
+	Slides:     carouselIndicatorSlides(),
+	Indicators: true,
+})`, daisyui.Carousel(daisyui.CarouselConfig{
+		Class:      "w-full",
+		Slides:     carouselIndicatorSlides(),
+		Indicators: true,
+	}))
+	@gallery.Section("Carousel with next/prev buttons", `@daisyui.Carousel(daisyui.CarouselConfig{
+	Class:    "w-full",
+	Slides:   carouselNextPrevSlides(),
+	Controls: true,
+})`, daisyui.Carousel(daisyui.CarouselConfig{
+		Class:    "w-full",
+		Slides:   carouselNextPrevSlides(),
+		Controls: true,
+	}))
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "carousel",
+		Name:        "Carousel",
+		Description: "Carousel show images or content in a scrollable area.",
+		Category:    "daisyui",
+		Body:        carouselBody,
+	})
+}

@@ -1,0 +1,33 @@
+#:schema https://pitchfork.jdx.dev/schema.json
+namespace = "templ-ui"
+
+[env]
+PORT = "8080"
+
+# templ codegen watch: regenerate *_templ.go on .templ changes.
+[daemons.templ]
+run = "templ generate -watch"
+watch = ["*.templ", "daisyui/*.templ", "shiki/*.templ", "containers/*.templ", "examples/**/*.templ"]
+oneshot = false
+
+# Gallery demo server: rebuild+restart on generated Go changes. The server
+# itself does not hot-reload; pitchfork restarts it when templ (or a manual
+# edit) writes new code.
+[daemons.gallery]
+run = "exec go run ./examples/gallery/cmd/server"
+watch = ["daisyui/*.go", "shiki/*.go", "containers/*.go", "examples/gallery/*.go", "examples/gallery/demos/*.go"]
+depends = ["templ"]
+ready_http = { url = "http://127.0.0.1:8080/", timeout = "60s" }
+retry = 3
+
+# Tailwind v4 + daisyUI stylesheet build (input: assets/styles.css, output:
+# examples/gallery/static/styles.css).
+[daemons.css]
+run = "exec bun run css:watch"
+watch = ["assets/styles.css"]
+
+# shiki highlighter bundle build (input: assets/shiki.js, output:
+# examples/gallery/static/shiki.js).
+[daemons.shiki]
+run = "exec bun run watch:shiki"
+watch = ["assets/shiki.js"]

@@ -1,0 +1,54 @@
+package daisyui
+
+// ToastConfig configures a daisyUI Toast container. Horizontal accepts
+// "start", "center", or "end" (produces toast-start, toast-center, toast-end;
+// "end" is the daisyUI default and is omitted). Vertical accepts "top",
+// "middle", or "bottom" ("bottom" is the default and is omitted). Class lets
+// callers add extra utility classes (e.g. "absolute"). Children is the
+// content rendered inside the toast (typically alert components).
+type ToastConfig struct {
+	Horizontal string
+	Vertical   string
+	Glass      bool
+	Class      string
+	Children   templ.Component
+}
+
+// Toast renders a daisyUI toast container (<div class="toast ...">).
+templ Toast(cfg ToastConfig) {
+	<div
+		class={ joinClasses(
+		"toast",
+		toastHorizontalClass(cfg.Horizontal),
+		toastVerticalClass(cfg.Vertical),
+		glassClass(cfg.Glass),
+		cfg.Class,
+	) }
+	>
+		if cfg.Children != nil {
+			@cfg.Children
+		}
+	</div>
+}
+
+func toastHorizontalClass(h string) string {
+	switch h {
+	case "start", "center":
+		return "toast-" + h
+	case "end":
+		return ""
+	default:
+		return ""
+	}
+}
+
+func toastVerticalClass(v string) string {
+	switch v {
+	case "top", "middle":
+		return "toast-" + v
+	case "bottom":
+		return ""
+	default:
+		return ""
+	}
+}

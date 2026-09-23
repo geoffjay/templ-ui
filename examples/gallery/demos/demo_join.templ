@@ -1,0 +1,162 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ joinBody() {
+	@gallery.Section("Join", `@daisyui.Join(
+	[]templ.Component{
+		daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+		daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+		daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+	},
+	"",
+	"",
+)`, daisyui.Join(
+		[]templ.Component{
+			daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+			daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+			daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+		},
+		"",
+		"",
+	))
+	@gallery.Section("Group items vertically", `@daisyui.Join(
+	[]templ.Component{
+		daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+		daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+		daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+	},
+	"vertical",
+	"",
+)`, daisyui.Join(
+		[]templ.Component{
+			daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+			daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+			daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+		},
+		"vertical",
+		"",
+	))
+	@gallery.Section("Responsive: vertical on small, horizontal on large", `@daisyui.Join(
+	[]templ.Component{
+		daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+		daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+		daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+	},
+	"vertical lg:join-horizontal",
+	"",
+)`, daisyui.Join(
+		[]templ.Component{
+			daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+			daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+			daisyui.Button(daisyui.ButtonConfig{Label: "Button", Class: "join-item"}),
+		},
+		"vertical lg:join-horizontal",
+		"",
+	))
+	@gallery.Section("With extra elements in the group", `@daisyui.Join(
+	[]templ.Component{
+		joinSearchInput(),
+		daisyui.Select(daisyui.SelectConfig{
+			Placeholder: "Filter",
+			Options: []daisyui.SelectOption{
+				{Value: "Sci-fi"},
+				{Value: "Drama"},
+				{Value: "Action"},
+			},
+			Class: "join-item w-[5.8rem] md:w-auto",
+		}),
+		daisyui.Indicator(daisyui.IndicatorConfig{
+			Items: []daisyui.IndicatorItemConfig{
+				{Class: "badge badge-secondary", Children: templ.Raw("new")},
+			},
+			Children: daisyui.Button(daisyui.ButtonConfig{Label: "Search", Class: "join-item"}),
+		}),
+	},
+	"",
+	"",
+)
+
+templ joinSearchInput() {
+	<div>
+		<div>
+			@daisyui.Input(daisyui.InputConfig{Placeholder: "Search", Class: "join-item w-[5.3rem] md:w-52"})
+		</div>
+	</div>
+}`, daisyui.Join(
+		[]templ.Component{
+			joinSearchInput(),
+			daisyui.Select(daisyui.SelectConfig{
+				Placeholder: "Filter",
+				Options: []daisyui.SelectOption{
+					{Value: "Sci-fi"},
+					{Value: "Drama"},
+					{Value: "Action"},
+				},
+				Class: "join-item w-[5.8rem] md:w-auto",
+			}),
+			daisyui.Indicator(daisyui.IndicatorConfig{
+				Items: []daisyui.IndicatorItemConfig{
+					{Class: "badge badge-secondary", Children: templ.Raw("new")},
+				},
+				Children: daisyui.Button(daisyui.ButtonConfig{Label: "Search", Class: "join-item"}),
+			}),
+		},
+		"",
+		"",
+	))
+	@gallery.Section("Custom border radius", `@daisyui.Join(
+	[]templ.Component{
+		daisyui.Input(daisyui.InputConfig{Placeholder: "Email", Class: "join-item w-36 lg:w-52"}),
+		daisyui.Button(daisyui.ButtonConfig{Label: "Subscribe", Class: "join-item rounded-r-full"}),
+	},
+	"",
+	"",
+)`, daisyui.Join(
+		[]templ.Component{
+			daisyui.Input(daisyui.InputConfig{Placeholder: "Email", Class: "join-item w-36 lg:w-52"}),
+			daisyui.Button(daisyui.ButtonConfig{Label: "Subscribe", Class: "join-item rounded-r-full"}),
+		},
+		"",
+		"",
+	))
+	@gallery.Section("Join radio inputs with btn style", `@daisyui.Join(
+	[]templ.Component{
+		templ.Raw(...),
+		templ.Raw(...),
+		templ.Raw(...),
+	},
+	"",
+	"",
+)`, daisyui.Join(
+		[]templ.Component{
+			templ.Raw(`<input class="join-item btn" type="radio" name="options" autocomplete="off" aria-label="Radio 1"/>`),
+			templ.Raw(`<input class="join-item btn" type="radio" name="options" autocomplete="off" aria-label="Radio 2"/>`),
+			templ.Raw(`<input class="join-item btn" type="radio" name="options" autocomplete="off" aria-label="Radio 3"/>`),
+		},
+		"",
+		"",
+	))
+}
+
+templ joinSearchInput() {
+	<div>
+		<div>
+			@daisyui.Input(daisyui.InputConfig{Placeholder: "Search", Class: "join-item w-[5.3rem] md:w-52"})
+		</div>
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "join",
+		Name:        "Join",
+		Description: "Join is a container for grouping multiple items, it can be used to group buttons, inputs, etc. Join applies border radius to the first and last item.",
+		Category:    "daisyui",
+		Body:        joinBody,
+	})
+}

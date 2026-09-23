@@ -1,0 +1,71 @@
+package daisyui
+
+// IndicatorItemConfig configures a single indicator-item placed on the
+// corner of the indicator's sibling. Horizontal accepts "start", "center",
+// or "end" (produces indicator-start, etc; "end" is the daisyUI default and
+// is omitted). Vertical accepts "top", "middle", or "bottom" ("top" is the
+// default and is omitted). Class lets callers add extra utility classes
+// (e.g. "badge badge-secondary"). Children is the indicator content (e.g. a
+// badge or a status dot).
+type IndicatorItemConfig struct {
+	Horizontal string
+	Vertical   string
+	Class      string
+	Children   templ.Component
+}
+
+// IndicatorConfig configures a daisyUI Indicator container. Items is the
+// list of indicator-items placed on the corners. Class lets callers add
+// extra utility classes (e.g. "avatar"). Children is the main content the
+// indicators are placed on (e.g. an image, a button, a card).
+type IndicatorConfig struct {
+	Items    []IndicatorItemConfig
+	Class    string
+	Children templ.Component
+}
+
+// Indicator renders a daisyUI indicator container (<div class="indicator">)
+// with one indicator-item per config, followed by the main content.
+templ Indicator(cfg IndicatorConfig) {
+	<div class={ joinClasses("indicator", cfg.Class) }>
+		for _, item := range cfg.Items {
+			<span
+				class={ joinClasses(
+				"indicator-item",
+				indicatorHorizontalClass(item.Horizontal),
+				indicatorVerticalClass(item.Vertical),
+				item.Class,
+			) }
+			>
+				if item.Children != nil {
+					@item.Children
+				}
+			</span>
+		}
+		if cfg.Children != nil {
+			@cfg.Children
+		}
+	</div>
+}
+
+func indicatorHorizontalClass(h string) string {
+	switch h {
+	case "start", "center":
+		return "indicator-" + h
+	case "end":
+		return ""
+	default:
+		return ""
+	}
+}
+
+func indicatorVerticalClass(v string) string {
+	switch v {
+	case "middle", "bottom":
+		return "indicator-" + v
+	case "top":
+		return ""
+	default:
+		return ""
+	}
+}

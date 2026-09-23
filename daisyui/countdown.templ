@@ -1,0 +1,50 @@
+package daisyui
+
+// CountdownItem is a single digit-group inside a Countdown. Value is the
+// number (0-999) shown and also set as the --value CSS variable. Digits, when
+// set ("2" or "3"), populates the --digits CSS variable to pad the display.
+// Suffix, when set, is rendered immediately after the value span (e.g. "h",
+// "m", "s", or ":" for clock-style separators).
+type CountdownItem struct {
+	Value  string
+	Digits string
+	Suffix string
+}
+
+// CountdownConfig configures a daisyUI Countdown. Items is the list of
+// digit-groups to render inside the wrapper. Class lets callers add extra
+// utility classes (e.g. "font-mono text-6xl").
+type CountdownConfig struct {
+	Items []CountdownItem
+	Class string
+}
+
+// Countdown renders a daisyUI countdown (<span class="countdown ...">)
+// containing one inner <span style="--value:...;"> per item.
+templ Countdown(cfg CountdownConfig) {
+	<span class={ joinClasses("countdown", cfg.Class) }>
+		for _, item := range cfg.Items {
+			<span
+				style={ countdownItemStyle(item) }
+				aria-live="polite"
+				aria-label={ item.Value }
+			>
+				{ item.Value }
+			</span>
+			if item.Suffix != "" {
+				{ item.Suffix }
+			}
+		}
+	</span>
+}
+
+func countdownItemStyle(item CountdownItem) string {
+	var out string
+	if item.Value != "" {
+		out += "--value:" + item.Value + ";"
+	}
+	if item.Digits != "" {
+		out += "--digits:" + item.Digits + ";"
+	}
+	return out
+}

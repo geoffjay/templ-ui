@@ -1,0 +1,84 @@
+package daisyui
+
+// ListItem describes a single <li class="list-row"> inside a List. The
+// primary children passed via Items are rendered in order inside the row;
+// daisyUI places the second child in the growing column by default, so wrap
+// the expanding child with ListColGrow to claim the remaining space, or
+// ListColWrap to force a child onto its own line. Rows, when set, replaces
+// Items entirely and is rendered raw inside the <li class="list-row"> (use
+// for maximum control over the row content).
+type ListItem struct {
+	Items []templ.Component
+	Row   templ.Component
+	Class string
+}
+
+// ListConfig configures a daisyUI List. Header, when set, is rendered as a
+// leading <li> (typically a small caption/title <li> with utility classes).
+// Items is the list of rows. Modifier accepts "" (default), "ordered"
+// (renders <ol> instead of <ul>), or any extra utility classes via Class.
+// Class lets callers add extra utility classes (e.g. "bg-base-100 rounded-box
+// shadow-md").
+type ListConfig struct {
+	Header  templ.Component
+	Items   []ListItem
+	Ordered bool
+	Glass   bool
+	Class   string
+}
+
+// List renders a daisyUI list (<ul class="list"> or <ol class="list">).
+templ List(cfg ListConfig) {
+	if cfg.Ordered {
+		<ol class={ listClass(cfg) }>
+			@listBody(cfg)
+		</ol>
+	} else {
+		<ul class={ listClass(cfg) }>
+			@listBody(cfg)
+		</ul>
+	}
+}
+
+templ listBody(cfg ListConfig) {
+	if cfg.Header != nil {
+		<li class="p-4 pb-2 text-xs opacity-60 tracking-wide">
+			@cfg.Header
+		</li>
+	}
+	for _, item := range cfg.Items {
+		<li class={ joinClasses("list-row", item.Class) }>
+			if item.Row != nil {
+				@item.Row
+			} else {
+				for _, c := range item.Items {
+					@c
+				}
+			}
+		</li>
+	}
+}
+
+func listClass(cfg ListConfig) string {
+	return joinClasses(
+		"list",
+		glassClass(cfg.Glass),
+		cfg.Class,
+	)
+}
+
+// ListColGrow wraps children with the list-col-grow class to make them fill
+// the remaining space inside a list-row.
+templ ListColGrow(children templ.Component) {
+	<div class="list-col-grow">
+		@children
+	</div>
+}
+
+// ListColWrap wraps children with the list-col-wrap class to force them onto
+// the next line inside a list-row.
+templ ListColWrap(children templ.Component) {
+	<p class="list-col-wrap">
+		@children
+	</p>
+}

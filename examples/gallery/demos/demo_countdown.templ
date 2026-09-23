@@ -1,0 +1,146 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ countdownBody() {
+	@gallery.Section("Countdown", `@daisyui.Countdown(daisyui.CountdownConfig{
+	Items: []daisyui.CountdownItem{{Value: "59"}},
+})`, daisyui.Countdown(daisyui.CountdownConfig{
+		Items: []daisyui.CountdownItem{{Value: "59"}},
+	}))
+	@gallery.Section("Large text with 2 digits", `@daisyui.Countdown(daisyui.CountdownConfig{
+	Class: "font-mono text-6xl",
+	Items: []daisyui.CountdownItem{{Value: "59", Digits: "2"}},
+})`, daisyui.Countdown(daisyui.CountdownConfig{
+		Class: "font-mono text-6xl",
+		Items: []daisyui.CountdownItem{{Value: "59", Digits: "2"}},
+	}))
+	@gallery.Section("Clock countdown", `@daisyui.Countdown(daisyui.CountdownConfig{
+	Class: "font-mono text-2xl",
+	Items: []daisyui.CountdownItem{
+		{Value: "10", Suffix: "h "},
+		{Value: "24", Suffix: "m "},
+		{Value: "59", Suffix: "s"},
+	},
+})`, daisyui.Countdown(daisyui.CountdownConfig{
+		Class: "font-mono text-2xl",
+		Items: []daisyui.CountdownItem{
+			{Value: "10", Suffix: "h "},
+			{Value: "24", Suffix: "m "},
+			{Value: "59", Suffix: "s"},
+		},
+	}))
+	@gallery.Section("Clock countdown with colons", `@daisyui.Countdown(daisyui.CountdownConfig{
+	Class: "font-mono text-2xl",
+	Items: []daisyui.CountdownItem{
+		{Value: "10", Suffix: ":"},
+		{Value: "24", Digits: "2", Suffix: ":"},
+		{Value: "59", Digits: "2"},
+	},
+})`, daisyui.Countdown(daisyui.CountdownConfig{
+		Class: "font-mono text-2xl",
+		Items: []daisyui.CountdownItem{
+			{Value: "10", Suffix: ":"},
+			{Value: "24", Digits: "2", Suffix: ":"},
+			{Value: "59", Digits: "2"},
+		},
+	}))
+	@gallery.Section("Large text with labels", `<div class="flex gap-5">
+	<div>
+		@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-4xl", Items: []daisyui.CountdownItem{{Value: "15"}}})
+		days
+	</div>
+	// ... one per unit
+</div>`, countdownWithLabels())
+	@gallery.Section("Large text with labels under", `<div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+	<div class="flex flex-col">
+		@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "15"}}})
+		days
+	</div>
+	// ... one per unit
+</div>`, countdownWithLabelsUnder())
+	@gallery.Section("In boxes", `<div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+	<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+		@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "15"}}})
+		days
+	</div>
+	// ... one per unit
+</div>`, countdownInBoxes())
+}
+
+templ countdownWithLabels() {
+	<div class="flex gap-5">
+		<div>
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-4xl", Items: []daisyui.CountdownItem{{Value: "15"}}})
+			days
+		</div>
+		<div>
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-4xl", Items: []daisyui.CountdownItem{{Value: "10"}}})
+			hours
+		</div>
+		<div>
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-4xl", Items: []daisyui.CountdownItem{{Value: "24"}}})
+			minutes
+		</div>
+		<div>
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-4xl", Items: []daisyui.CountdownItem{{Value: "59"}}})
+			sec
+		</div>
+	</div>
+}
+
+templ countdownWithLabelsUnder() {
+	<div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+		<div class="flex flex-col">
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "15"}}})
+			days
+		</div>
+		<div class="flex flex-col">
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "10"}}})
+			hours
+		</div>
+		<div class="flex flex-col">
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "24"}}})
+			min
+		</div>
+		<div class="flex flex-col">
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "59"}}})
+			sec
+		</div>
+	</div>
+}
+
+templ countdownInBoxes() {
+	<div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+		<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "15"}}})
+			days
+		</div>
+		<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "10"}}})
+			hours
+		</div>
+		<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "24"}}})
+			min
+		</div>
+		<div class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+			@daisyui.Countdown(daisyui.CountdownConfig{Class: "font-mono text-5xl", Items: []daisyui.CountdownItem{{Value: "59"}}})
+			sec
+		</div>
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "countdown",
+		Name:        "Countdown",
+		Description: "Countdown gives you a transition effect when you change a number between 0 to 999.",
+		Category:    "daisyui",
+		Body:        countdownBody,
+	})
+}

@@ -1,0 +1,96 @@
+package gallery
+
+import "github.com/geoffjay/templ-ui/internal/registry"
+
+// document renders a full HTML document wrapping the AppShell page shell
+// with the shared head assets: the compiled stylesheet and the shiki
+// highlighter module. Used by both the live server and the static export so
+// every rendered surface is identical.
+templ document(title string, body templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en" data-theme="nord">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			@head()
+			<title>{ title }</title>
+		</head>
+		<body>
+			@body
+		</body>
+	</html>
+}
+
+// head renders the asset links for the gallery: the compiled Tailwind +
+// daisyUI stylesheet and the shiki bundle. Paths are gallery-relative; the
+// static export copies the built assets next to the HTML files.
+templ head() {
+	<link rel="stylesheet" href="static/styles.css"/>
+	<script type="module" src="static/shiki.js"></script>
+}
+
+// ComponentPage renders the full document for one registry entry.
+templ ComponentPage(e registry.Entry) {
+	@document("templ-ui — "+e.Name, pageShell(e.Name, e.Description, e.Body()))
+}
+
+// IndexPage renders the gallery index: a card grid of every registry entry
+// grouped by category. Each card links to the component's page.
+templ IndexPage() {
+	@document("templ-ui", indexBody())
+}
+
+templ indexBody() {
+	@pageShell("templ-ui", "Reusable templ components: daisyUI, shiki, and containers.", indexMain())
+}
+
+// indexMain renders the card grid, one section per category. Cards show the
+// component name, description, and link to the detail page.
+templ indexMain() {
+	<div class="p-8 w-full max-w-6xl mx-auto space-y-8">
+		<h1 class="text-3xl font-bold text-primary">templ-ui components</h1>
+		<p class="text-base-content/70">
+			Reusable templ components ported from jughead. Browse by category; each
+			page shows live previews with the templ source used to render them.
+		</p>
+		for _, cat := range indexCategories() {
+			<section class="space-y-4">
+				<h2 class="text-2xl font-semibold">{ cat }</h2>
+				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+					for _, e := range indexEntries(cat) {
+						<a class="card bg-base-100 shadow-sm border border-base-300" href={ templ.URL("/components/" + e.Slug) }>
+							<div class="card-body">
+								<h3 class="card-title text-primary">{ e.Name }</h3>
+								<p class="text-base-content/70 text-sm">{ e.Description }</p>
+							</div>
+						</a>
+					}
+				</div>
+			</section>
+		}
+	</div>
+}
+
+// indexCategories returns the distinct registry categories in sorted order.
+func indexCategories() []string {
+	var cats []string
+	seen := make(map[string]bool)
+	for _, e := range registry.Sorted() {
+		if !seen[e.Category] {
+			seen[e.Category] = true
+			cats = append(cats, e.Category)
+		}
+	}
+	return cats
+}
+
+// indexEntries returns the registry entries in one category.
+func indexEntries(category string) []registry.Entry {
+	var out []registry.Entry
+	for _, e := range registry.Sorted() {
+		if e.Category == category {
+			out = append(out, e)
+		}
+	}
+	return out
+}

@@ -1,0 +1,79 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "loading",
+		Name:        "Loading",
+		Description: "Loading shows an animation to indicate that something is loading.",
+		Category:    "daisyui",
+		Body:        loadingBody,
+	})
+}
+
+templ loadingBody() {
+	@gallery.Section("Loading spinner", `<div class="flex items-center gap-2">
+	@daisyui.Loading("spinner", "xs", "", "")
+	@daisyui.Loading("spinner", "sm", "", "")
+	// ... one per size
+</div>`, loadingRow("spinner"))
+	@gallery.Section("Loading dots", `<div class="flex items-center gap-2">
+	@daisyui.Loading("dots", "xs", "", "")
+	@daisyui.Loading("dots", "sm", "", "")
+	// ... one per size
+</div>`, loadingRow("dots"))
+	@gallery.Section("Loading ring", `<div class="flex items-center gap-2">
+	@daisyui.Loading("ring", "xs", "", "")
+	@daisyui.Loading("ring", "sm", "", "")
+	// ... one per size
+</div>`, loadingRow("ring"))
+	@gallery.Section("Loading ball", `<div class="flex items-center gap-2">
+	@daisyui.Loading("ball", "xs", "", "")
+	@daisyui.Loading("ball", "sm", "", "")
+	// ... one per size
+</div>`, loadingRow("ball"))
+	@gallery.Section("Loading bars", `<div class="flex items-center gap-2">
+	@daisyui.Loading("bars", "xs", "", "")
+	@daisyui.Loading("bars", "sm", "", "")
+	// ... one per size
+</div>`, loadingRow("bars"))
+	@gallery.Section("Loading infinity", `<div class="flex items-center gap-2">
+	@daisyui.Loading("infinity", "xs", "", "")
+	@daisyui.Loading("infinity", "sm", "", "")
+	// ... one per size
+</div>`, loadingRow("infinity"))
+	@gallery.Section("Loading with colors", `@daisyui.Loading("spinner", "", "text-primary", "")
+@daisyui.Loading("spinner", "", "text-secondary", "")
+@daisyui.Loading("spinner", "", "text-accent", "")
+@daisyui.Loading("spinner", "", "text-neutral", "")
+@daisyui.Loading("spinner", "", "text-info", "")
+@daisyui.Loading("spinner", "", "text-success", "")
+@daisyui.Loading("spinner", "", "text-warning", "")
+@daisyui.Loading("spinner", "", "text-error", "")`, loadingColorRow())
+}
+
+templ loadingColorRow() {
+	@daisyui.Loading("spinner", "", "text-primary", "")
+	@daisyui.Loading("spinner", "", "text-secondary", "")
+	@daisyui.Loading("spinner", "", "text-accent", "")
+	@daisyui.Loading("spinner", "", "text-neutral", "")
+	@daisyui.Loading("spinner", "", "text-info", "")
+	@daisyui.Loading("spinner", "", "text-success", "")
+	@daisyui.Loading("spinner", "", "text-warning", "")
+	@daisyui.Loading("spinner", "", "text-error", "")
+}
+
+templ loadingRow(shape string) {
+	<div class="flex items-center gap-2">
+		@daisyui.Loading(shape, "xs", "", "")
+		@daisyui.Loading(shape, "sm", "", "")
+		@daisyui.Loading(shape, "md", "", "")
+		@daisyui.Loading(shape, "lg", "", "")
+		@daisyui.Loading(shape, "xl", "", "")
+	</div>
+}

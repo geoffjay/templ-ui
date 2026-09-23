@@ -1,0 +1,48 @@
+package daisyui
+
+// BreadcrumbItem describes a single entry in a breadcrumbs trail. Label is
+// the visible text. Href, when set, renders the entry as an anchor; when
+// empty the entry is rendered as a plain <span> (the current/last page).
+// Icon, when set, is rendered before the label (e.g. an SVG).
+type BreadcrumbItem struct {
+	Label string
+	Href  string
+	Icon  templ.Component
+}
+
+// BreadcrumbsConfig configures a daisyUI breadcrumbs trail. Class lets
+// callers add extra utility classes (e.g. "text-sm" or "max-w-xs"). Resolver,
+// when set, is used to build all hrefs.
+type BreadcrumbsConfig struct {
+	Items    []BreadcrumbItem
+	Class    string
+	Resolver URLResolver
+}
+
+// Breadcrumbs renders a daisyUI breadcrumbs trail
+// (<div class="breadcrumbs"><ul>...</ul></div>).
+templ Breadcrumbs(cfg BreadcrumbsConfig) {
+	<div class={ joinClasses("breadcrumbs", cfg.Class) }>
+		<ul>
+			for _, item := range cfg.Items {
+				<li>
+					if item.Href != "" {
+						<a href={ resolveHref(cfg.Resolver, item.Href) }>
+							if item.Icon != nil {
+								@item.Icon
+							}
+							{ item.Label }
+						</a>
+					} else {
+						<span class="inline-flex items-center gap-2">
+							if item.Icon != nil {
+								@item.Icon
+							}
+							{ item.Label }
+						</span>
+					}
+				</li>
+			}
+		</ul>
+	</div>
+}

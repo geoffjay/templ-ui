@@ -1,0 +1,66 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "file-input",
+		Name:        "File Input",
+		Description: "File Input is a an input field for uploading files.",
+		Category:    "daisyui",
+		Body:        fileInputBody,
+	})
+}
+
+templ fileInputBody() {
+	@gallery.Section("File input", `@daisyui.FileInput(daisyui.FileInputConfig{})`, daisyui.FileInput(daisyui.FileInputConfig{}))
+	@gallery.Section("File input ghost", `@daisyui.FileInput(daisyui.FileInputConfig{Style: "ghost"})`, daisyui.FileInput(daisyui.FileInputConfig{Style: "ghost"}))
+	@gallery.Section("With fieldset and label", `@daisyui.Fieldset(daisyui.FieldsetConfig{
+	Legend: "Pick a file",
+}, templ.Raw(...)) {
+	<input type="file" class="file-input" />
+	<label class="label">Max size 2MB</label>
+}`, daisyui.Fieldset(daisyui.FieldsetConfig{
+		Legend: "Pick a file",
+	}, templ.Raw(`
+	<input type="file" class="file-input" />
+	<label class="label">Max size 2MB</label>`)))
+	@gallery.Section("Sizes", `<div class="flex flex-col gap-4 w-full items-center">
+@daisyui.FileInput(daisyui.FileInputConfig{Size: "xs"})
+@daisyui.FileInput(daisyui.FileInputConfig{Size: "sm"})
+// ... one per size
+</div>`, fileInputSizeRow())
+	@gallery.Section("Primary color", `<div class="grid gap-2">
+@daisyui.FileInput(daisyui.FileInputConfig{Color: "primary"})
+@daisyui.FileInput(daisyui.FileInputConfig{Color: "secondary"})
+// ... one per color
+</div>`, fileInputColorRow())
+	@gallery.Section("Disabled", `@daisyui.FileInput(daisyui.FileInputConfig{Disabled: true})`, daisyui.FileInput(daisyui.FileInputConfig{Disabled: true}))
+}
+
+templ fileInputSizeRow() {
+	<div class="flex flex-col gap-4 w-full items-center">
+		@daisyui.FileInput(daisyui.FileInputConfig{Size: "xs"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Size: "sm"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Size: "md"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Size: "lg"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Size: "xl"})
+	</div>
+}
+
+templ fileInputColorRow() {
+	<div class="grid gap-2">
+		@daisyui.FileInput(daisyui.FileInputConfig{Color: "primary"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Color: "secondary"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Color: "accent"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Color: "neutral"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Color: "info"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Color: "success"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Color: "warning"})
+		@daisyui.FileInput(daisyui.FileInputConfig{Color: "error"})
+	</div>
+}

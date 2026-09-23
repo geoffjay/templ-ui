@@ -1,0 +1,127 @@
+package daisyui
+
+// ButtonConfig configures a daisyUI Button. When Href is non-empty the button
+// is rendered as an anchor (<a role="button">); otherwise a <button> is used.
+//
+// Color accepts the documented button color suffixes (neutral, primary,
+// secondary, accent, info, success, warning, error) and produces e.g.
+// "btn-primary". Style accepts "outline", "dash", "soft", "ghost", or "link"
+// (produces btn-outline, btn-dash, btn-soft, btn-ghost, btn-link). Size accepts
+// "xs", "sm", "md", "lg", "xl" (produces btn-xs, etc; "md" is the default and is
+// omitted). Modifier accepts "wide", "block", "square", "circle" (produces
+// btn-wide, etc). Active renders btn-active; Disabled renders the disabled
+// attribute (for <button>) or btn-disabled class (for <a>). Type sets the
+// type attribute on a <button> (defaults to "button"). Class lets callers add
+// extra utility classes. Children, when set, is rendered inside the button
+// (use for icons or custom content); Label is rendered after children when set.
+// Resolver, when set, is used to build the href.
+type ButtonConfig struct {
+	Label    string
+	Href     string
+	Color    string
+	Style    string
+	Size     string
+	Modifier string
+	Active   bool
+	Disabled bool
+	Type     string
+	Class    string
+	Children templ.Component
+	Resolver URLResolver
+}
+
+// Button renders a daisyUI button (or anchor when Href is set) using the
+// provided configuration.
+templ Button(cfg ButtonConfig) {
+	if cfg.Href != "" {
+		<a
+			role="button"
+			href={ resolveHref(cfg.Resolver, cfg.Href) }
+			class={ buttonClass(cfg) }
+			tabindex={ buttonDisabledTabindex(cfg.Disabled) }
+			aria-disabled={ buttonAriaDisabled(cfg.Disabled) }
+		>
+			if cfg.Children != nil {
+				@cfg.Children
+			}
+			{ cfg.Label }
+		</a>
+	} else {
+		<button
+			type={ buttonTypeAttr(cfg.Type) }
+			class={ buttonClass(cfg) }
+			disabled?={ cfg.Disabled }
+		>
+			if cfg.Children != nil {
+				@cfg.Children
+			}
+			{ cfg.Label }
+		</button>
+	}
+}
+
+func buttonClass(cfg ButtonConfig) string {
+	return joinClasses(
+		"btn",
+		classFor("btn", cfg.Color),
+		buttonStyleClass(cfg.Style),
+		buttonSizeClass(cfg.Size),
+		classFor("btn", cfg.Modifier),
+		buttonActiveClass(cfg.Active),
+		buttonDisabledClass(cfg.Disabled, cfg.Href),
+		cfg.Class,
+	)
+}
+
+func buttonStyleClass(s string) string {
+	switch s {
+	case "outline", "dash", "soft", "ghost", "link":
+		return "btn-" + s
+	default:
+		return ""
+	}
+}
+
+func buttonSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "btn-" + s
+	default:
+		return ""
+	}
+}
+
+func buttonActiveClass(active bool) string {
+	if active {
+		return "btn-active"
+	}
+	return ""
+}
+
+func buttonDisabledClass(disabled bool, href string) string {
+	if disabled && href != "" {
+		return "btn-disabled"
+	}
+	return ""
+}
+
+func buttonDisabledTabindex(disabled bool) string {
+	if disabled {
+		return "-1"
+	}
+	return ""
+}
+
+func buttonAriaDisabled(disabled bool) string {
+	if disabled {
+		return "true"
+	}
+	return ""
+}
+
+func buttonTypeAttr(t string) string {
+	if t == "" {
+		return "button"
+	}
+	return t
+}

@@ -1,0 +1,32 @@
+package daisyui
+
+// Link renders an anchor with daisyUI's link styling, restoring the underline
+// reset by Tailwind. Href is resolved via the optional URLResolver; an empty
+// href falls back to "#". Color accepts documented link color suffixes
+// (neutral, primary, secondary, accent, success, info, warning, error) and
+// produces e.g. "link-primary". Style accepts "hover" (underline only on hover)
+// or "" for the persistent underline. Class lets callers add extra classes.
+//
+// LinkBody renders the link class on a wrapping element when no href is needed
+// (e.g. a <button>).
+templ Link(href, text, color, style, class string, resolver URLResolver) {
+	<a
+		href={ resolveHref(resolver, href) }
+		class={ joinClasses("link", classFor("link", color), linkStyleClass(style), class) }
+	>
+		{ text }
+	</a>
+}
+
+templ LinkBody(color, style, class string, children templ.Component) {
+	<span class={ joinClasses("link", classFor("link", color), linkStyleClass(style), class) }>
+		@children
+	</span>
+}
+
+func linkStyleClass(s string) string {
+	if s == "hover" {
+		return "link-hover"
+	}
+	return ""
+}

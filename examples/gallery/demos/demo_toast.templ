@@ -1,0 +1,137 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ toastBody() {
+	@gallery.Section("toast with alert inside", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Class:    "absolute",
+		Children: daisyui.Alert(daisyui.AlertConfig{Message: "New message arrived.", Color: "info"}),
+	})
+</div>`, toastSingleFrame())
+	@gallery.Section("toast-top toast-start", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Vertical:   "top",
+		Horizontal: "start",
+		Class:      "absolute",
+		Children:   toastAlerts(),
+	})
+</div>`, toastFrame("start", "top"))
+	@gallery.Section("toast-top toast-center", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Vertical:   "top",
+		Horizontal: "center",
+		Class:      "absolute",
+		Children:   toastAlerts(),
+	})
+</div>`, toastFrame("center", "top"))
+	@gallery.Section("toast-top toast-end", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Vertical:   "top",
+		Horizontal: "end",
+		Class:      "absolute",
+		Children:   toastAlerts(),
+	})
+</div>`, toastFrame("end", "top"))
+	@gallery.Section("toast-start toast-middle", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Vertical:   "middle",
+		Horizontal: "start",
+		Class:      "absolute",
+		Children:   toastAlerts(),
+	})
+</div>`, toastFrame("start", "middle"))
+	@gallery.Section("toast-center toast-middle", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Vertical:   "middle",
+		Horizontal: "center",
+		Class:      "absolute",
+		Children:   toastAlerts(),
+	})
+</div>`, toastFrame("center", "middle"))
+	@gallery.Section("toast-end toast-middle", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Vertical:   "middle",
+		Horizontal: "end",
+		Class:      "absolute",
+		Children:   toastAlerts(),
+	})
+</div>`, toastFrame("end", "middle"))
+	@gallery.Section("toast-start toast-bottom (default)", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Horizontal: "start",
+		Class:      "absolute",
+		Children:   toastAlerts(),
+	})
+</div>`, toastFrame("start", ""))
+	@gallery.Section("toast-center toast-bottom (default)", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Horizontal: "center",
+		Class:      "absolute",
+		Children:   toastAlerts(),
+	})
+</div>`, toastFrame("center", ""))
+	@gallery.Section("toast-end (default) toast-bottom (default)", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Horizontal: "end",
+		Class:      "absolute",
+		Children:   toastAlerts(),
+	})
+</div>`, toastFrame("end", ""))
+	@gallery.Section("Toast with glass", `<div class="w-full h-64 relative">
+	@daisyui.Toast(daisyui.ToastConfig{
+		Glass:    true,
+		Class:    "absolute",
+		Children: daisyui.Alert(daisyui.AlertConfig{Message: "New message arrived.", Color: "info"}),
+	})
+</div>`, gallery.GlassBackdrop(toastGlassFrame()))
+}
+
+templ toastGlassFrame() {
+	<div class="w-full h-64 relative">
+		@daisyui.Toast(daisyui.ToastConfig{
+			Glass:    true,
+			Class:    "absolute",
+			Children: daisyui.Alert(daisyui.AlertConfig{Message: "New message arrived.", Color: "info"}),
+		})
+	</div>
+}
+
+templ toastAlerts() {
+	@daisyui.Alert(daisyui.AlertConfig{Message: "New mail arrived.", Color: "info"})
+	@daisyui.Alert(daisyui.AlertConfig{Message: "Message sent successfully.", Color: "success"})
+}
+
+templ toastSingleFrame() {
+	<div class="w-full h-64 relative">
+		@daisyui.Toast(daisyui.ToastConfig{
+			Class:    "absolute",
+			Children: daisyui.Alert(daisyui.AlertConfig{Message: "New message arrived.", Color: "info"}),
+		})
+	</div>
+}
+
+templ toastFrame(horizontal, vertical string) {
+	<div class="w-full h-64 relative">
+		@daisyui.Toast(daisyui.ToastConfig{
+			Horizontal: horizontal,
+			Vertical:   vertical,
+			Class:      "absolute",
+			Children:   toastAlerts(),
+		})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "toast",
+		Name:        "Toast",
+		Description: "Toast is a wrapper to stack elements, positioned on the corner of page.",
+		Category:    "daisyui",
+		Body:        toastBody,
+	})
+}

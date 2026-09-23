@@ -1,0 +1,59 @@
+package daisyui
+
+// DiffItem holds one side of a Diff component. The content is rendered as raw
+// markup (the typical usage is a full-bleed <img> or a centred <div>).
+type DiffItem struct {
+	Children templ.Component
+	Role     string
+	Tabindex bool
+}
+
+// DiffConfig configures a daisyUI Diff (side-by-side comparison with a
+// draggable resizer). Item1 and Item2 are rendered inside diff-item-1 and
+// diff-item-2 respectively. Class lets callers add extra utility classes to
+// the outer <figure> (e.g. "aspect-16/9", "rounded-field"); defaults to
+// "rounded-field aspect-16/9" when empty.
+type DiffConfig struct {
+	Item1 DiffItem
+	Item2 DiffItem
+	Class string
+}
+
+// Diff renders a daisyUI diff (<figure class="diff ...">).
+templ Diff(cfg DiffConfig) {
+	<figure class={ diffClass(cfg) } tabindex="0">
+		<div
+			class="diff-item-1"
+			role={ diffRole(cfg.Item1.Role) }
+			tabindex?={ cfg.Item1.Tabindex }
+		>
+			if cfg.Item1.Children != nil {
+				@cfg.Item1.Children
+			}
+		</div>
+		<div
+			class="diff-item-2"
+			role={ diffRole(cfg.Item2.Role) }
+		>
+			if cfg.Item2.Children != nil {
+				@cfg.Item2.Children
+			}
+		</div>
+		<div class="diff-resizer"></div>
+	</figure>
+}
+
+func diffClass(cfg DiffConfig) string {
+	c := cfg.Class
+	if c == "" {
+		c = "rounded-field aspect-16/9"
+	}
+	return joinClasses("diff", c)
+}
+
+func diffRole(r string) string {
+	if r == "" {
+		return "img"
+	}
+	return r
+}

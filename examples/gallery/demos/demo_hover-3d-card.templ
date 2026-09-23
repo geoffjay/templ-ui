@@ -1,0 +1,92 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+const hover3DCreditCardImg = "https://img.daisyui.com/images/stock/creditcard.webp"
+
+templ hover3DCardBody() {
+	@gallery.Section("3D image hover effect", `@daisyui.Hover3DCard(daisyui.Hover3DConfig{
+	Class:    "my-6 mx-2",
+	Children: hover3DFigure(),
+})`, daisyui.Hover3DCard(daisyui.Hover3DConfig{
+		Class:    "my-6 mx-2",
+		Children: hover3DFigure(),
+	}))
+	@gallery.Section("The whole card can be a link", `@daisyui.Hover3DCard(daisyui.Hover3DConfig{
+	Href:     "/components/hover-3d-card",
+	Class:    "my-6 mx-2 cursor-pointer",
+	Children: hover3DCreditCard(),
+})`, daisyui.Hover3DCard(daisyui.Hover3DConfig{
+		Href:     "/components/hover-3d-card",
+		Class:    "my-6 mx-2 cursor-pointer",
+		Children: hover3DCreditCard(),
+	}))
+	@gallery.Section("3D hover effect for image gallery", `<div class="flex max-sm:flex-col gap-10 p-4 max-sm:w-70">
+	@daisyui.Hover3DCard(daisyui.Hover3DConfig{
+		Children: hover3DGalleryItem(".../card-1.webp", "Tailwind CSS 3D card"),
+	})
+	// ... one per gallery image
+</div>`, hover3DGallery())
+}
+
+templ hover3DFigure() {
+	<figure class="max-w-100 rounded-2xl">
+		<img src={ templ.SafeURL(hover3DCreditCardImg) } alt="Tailwind CSS 3D card"/>
+	</figure>
+}
+
+templ hover3DCreditCard() {
+	<div class="card w-96 bg-black text-white bg-[radial-gradient(circle_at_bottom_left,#ffffff04_35%,transparent_36%),radial-gradient(circle_at_top_right,#ffffff04_35%,transparent_36%)] bg-size-[4.95em_4.95em]">
+		<div class="card-body font-mono">
+			<div class="flex justify-between mb-10">
+				<div class="font-bold">BANK OF LATVERIA</div>
+				<div class="text-5xl opacity-10">❁</div>
+			</div>
+			<div class="text-lg mb-4 opacity-40">0210 8820 1150 0222</div>
+			<div class="flex justify-between">
+				<div>
+					<div class="text-xs opacity-20">CARD HOLDER</div>
+					<div>VICTOR VON D.</div>
+				</div>
+				<div>
+					<div class="text-xs opacity-20">EXPIRES</div>
+					<div>29/08</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ hover3DGallery() {
+	<div class="flex max-sm:flex-col gap-10 p-4 max-sm:w-70">
+		@daisyui.Hover3DCard(daisyui.Hover3DConfig{
+			Children: hover3DGalleryItem("https://img.daisyui.com/images/stock/card-1.webp", "Tailwind CSS 3D card"),
+		})
+		@daisyui.Hover3DCard(daisyui.Hover3DConfig{
+			Children: hover3DGalleryItem("https://img.daisyui.com/images/stock/card-2.webp", "Tailwind CSS 3D hover"),
+		})
+		@daisyui.Hover3DCard(daisyui.Hover3DConfig{
+			Children: hover3DGalleryItem("https://img.daisyui.com/images/stock/card-3.webp", "Tailwind CSS Card 3D effect"),
+		})
+	</div>
+}
+
+templ hover3DGalleryItem(src, alt string) {
+	<figure class="rounded-xl">
+		<img src={ templ.SafeURL(src) } alt={ alt }/>
+	</figure>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "hover-3d-card",
+		Name:        "Hover 3D Card",
+		Description: "Hover 3D is a wrapper component that adds a 3D hover effect to its content. Hover to see the 3D tilt.",
+		Category:    "daisyui",
+		Body:        hover3DCardBody,
+	})
+}

@@ -1,0 +1,69 @@
+package daisyui
+
+// CalendarConfig configures a daisyUI Calendar styles wrapper. daisyUI
+// itself only provides styles for calendar libraries (Cally, Pikaday, React
+// Day Picker); this component emits the markup that those libraries style.
+//
+// Variant selects the calendar library markup to emit:
+//   - "cally" (default): emits the Cally web component markup
+//     (<calendar-date class="cally …">). The caller must load the Cally
+//     web component separately (e.g. <script type="module" src="...">).
+//   - "pikaday": emits a text input with the pika-single class for Pikaday
+//     to attach to. The caller must load Pikaday separately.
+//
+// Class lets callers add extra utility classes to the calendar element
+// (e.g. "bg-base-100 border border-base-300 shadow-lg rounded-box"). Value,
+// when set, is rendered as the input value (pikaday variant) or the
+// calendar-date value attribute (cally variant).
+type CalendarConfig struct {
+	Variant string
+	Class   string
+	Value   string
+}
+
+// Calendar renders a daisyUI calendar styles wrapper. For the "cally"
+// variant it emits the <calendar-date> web component with previous/next
+// slot icons and a <calendar-month> child. For the "pikaday" variant it
+// emits a text input with the pika-single class.
+templ Calendar(cfg CalendarConfig) {
+	switch calendarVariant(cfg.Variant) {
+		case "pikaday":
+			<input type="text" class={ calendarPikadayClass(cfg) } value={ cfg.Value }/>
+		default:
+			@calendarCally(cfg)
+	}
+}
+
+templ calendarCally(cfg CalendarConfig) {
+	<calendar-date
+		class={ calendarCallyClass(cfg) }
+		if cfg.Value != "" {
+			value={ cfg.Value }
+		}
+	>
+		<svg aria-label="Previous" class="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			<path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+		</svg>
+		<svg aria-label="Next" class="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			<path fill="currentColor" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+		</svg>
+		<calendar-month></calendar-month>
+	</calendar-date>
+}
+
+func calendarVariant(v string) string {
+	switch v {
+	case "pikaday":
+		return "pikaday"
+	default:
+		return "cally"
+	}
+}
+
+func calendarCallyClass(cfg CalendarConfig) string {
+	return joinClasses("cally", cfg.Class)
+}
+
+func calendarPikadayClass(cfg CalendarConfig) string {
+	return joinClasses("input", "pika-single", cfg.Class)
+}

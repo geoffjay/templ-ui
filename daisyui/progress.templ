@@ -1,0 +1,47 @@
+package daisyui
+
+// ProgressConfig configures a daisyUI Progress bar. Value is the current
+// progress value; Max is the maximum (default 100 when empty). Color accepts
+// the documented progress color suffixes (neutral, primary, secondary,
+// accent, info, success, warning, error) producing e.g. "progress-primary".
+// Class lets callers add extra utility classes (e.g. "w-56"). When Value is
+// empty the progress bar is rendered as indeterminate (no value attribute).
+type ProgressConfig struct {
+	Value string
+	Max   string
+	Color string
+	Class string
+}
+
+// Progress renders a daisyUI progress bar (<progress class="progress ..."
+// value="..." max="...">). When Value is empty the value attribute is omitted
+// so the bar renders indeterminate.
+templ Progress(cfg ProgressConfig) {
+	if cfg.Value != "" {
+		<progress
+			class={ joinClasses(
+				"progress",
+				classFor("progress", cfg.Color),
+				cfg.Class,
+			) }
+			value={ cfg.Value }
+			max={ progressMaxAttr(cfg.Max) }
+		></progress>
+	} else {
+		<progress
+			class={ joinClasses(
+				"progress",
+				classFor("progress", cfg.Color),
+				cfg.Class,
+			) }
+			max={ progressMaxAttr(cfg.Max) }
+		></progress>
+	}
+}
+
+func progressMaxAttr(m string) string {
+	if m == "" {
+		return "100"
+	}
+	return m
+}

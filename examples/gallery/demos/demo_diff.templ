@@ -1,0 +1,55 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+const diffImgA = "https://img.daisyui.com/images/stock/photo-1560717789-0ac7c58ac90a.webp"
+const diffImgB = "https://img.daisyui.com/images/stock/photo-1560717789-0ac7c58ac90a-blur.webp"
+
+templ diffBody() {
+	@gallery.Section("Diff", `@daisyui.Diff(daisyui.DiffConfig{
+	Item1: daisyui.DiffItem{
+		Children: templ.Raw("<img alt=\"daisy\" src=\"" + diffImgA + "\"/>"),
+		Tabindex: true,
+	},
+	Item2: daisyui.DiffItem{
+		Children: templ.Raw("<img alt=\"daisy\" src=\"" + diffImgB + "\"/>"),
+	},
+})`, daisyui.Diff(daisyui.DiffConfig{
+		Item1: daisyui.DiffItem{
+			Children: templ.Raw(`<img alt="daisy" src="` + diffImgA + `"/>`),
+			Tabindex: true,
+		},
+		Item2: daisyui.DiffItem{
+			Children: templ.Raw(`<img alt="daisy" src="` + diffImgB + `"/>`),
+		},
+	}))
+	@gallery.Section("Diff text", `@daisyui.Diff(daisyui.DiffConfig{
+	Item1: daisyui.DiffItem{
+		Children: templ.Raw("<div class=\"bg-primary text-primary-content text-4xl lg:text-9xl font-black grid place-content-center\">DAISY</div>"),
+	},
+	Item2: daisyui.DiffItem{
+		Children: templ.Raw("<div class=\"bg-base-200 text-4xl lg:text-9xl font-black grid place-content-center\">DAISY</div>"),
+	},
+})`, daisyui.Diff(daisyui.DiffConfig{
+		Item1: daisyui.DiffItem{
+			Children: templ.Raw(`<div class="bg-primary text-primary-content text-4xl lg:text-9xl font-black grid place-content-center">DAISY</div>`),
+		},
+		Item2: daisyui.DiffItem{
+			Children: templ.Raw(`<div class="bg-base-200 text-4xl lg:text-9xl font-black grid place-content-center">DAISY</div>`),
+		},
+	}))
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "diff",
+		Name:        "Diff",
+		Description: "Diff component shows a side-by-side comparison of two items.",
+		Category:    "daisyui",
+		Body:        diffBody,
+	})
+}

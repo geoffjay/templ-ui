@@ -1,0 +1,74 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+const (
+	hoverGalleryHat1 = "https://img.daisyui.com/images/stock/daisyui-hat-1.webp"
+	hoverGalleryHat2 = "https://img.daisyui.com/images/stock/daisyui-hat-2.webp"
+	hoverGalleryHat3 = "https://img.daisyui.com/images/stock/daisyui-hat-3.webp"
+	hoverGalleryHat4 = "https://img.daisyui.com/images/stock/daisyui-hat-4.webp"
+)
+
+templ hoverGalleryBody() {
+	@gallery.Section("Hover Gallery", `@daisyui.HoverGallery(daisyui.HoverGalleryConfig{
+	Class: "max-w-60",
+	Images: []daisyui.HoverGalleryImage{
+		{Src: galleryHat1, Alt: "Tailwind CSS image hover gallery"},
+		// ... one per image
+	},
+})`, daisyui.HoverGallery(daisyui.HoverGalleryConfig{
+		Class: "max-w-60",
+		Images: []daisyui.HoverGalleryImage{
+			{Src: hoverGalleryHat1, Alt: "Tailwind CSS image hover gallery"},
+			{Src: hoverGalleryHat2, Alt: "Tailwind CSS image hover gallery"},
+			{Src: hoverGalleryHat3, Alt: "Tailwind CSS image hover gallery"},
+			{Src: hoverGalleryHat4, Alt: "Tailwind CSS image hover gallery"},
+		},
+	}))
+	@gallery.Section("Hover Gallery in a card", `<div class="card card-sm bg-base-200 max-w-60 shadow">
+	@daisyui.HoverGallery(daisyui.HoverGalleryConfig{
+		Images: []daisyui.HoverGalleryImage{
+			{Src: galleryHat1, Alt: "Tailwind CSS image hover gallery"},
+			// ... one per image
+		},
+	})
+	<div class="card-body">
+		<h2 class="card-title flex justify-between">daisyUI Hat <span class="font-normal">$25</span></h2>
+		<p>High Quality classic cap hat with stitch logo</p>
+	</div>
+</div>`, hoverGalleryInCard())
+}
+
+templ hoverGalleryInCard() {
+	<div class="card card-sm bg-base-200 max-w-60 shadow">
+		@daisyui.HoverGallery(daisyui.HoverGalleryConfig{
+			Images: []daisyui.HoverGalleryImage{
+				{Src: hoverGalleryHat1, Alt: "Tailwind CSS image hover gallery"},
+				{Src: hoverGalleryHat2, Alt: "Tailwind CSS image hover gallery"},
+				{Src: hoverGalleryHat3, Alt: "Tailwind CSS image hover gallery"},
+				{Src: hoverGalleryHat4, Alt: "Tailwind CSS image hover gallery"},
+			},
+		})
+		<div class="card-body">
+			<h2 class="card-title flex justify-between">
+				daisyUI Hat
+				<span class="font-normal">$25</span>
+			</h2>
+			<p>High Quality classic cap hat with stitch logo</p>
+		</div>
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "hover-gallery",
+		Name:        "Hover Gallery",
+		Description: "Hover Gallery is a container of images. The first image is visible by default; hover horizontally to reveal the others.",
+		Category:    "daisyui",
+		Body:        hoverGalleryBody,
+	})
+}

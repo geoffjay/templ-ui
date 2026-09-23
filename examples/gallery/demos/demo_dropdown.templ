@@ -1,0 +1,114 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "dropdown",
+		Name:        "Dropdown",
+		Description: "Dropdown opens a menu or panel of options on hover or click.",
+		Category:    "daisyui",
+		Body:        dropdownBody,
+	})
+}
+
+templ dropdownBody() {
+	@gallery.Section("Dropdown", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label:    "Click me",
+	Items:    []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label: "Click me",
+		Items: []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+	}))
+	@gallery.Section("Dropdown with hover", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label:    "Hover me",
+	Modifier: "hover",
+	Items:    []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label:    "Hover me",
+		Modifier: "hover",
+		Items:    []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+	}))
+	@gallery.Section("Dropdown open", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label:    "Always open",
+	Modifier: "open",
+	Items:    []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label:    "Always open",
+		Modifier: "open",
+		Items:    []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+	}))
+	@gallery.Section("Dropdown with details/summary", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label:      "Details trigger",
+	UseDetails: true,
+	Items:      []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label:      "Details trigger",
+		UseDetails: true,
+		Items:      []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+	}))
+	@gallery.Section("Dropdown placement (top end)", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label:     "Top end",
+	Placement: "top end",
+	Items:     []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label:     "Top end",
+		Placement: "top end",
+		Items:     []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+	}))
+	@gallery.Section("Dropdown placement (bottom center)", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label:     "Bottom center",
+	Placement: "bottom center",
+	Items:     []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label:     "Bottom center",
+		Placement: "bottom center",
+		Items:     []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+	}))
+	@gallery.Section("Dropdown with custom trigger class", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label:        "Custom trigger",
+	TriggerClass: "btn btn-primary",
+	Items:        []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label:        "Custom trigger",
+		TriggerClass: "btn btn-primary",
+		Items:        []daisyui.DropdownItem{{Label: "Item 1", Href: "#"}, {Label: "Item 2", Href: "#"}},
+	}))
+	@gallery.Section("Dropdown with buttons (no href)", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label: "Buttons",
+	Items: []daisyui.DropdownItem{{Label: "Action 1"}, {Label: "Action 2"}, {Label: "Action 3"}},
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label: "Buttons",
+		Items: []daisyui.DropdownItem{{Label: "Action 1"}, {Label: "Action 2"}, {Label: "Action 3"}},
+	}))
+	@gallery.Section("Dropdown with custom content", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label:   "Custom content",
+	Content: dropdownCustomCard(),
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label:   "Custom content",
+		Content: dropdownCustomCard(),
+	}))
+	@gallery.Section("Dropdown with items", `@daisyui.Dropdown(daisyui.DropdownConfig{
+	Label:    "Resolved links",
+	Items:    []daisyui.DropdownItem{{Label: "Home", Href: "/"}, {Label: "About", Href: "/about"}, {Label: "Contact", Href: "/contact"}},
+})`, daisyui.Dropdown(daisyui.DropdownConfig{
+		Label: "Resolved links",
+		Items: []daisyui.DropdownItem{{Label: "Home", Href: "/"}, {Label: "About", Href: "/about"}, {Label: "Contact", Href: "/contact"}},
+	}))
+}
+
+templ dropdownCustomCard() {
+	<div class="card card-compact w-64 bg-base-100 shadow-sm">
+		<div class="card-body">
+			<h3 class="card-title">Card dropdown</h3>
+			<p class="text-sm opacity-70">Any templ component can be rendered inside a dropdown.</p>
+			<div class="card-actions justify-end">
+				<button class="btn btn-primary btn-sm">Close</button>
+			</div>
+		</div>
+	</div>
+}

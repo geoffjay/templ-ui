@@ -1,0 +1,85 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ textareaBody() {
+	@gallery.Section("Textarea", `@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Bio"})`, daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Bio"}))
+	@gallery.Section("Ghost (no background)", `@daisyui.Textarea(daisyui.TextareaConfig{
+	Placeholder: "Bio",
+	Style:       "ghost",
+})`, daisyui.Textarea(daisyui.TextareaConfig{
+		Placeholder: "Bio",
+		Style:       "ghost",
+	}))
+	@gallery.Section("With form control and labels", `@daisyui.Fieldset(daisyui.FieldsetConfig{
+	Legend: "Your bio",
+	Class:  "w-xs",
+}, textareaFieldsetBody())
+
+templ textareaFieldsetBody() {
+	@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Bio", Class: "h-24"})
+	<div class="label">Optional</div>
+}`, daisyui.Fieldset(daisyui.FieldsetConfig{
+		Legend: "Your bio",
+		Class:  "w-xs",
+	}, textareaFieldsetBody()))
+	@gallery.Section("Textarea colors", `<div class="grid gap-4 w-xs">
+	@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Primary", Color: "primary"})
+	@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Secondary", Color: "secondary"})
+	// ... one per color
+</div>`, textareaColorRow())
+	@gallery.Section("Sizes", `<div class="flex flex-col gap-4 w-full items-center">
+	@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Xsmall", Size: "xs"})
+	@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Small", Size: "sm"})
+	// ... one per size
+</div>`, textareaSizeRow())
+	@gallery.Section("Disabled", `@daisyui.Textarea(daisyui.TextareaConfig{
+	Placeholder: "Bio",
+	Disabled:    true,
+})`, daisyui.Textarea(daisyui.TextareaConfig{
+		Placeholder: "Bio",
+		Disabled:    true,
+	}))
+}
+
+templ textareaFieldsetBody() {
+	@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Bio", Class: "h-24"})
+	<div class="label">Optional</div>
+}
+
+templ textareaColorRow() {
+	<div class="grid gap-4 w-xs">
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Primary", Color: "primary"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Secondary", Color: "secondary"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Accent", Color: "accent"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Neutral", Color: "neutral"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Info", Color: "info"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Success", Color: "success"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Warning", Color: "warning"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Error", Color: "error"})
+	</div>
+}
+
+templ textareaSizeRow() {
+	<div class="flex flex-col gap-4 w-full items-center">
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Xsmall", Size: "xs"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Small", Size: "sm"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Medium", Size: "md"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Large", Size: "lg"})
+		@daisyui.Textarea(daisyui.TextareaConfig{Placeholder: "Xlarge", Size: "xl"})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "textarea",
+		Name:        "Textarea",
+		Description: "Textarea allows users to enter text in multiple lines.",
+		Category:    "daisyui",
+		Body:        textareaBody,
+	})
+}

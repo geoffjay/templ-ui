@@ -1,0 +1,57 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+	icons "github.com/iota-uz/icons/phosphor"
+)
+
+templ swapBody() {
+	@gallery.Section("Swap text", `@daisyui.Swap(
+	daisyui.SwapConfig{},
+	templ.Raw("ON"),
+	templ.Raw("OFF"),
+)`, daisyui.Swap(
+		daisyui.SwapConfig{},
+		templ.Raw("ON"),
+		templ.Raw("OFF"),
+	))
+	@gallery.Section("Swap volume icons", `@daisyui.Swap(
+	daisyui.SwapConfig{},
+	templ.Raw(...), // swap-on: volume-up svg
+	templ.Raw(...), // swap-off: volume-mute svg
+)`, daisyui.Swap(
+		daisyui.SwapConfig{},
+		icons.SpeakerHigh(icons.Props{Size: "48", Class: "fill-current", Variant: icons.Filled}),
+		icons.SpeakerSlash(icons.Props{Size: "48", Class: "fill-current", Variant: icons.Filled}),
+	))
+	@gallery.Section("Swap icons with rotate effect", `@daisyui.Swap(
+	daisyui.SwapConfig{Effect: "rotate"},
+	templ.Raw(...), // swap-on: sun svg
+	templ.Raw(...), // swap-off: moon svg
+)`, daisyui.Swap(
+		daisyui.SwapConfig{Effect: "rotate"},
+		icons.Sun(icons.Props{Size: "40", Class: "swap-on fill-current w-10 h-10", Variant: icons.Filled}),
+		icons.Moon(icons.Props{Size: "40", Class: "swap-off fill-current w-10 h-10", Variant: icons.Filled}),
+	))
+	@gallery.Section("Swap icons with flip effect", `@daisyui.Swap(
+	daisyui.SwapConfig{Effect: "flip", Class: "text-9xl"},
+	templ.Raw("&#128520;"),
+	templ.Raw("&#128519;"),
+)`, daisyui.Swap(
+		daisyui.SwapConfig{Effect: "flip", Class: "text-9xl"},
+		templ.Raw("&#128520;"),
+		templ.Raw("&#128519;"),
+	))
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "swap",
+		Name:        "Swap",
+		Description: "Swap allows you to toggle the visibility of two elements using a checkbox or a class name.",
+		Category:    "daisyui",
+		Body:        swapBody,
+	})
+}

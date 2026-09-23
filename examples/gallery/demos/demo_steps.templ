@@ -1,0 +1,123 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ stepsBody() {
+	@gallery.Section("Steps", `@daisyui.Steps(daisyui.StepsConfig{
+	Items: []daisyui.StepItem{
+		{Label: "Step 1"},
+		{Label: "Step 2"},
+		{Label: "Step 3"},
+	},
+})`, daisyui.Steps(daisyui.StepsConfig{
+		Items: []daisyui.StepItem{
+			{Label: "Step 1"},
+			{Label: "Step 2"},
+			{Label: "Step 3"},
+		},
+	}))
+	@gallery.Section("Steps with colors", `@daisyui.Steps(daisyui.StepsConfig{
+	Items: []daisyui.StepItem{
+		{Label: "Step 1", Color: "primary"},
+		{Label: "Step 2", Color: "primary"},
+		{Label: "Step 3", Color: "primary"},
+	},
+})`, daisyui.Steps(daisyui.StepsConfig{
+		Items: []daisyui.StepItem{
+			{Label: "Step 1", Color: "primary"},
+			{Label: "Step 2", Color: "primary"},
+			{Label: "Step 3", Color: "primary"},
+		},
+	}))
+	@gallery.Section("Steps with different colors", `@daisyui.Steps(daisyui.StepsConfig{
+	Items: []daisyui.StepItem{
+		{Label: "Registration", Color: "secondary"},
+		{Label: "Payment", Color: "primary"},
+		{Label: "Confirmation", Color: "success"},
+	},
+})`, daisyui.Steps(daisyui.StepsConfig{
+		Items: []daisyui.StepItem{
+			{Label: "Registration", Color: "secondary"},
+			{Label: "Payment", Color: "primary"},
+			{Label: "Confirmation", Color: "success"},
+		},
+	}))
+	@gallery.Section("Steps with data-content (icons via CSS)", `@daisyui.Steps(daisyui.StepsConfig{
+	Items: []daisyui.StepItem{
+		{Label: "Star", Color: "primary", DataContent: "★"},
+		{Label: "Like", Color: "primary", DataContent: "♥"},
+		{Label: "Heart", Color: "primary", DataContent: "✓"},
+	},
+})`, daisyui.Steps(daisyui.StepsConfig{
+		Items: []daisyui.StepItem{
+			{Label: "Star", Color: "primary", DataContent: "★"},
+			{Label: "Like", Color: "primary", DataContent: "♥"},
+			{Label: "Heart", Color: "primary", DataContent: "✓"},
+		},
+	}))
+	@gallery.Section("Steps with custom icon", `@daisyui.Steps(daisyui.StepsConfig{
+	Items: []daisyui.StepItem{
+		{Label: "Step 1", Color: "neutral", Icon: stepsCheckIcon()},
+		{Label: "Step 2", Color: "neutral", Icon: stepsCheckIcon()},
+		{Label: "Step 3", Color: "neutral", Icon: stepsCheckIcon()},
+	},
+})`, daisyui.Steps(daisyui.StepsConfig{
+		Items: []daisyui.StepItem{
+			{Label: "Step 1", Color: "neutral", Icon: stepsCheckIcon()},
+			{Label: "Step 2", Color: "neutral", Icon: stepsCheckIcon()},
+			{Label: "Step 3", Color: "neutral", Icon: stepsCheckIcon()},
+		},
+	}))
+	@gallery.Section("Steps vertical", `@daisyui.Steps(daisyui.StepsConfig{
+	Direction: "vertical",
+	Items: []daisyui.StepItem{
+		{Label: "Step 1", Color: "primary"},
+		{Label: "Step 2", Color: "primary"},
+		{Label: "Step 3", Color: "primary"},
+	},
+})`, daisyui.Steps(daisyui.StepsConfig{
+		Direction: "vertical",
+		Items: []daisyui.StepItem{
+			{Label: "Step 1", Color: "primary"},
+			{Label: "Step 2", Color: "primary"},
+			{Label: "Step 3", Color: "primary"},
+		},
+	}))
+	@gallery.Section("Steps with responsive direction", `@daisyui.Steps(daisyui.StepsConfig{
+	Direction: "vertical",
+	Class:     "lg:steps-horizontal",
+	Items: []daisyui.StepItem{
+		{Label: "Step 1", Color: "secondary"},
+		{Label: "Step 2", Color: "secondary"},
+		{Label: "Step 3", Color: "secondary"},
+	},
+})`, daisyui.Steps(daisyui.StepsConfig{
+		Direction: "vertical",
+		Class:     "lg:steps-horizontal",
+		Items: []daisyui.StepItem{
+			{Label: "Step 1", Color: "secondary"},
+			{Label: "Step 2", Color: "secondary"},
+			{Label: "Step 3", Color: "secondary"},
+		},
+	}))
+}
+
+templ stepsCheckIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+	</svg>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "steps",
+		Name:        "Steps",
+		Description: "Steps shows progress through a numbered sequence of steps.",
+		Category:    "daisyui",
+		Body:        stepsBody,
+	})
+}

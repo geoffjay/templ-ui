@@ -1,0 +1,69 @@
+package daisyui
+
+// AlertConfig configures a daisyUI Alert. Message is the primary text shown
+// inside the alert. Title and Description, when set, are rendered as a
+// title/description pair (the alert then shows a bold title and a smaller
+// description below it). Color accepts the documented alert color suffixes
+// (neutral, primary, secondary, accent, info, success, warning, error) and
+// produces e.g. "alert-info". Style accepts "outline", "dash", or "soft"
+// (produces alert-outline, alert-dash, alert-soft). Direction accepts
+// "vertical" or "horizontal" (produces alert-vertical / alert-horizontal).
+// Icon, when set, is rendered before the content as raw HTML (e.g. an SVG).
+// Actions, when set, is rendered after the content (e.g. a group of buttons).
+// Class lets callers add extra utility classes (e.g. "w-full" or responsive
+// direction "alert-vertical sm:alert-horizontal").
+type AlertConfig struct {
+	Message   string
+	Title     string
+	Desc      string
+	Color     string
+	Style     string
+	Direction string
+	Glass     bool
+	Icon      templ.Component
+	Actions   templ.Component
+	Class     string
+}
+
+// Alert renders a daisyUI alert (<div role="alert" class="alert ...">).
+templ Alert(cfg AlertConfig) {
+	<div
+		role="alert"
+		class={ joinClasses(
+			"alert",
+			classFor("alert", cfg.Color),
+			alertStyleClass(cfg.Style),
+			classFor("alert", cfg.Direction),
+			glassClass(cfg.Glass),
+			cfg.Class,
+		) }
+	>
+		if cfg.Icon != nil {
+			@cfg.Icon
+		}
+		if cfg.Title != "" || cfg.Desc != "" {
+			<div>
+				if cfg.Title != "" {
+					<h3 class="font-bold">{ cfg.Title }</h3>
+				}
+				if cfg.Desc != "" {
+					<div class="text-xs">{ cfg.Desc }</div>
+				}
+			</div>
+		} else if cfg.Message != "" {
+			<span>{ cfg.Message }</span>
+		}
+		if cfg.Actions != nil {
+			@cfg.Actions
+		}
+	</div>
+}
+
+func alertStyleClass(s string) string {
+	switch s {
+	case "outline", "dash", "soft":
+		return "alert-" + s
+	default:
+		return ""
+	}
+}

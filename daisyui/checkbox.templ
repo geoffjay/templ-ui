@@ -1,0 +1,43 @@
+package daisyui
+
+// CheckboxConfig configures a daisyUI checkbox. Color accepts the documented
+// checkbox color suffixes (neutral, primary, secondary, accent, info, success,
+// warning, error) producing e.g. "checkbox-primary". Size accepts "xs", "sm",
+// "md", "lg", "xl" ("md" is the default and omitted). Class lets callers add
+// extra utility classes (e.g. "validator", "border-indigo-600").
+type CheckboxConfig struct {
+	Name     string
+	Value    string
+	Checked  bool
+	Color    string
+	Size     string
+	Disabled bool
+	Class    string
+}
+
+// Checkbox renders a daisyUI checkbox input (<input type="checkbox"
+// class="checkbox ...">).
+templ Checkbox(cfg CheckboxConfig) {
+	<input
+		type="checkbox"
+		name={ cfg.Name }
+		value={ cfg.Value }
+		checked?={ cfg.Checked }
+		class={ joinClasses(
+			"checkbox",
+			classFor("checkbox", cfg.Color),
+			checkboxSizeClass(cfg.Size),
+			cfg.Class,
+		) }
+		disabled?={ cfg.Disabled }
+	/>
+}
+
+func checkboxSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "checkbox-" + s
+	default:
+		return ""
+	}
+}

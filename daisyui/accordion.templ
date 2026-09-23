@@ -1,0 +1,55 @@
+package daisyui
+
+// AccordionItem is a single entry in an Accordion. Title renders in the
+// collapse-title region and Content renders in the collapse-content region.
+// When Open is true the item is expanded by default.
+type AccordionItem struct {
+	Title   string
+	Content string
+	Open    bool
+}
+
+// Accordion renders a group of collapsible items where only one item can stay
+// open at a time. It uses hidden radio inputs sharing a single name so the
+// browser handles the single-open behaviour without any JavaScript.
+//
+// Icon controls the modifier applied to each item:
+//   - ""            : no icon
+//   - "arrow"       : adds an arrow icon (collapse-arrow)
+//   - "plus"        : adds a plus/minus icon (collapse-plus)
+//
+// Join, when true, wraps the items in a vertical join group so borders and
+// border-radius between adjacent items are handled automatically. Glass, when
+// true, applies the glass surface treatment to each item wrapper.
+templ Accordion(name string, items []AccordionItem, icon string, join bool, glass bool) {
+	if join {
+		<div class={ joinClasses("join", "join-vertical", "bg-base-100", glassClass(glass)) }>
+			for _, item := range items {
+				@accordionItem(name, item, icon, "join-item border border-base-300")
+			}
+		</div>
+	} else {
+		for _, item := range items {
+			@accordionItem(name, item, icon, joinClasses("bg-base-100 border border-base-300", glassClass(glass)))
+		}
+	}
+}
+
+templ accordionItem(name string, item AccordionItem, icon, wrapperClass string) {
+	<div class={ "collapse", accordionIconClass(icon), wrapperClass }>
+		<input type="radio" name={ name } autocomplete="off" checked={ item.Open }/>
+		<div class="collapse-title font-semibold">{ item.Title }</div>
+		<div class="collapse-content text-sm">{ item.Content }</div>
+	</div>
+}
+
+func accordionIconClass(icon string) string {
+	switch icon {
+	case "arrow":
+		return "collapse-arrow"
+	case "plus":
+		return "collapse-plus"
+	default:
+		return ""
+	}
+}

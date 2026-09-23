@@ -1,0 +1,49 @@
+package daisyui
+
+// PhoneConfig configures a daisyUI Phone mockup. Camera, when true, renders
+// the <div class="mockup-phone-camera"> notch (opt-in; defaults to false). DisplayClass lets
+// callers add extra utility classes to the <div class="mockup-phone-display">
+// wrapper (e.g. "text-white bg-neutral-900", sizing). WallpaperSrc, when
+// set, renders an <img alt="wallpaper" src="…"/> inside the display as the
+// docs' "With color and wallpaper" example. Children, when set, replaces the
+// default wallpaper image and is rendered inside the display — use this for
+// custom phone content (e.g. text, an app screen). Class lets callers add
+// extra utility classes to the outer <div class="mockup-phone"> (e.g.
+// "border-[#ff8938]" to recolor the bezel).
+type PhoneConfig struct {
+	Camera       bool
+	WallpaperSrc string
+	DisplayClass string
+	Children     templ.Component
+	Class        string
+}
+
+// Phone renders a daisyUI phone mockup (<div class="mockup-phone …">).
+templ Phone(cfg PhoneConfig) {
+	<div class={ phoneClass(cfg) }>
+		if cfg.Camera {
+			<div class="mockup-phone-camera"></div>
+		}
+		<div class={ phoneDisplayClass(cfg) }>
+			@phoneBody(cfg)
+		</div>
+	</div>
+}
+
+templ phoneBody(cfg PhoneConfig) {
+	if cfg.Children != nil {
+		@cfg.Children
+	} else if cfg.WallpaperSrc != "" {
+		<img alt="wallpaper" src={ templ.SafeURL(cfg.WallpaperSrc) }/>
+	} else {
+		<div class="grid place-content-center">Hello!</div>
+	}
+}
+
+func phoneClass(cfg PhoneConfig) string {
+	return joinClasses("mockup-phone", cfg.Class)
+}
+
+func phoneDisplayClass(cfg PhoneConfig) string {
+	return joinClasses("mockup-phone-display", cfg.DisplayClass)
+}

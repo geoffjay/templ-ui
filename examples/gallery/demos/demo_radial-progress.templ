@@ -1,0 +1,65 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ radialProgressBody() {
+	@gallery.Section("Radial progress", `@daisyui.RadialProgress(daisyui.RadialProgressConfig{
+	Value: "70", Label: "70%",
+})`, daisyui.RadialProgress(daisyui.RadialProgressConfig{
+		Value: "70", Label: "70%",
+	}))
+	@gallery.Section("Different values", `<div class="flex gap-4">
+	@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "0", Label: "0%"})
+	@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "20", Label: "20%"})
+	@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "60", Label: "60%"})
+	@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "80", Label: "80%"})
+	@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "100", Label: "100%"})
+</div>`, radialProgressValuesRow())
+	@gallery.Section("Custom color", `@daisyui.RadialProgress(daisyui.RadialProgressConfig{
+	Value: "70", Label: "70%", ColorClass: "text-primary",
+})`, daisyui.RadialProgress(daisyui.RadialProgressConfig{
+		Value: "70", Label: "70%", ColorClass: "text-primary",
+	}))
+	@gallery.Section("With background color and border", `@daisyui.RadialProgress(daisyui.RadialProgressConfig{
+	Value: "70", Label: "70%",
+	Class: "bg-primary text-primary-content border-4 border-primary",
+})`, daisyui.RadialProgress(daisyui.RadialProgressConfig{
+		Value: "70", Label: "70%",
+		Class: "bg-primary text-primary-content border-4 border-primary",
+	}))
+	@gallery.Section("Custom size and custom thickness", `<div class="flex gap-4">
+	@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "70", Label: "70%", Size: "12rem", Thickness: "2px"})
+	@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "70", Label: "70%", Size: "12rem", Thickness: "2rem"})
+</div>`, radialProgressSizeRow())
+}
+
+templ radialProgressValuesRow() {
+	<div class="flex gap-4">
+		@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "0", Label: "0%"})
+		@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "20", Label: "20%"})
+		@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "60", Label: "60%"})
+		@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "80", Label: "80%"})
+		@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "100", Label: "100%"})
+	</div>
+}
+
+templ radialProgressSizeRow() {
+	<div class="flex gap-4">
+		@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "70", Label: "70%", Size: "12rem", Thickness: "2px"})
+		@daisyui.RadialProgress(daisyui.RadialProgressConfig{Value: "70", Label: "70%", Size: "12rem", Thickness: "2rem"})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "radial-progress",
+		Name:        "Radial progress",
+		Description: "Radial progress can be used to show the progress of a task or to show the passing of time.",
+		Category:    "daisyui",
+		Body:        radialProgressBody,
+	})
+}

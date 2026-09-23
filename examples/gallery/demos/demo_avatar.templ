@@ -1,0 +1,154 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "avatar",
+		Name:        "Avatar",
+		Description: "Avatars are used to show a thumbnail representation of an individual or business in the interface.",
+		Category:    "daisyui",
+		Body:        avatarBody,
+	})
+}
+
+const avatarBat = "https://img.daisyui.com/images/profile/demo/batperson@192.webp"
+const avatarSuper = "https://img.daisyui.com/images/profile/demo/superperson@192.webp"
+const avatarYellingWoman = "https://img.daisyui.com/images/profile/demo/yellingwoman@192.webp"
+const avatarYellingCat = "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
+const avatarDistracted3 = "https://img.daisyui.com/images/profile/demo/distracted3@192.webp"
+const avatarDistracted1 = "https://img.daisyui.com/images/profile/demo/distracted1@192.webp"
+const avatarDistracted2 = "https://img.daisyui.com/images/profile/demo/distracted2@192.webp"
+const avatarSpider = "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
+const avatarAverage = "https://img.daisyui.com/images/profile/demo/averagebulk@192.webp"
+const avatarWonder = "https://img.daisyui.com/images/profile/demo/wonderperson@192.webp"
+const avatarGordon = "https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+const avatarIdiot = "https://img.daisyui.com/images/profile/demo/idiotsandwich@192.webp"
+
+templ avatarBody() {
+	@gallery.Section("Avatar", `@daisyui.Avatar(daisyui.AvatarConfig{
+	Src:        avatarBat,
+	Alt:        "Tailwind-CSS-Avatar-component",
+	Size:       "w-24",
+	InnerClass: "bg-base-300",
+})`, daisyui.Avatar(daisyui.AvatarConfig{
+		Src:        avatarBat,
+		Alt:        "Tailwind-CSS-Avatar-component",
+		Size:       "w-24",
+		InnerClass: "bg-base-300",
+	}))
+	@gallery.Section("Avatar in custom sizes", `<div class="flex flex-wrap gap-4">
+	@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarSuper, Alt: "Tailwind-CSS-Avatar-component", Size: "w-24", InnerClass: "bg-base-300"})
+	@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarSuper, Alt: "Tailwind-CSS-Avatar-component", Size: "w-16", InnerClass: "bg-base-300"})
+	// ... one per size (w-12, w-8)
+</div>`, avatarDemoSizes())
+	@gallery.Section("Avatar rounded", `<div class="flex flex-wrap gap-4">
+	@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarYellingWoman, Alt: "Tailwind-CSS-Avatar-component", Shape: "rounded-xl", Size: "w-24", InnerClass: "bg-base-300"})
+	@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarYellingCat, Alt: "Tailwind-CSS-Avatar-component", Shape: "rounded-full", Size: "w-24", InnerClass: "bg-base-300"})
+</div>`, avatarDemoRounded())
+	@gallery.Section("Avatar with mask", `<div class="flex flex-wrap gap-4">
+	@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarDistracted3, Alt: "Tailwind-CSS-Avatar-component", Shape: "heart", Size: "w-24", InnerClass: "bg-base-300"})
+	@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarDistracted1, Alt: "Tailwind-CSS-Avatar-component", Shape: "squircle", Size: "w-24", InnerClass: "bg-base-300"})
+	@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarDistracted2, Alt: "Tailwind-CSS-Avatar-component", Shape: "hexagon-2", Size: "w-24", InnerClass: "bg-base-300"})
+</div>`, avatarDemoMasks())
+	@gallery.Section("Avatar group", `@daisyui.AvatarGroup(daisyui.AvatarGroupConfig{
+	Class: "-space-x-6",
+	Items: []daisyui.AvatarConfig{
+		{Src: avatarBat, Size: "w-12", InnerClass: "bg-base-300"},
+		{Src: avatarSpider, Size: "w-12", InnerClass: "bg-base-300"},
+		{Src: avatarAverage, Size: "w-12", InnerClass: "bg-base-300"},
+		{Src: avatarWonder, Size: "w-12", InnerClass: "bg-base-300"},
+	},
+})`, daisyui.AvatarGroup(daisyui.AvatarGroupConfig{
+		Class: "-space-x-6",
+		Items: []daisyui.AvatarConfig{
+			{Src: avatarBat, Size: "w-12", InnerClass: "bg-base-300"},
+			{Src: avatarSpider, Size: "w-12", InnerClass: "bg-base-300"},
+			{Src: avatarAverage, Size: "w-12", InnerClass: "bg-base-300"},
+			{Src: avatarWonder, Size: "w-12", InnerClass: "bg-base-300"},
+		},
+	}))
+	@gallery.Section("Avatar group with counter", `@daisyui.AvatarGroup(daisyui.AvatarGroupConfig{
+	Class: "-space-x-6",
+	Items: []daisyui.AvatarConfig{
+		{Src: avatarBat, Size: "w-12", InnerClass: "bg-base-300"},
+		{Src: avatarSpider, Size: "w-12", InnerClass: "bg-base-300"},
+		{Src: avatarAverage, Size: "w-12", InnerClass: "bg-base-300"},
+		{Placeholder: true, PlaceholderText: "+99", Size: "w-12", InnerClass: "bg-neutral text-neutral-content"},
+	},
+})`, daisyui.AvatarGroup(daisyui.AvatarGroupConfig{
+		Class: "-space-x-6",
+		Items: []daisyui.AvatarConfig{
+			{Src: avatarBat, Size: "w-12", InnerClass: "bg-base-300"},
+			{Src: avatarSpider, Size: "w-12", InnerClass: "bg-base-300"},
+			{Src: avatarAverage, Size: "w-12", InnerClass: "bg-base-300"},
+			{Placeholder: true, PlaceholderText: "+99", Size: "w-12", InnerClass: "bg-neutral text-neutral-content"},
+		},
+	}))
+	@gallery.Section("Avatar with ring", `@daisyui.Avatar(daisyui.AvatarConfig{
+	Src:   avatarSpider,
+	Alt:   "Tailwind-CSS-Avatar-component",
+	Shape: "rounded-full",
+	Size:  "w-24",
+	Ring:  "primary",
+})`, daisyui.Avatar(daisyui.AvatarConfig{
+		Src:   avatarSpider,
+		Alt:   "Tailwind-CSS-Avatar-component",
+		Shape: "rounded-full",
+		Size:  "w-24",
+		Ring:  "primary",
+	}))
+	@gallery.Section("Avatar with presence indicator", `<div class="flex flex-wrap gap-4">
+	@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarGordon, Alt: "Tailwind-CSS-Avatar-component", Status: "online", Shape: "rounded-full", Size: "w-24", InnerClass: "bg-base-300"})
+	@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarIdiot, Alt: "Tailwind-CSS-Avatar-component", Status: "offline", Shape: "rounded-full", Size: "w-24", InnerClass: "bg-base-300"})
+</div>`, avatarDemoPresence())
+	@gallery.Section("Avatar placeholder", `<div class="flex flex-wrap gap-4 items-center">
+	@daisyui.Avatar(daisyui.AvatarConfig{Placeholder: true, PlaceholderText: "D", PlaceholderClass: "text-3xl", Size: "w-24", InnerClass: "bg-neutral text-neutral-content rounded-full"})
+	@daisyui.Avatar(daisyui.AvatarConfig{Placeholder: true, Status: "online", PlaceholderText: "AI", PlaceholderClass: "text-xl", Size: "w-16", InnerClass: "bg-neutral text-neutral-content rounded-full"})
+	// ... more placeholders
+</div>`, avatarDemoPlaceholders())
+}
+
+templ avatarDemoSizes() {
+	<div class="flex flex-wrap gap-4">
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarSuper, Alt: "Tailwind-CSS-Avatar-component", Size: "w-24", InnerClass: "bg-base-300"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarSuper, Alt: "Tailwind-CSS-Avatar-component", Size: "w-16", InnerClass: "bg-base-300"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarSuper, Alt: "Tailwind-CSS-Avatar-component", Size: "w-12", InnerClass: "bg-base-300"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarSuper, Alt: "Tailwind-CSS-Avatar-component", Size: "w-8", InnerClass: "bg-base-300"})
+	</div>
+}
+
+templ avatarDemoRounded() {
+	<div class="flex flex-wrap gap-4">
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarYellingWoman, Alt: "Tailwind-CSS-Avatar-component", Shape: "rounded-xl", Size: "w-24", InnerClass: "bg-base-300"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarYellingCat, Alt: "Tailwind-CSS-Avatar-component", Shape: "rounded-full", Size: "w-24", InnerClass: "bg-base-300"})
+	</div>
+}
+
+templ avatarDemoMasks() {
+	<div class="flex flex-wrap gap-4">
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarDistracted3, Alt: "Tailwind-CSS-Avatar-component", Shape: "heart", Size: "w-24", InnerClass: "bg-base-300"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarDistracted1, Alt: "Tailwind-CSS-Avatar-component", Shape: "squircle", Size: "w-24", InnerClass: "bg-base-300"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarDistracted2, Alt: "Tailwind-CSS-Avatar-component", Shape: "hexagon-2", Size: "w-24", InnerClass: "bg-base-300"})
+	</div>
+}
+
+templ avatarDemoPresence() {
+	<div class="flex flex-wrap gap-4">
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarGordon, Alt: "Tailwind-CSS-Avatar-component", Status: "online", Shape: "rounded-full", Size: "w-24", InnerClass: "bg-base-300"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Src: avatarIdiot, Alt: "Tailwind-CSS-Avatar-component", Status: "offline", Shape: "rounded-full", Size: "w-24", InnerClass: "bg-base-300"})
+	</div>
+}
+
+templ avatarDemoPlaceholders() {
+	<div class="flex flex-wrap gap-4 items-center">
+		@daisyui.Avatar(daisyui.AvatarConfig{Placeholder: true, PlaceholderText: "D", PlaceholderClass: "text-3xl", Size: "w-24", InnerClass: "bg-neutral text-neutral-content rounded-full"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Placeholder: true, Status: "online", PlaceholderText: "AI", PlaceholderClass: "text-xl", Size: "w-16", InnerClass: "bg-neutral text-neutral-content rounded-full"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Placeholder: true, PlaceholderText: "SY", Size: "w-12", InnerClass: "bg-neutral text-neutral-content rounded-full"})
+		@daisyui.Avatar(daisyui.AvatarConfig{Placeholder: true, PlaceholderText: "UI", PlaceholderClass: "text-xs", Size: "w-8", InnerClass: "bg-neutral text-neutral-content rounded-full"})
+	</div>
+}

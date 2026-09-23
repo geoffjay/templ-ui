@@ -1,0 +1,67 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "browser",
+		Name:        "Browser mockup",
+		Description: "Browser mockup is used to show a box that looks like a browser window.",
+		Category:    "daisyui",
+		Body:        browserBody,
+	})
+}
+
+const browserWallpaper = "https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp"
+
+templ browserBody() {
+	@gallery.Section("Browser mockup with border", `@daisyui.Browser(daisyui.BrowserConfig{
+	URL:      "https://daisyui.com",
+	Bordered: true,
+	Children: browserContent(),
+})`, daisyui.Browser(daisyui.BrowserConfig{
+		URL:      "https://daisyui.com",
+		Bordered: true,
+		Children: browserDemoContent(),
+	}))
+	@gallery.Section("Browser mockup with background color", `@daisyui.Browser(daisyui.BrowserConfig{
+	URL:        "https://daisyui.com",
+	Bordered:   true,
+	Background: true,
+	BodyClass:  "h-80",
+	Children:   browserContent(),
+})`, daisyui.Browser(daisyui.BrowserConfig{
+		URL:        "https://daisyui.com",
+		Bordered:   true,
+		Background: true,
+		BodyClass:  "h-80",
+		Children:   browserDemoContent(),
+	}))
+	@gallery.Section("With custom toolbar content", `@daisyui.Browser(daisyui.BrowserConfig{
+	Bordered: true,
+	Toolbar:  browserToolbar(),
+	Children: browserContent(),
+})`, daisyui.Browser(daisyui.BrowserConfig{
+		Bordered: true,
+		Toolbar:  browserDemoToolbar(),
+		Children: browserDemoContent(),
+	}))
+}
+
+templ browserDemoContent() {
+	<div class="grid place-content-center h-full">
+		<div class="text-center space-y-2">
+			<h3 class="text-xl font-semibold">Hello!</h3>
+			<p class="text-base-content/70">This is content rendered inside the browser mockup.</p>
+			<img src={ templ.SafeURL(browserWallpaper) } alt="Browser content preview" class="mx-auto rounded-lg shadow-md w-64"/>
+		</div>
+	</div>
+}
+
+templ browserDemoToolbar() {
+	<div class="input">https://daisyui.com/components/mockup-browser</div>
+}

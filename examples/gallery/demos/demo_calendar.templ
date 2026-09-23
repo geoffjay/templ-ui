@@ -1,0 +1,48 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "calendar",
+		Name:        "Calendar",
+		Description: "Calendar includes styles for different calendar libraries.",
+		Category:    "daisyui",
+		Body:        calendarBody,
+	})
+}
+
+templ calendarBody() {
+	@gallery.Section("Cally calendar example", `<div>
+	<p class="mb-2 text-sm text-base-content/70">
+		Load the Cally web component from CDN to make this interactive:
+		<code class="kbd kbd-xs">&lt;script type="module" src="https://unpkg.com/cally"&gt;&lt;/script&gt;</code>
+	</p>
+	@daisyui.Calendar(daisyui.CalendarConfig{
+		Class: "bg-base-100 border border-base-300 shadow-lg rounded-box",
+	})
+</div>`, calendarDemoCallyExample())
+	@gallery.Section("Pikaday input", `@daisyui.Calendar(daisyui.CalendarConfig{
+	Variant: "pikaday",
+	Value:   "Pick a day",
+})`, daisyui.Calendar(daisyui.CalendarConfig{
+		Variant: "pikaday",
+		Value:   "Pick a day",
+	}))
+}
+
+templ calendarDemoCallyExample() {
+	<div>
+		<p class="mb-2 text-sm text-base-content/70">
+			Load the Cally web component from CDN to make this interactive:
+			<code class="kbd kbd-xs">&lt;script type="module" src="https://unpkg.com/cally"&gt;&lt;/script&gt;</code>
+		</p>
+		@daisyui.Calendar(daisyui.CalendarConfig{
+			Class: "bg-base-100 border border-base-300 shadow-lg rounded-box",
+		})
+	</div>
+}

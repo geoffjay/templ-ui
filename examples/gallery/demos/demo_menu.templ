@@ -1,0 +1,211 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "menu",
+		Name:        "Menu",
+		Description: "Menu is used to display a list of links or actions.",
+		Category:    "daisyui",
+		Body:        menuBody,
+	})
+}
+
+templ menuBody() {
+	@gallery.Section("Menu", `@daisyui.Menu(daisyui.MenuConfig{
+	Items: []daisyui.MenuItem{
+		{Label: "Item 1", Href: "#"},
+		{Label: "Item 2", Href: "#", Active: true},
+		{Label: "Item 3", Href: "#"},
+	},
+	Class:    "bg-base-200 rounded-box w-56",
+})`, daisyui.Menu(daisyui.MenuConfig{
+		Items: []daisyui.MenuItem{
+			{Label: "Item 1", Href: "#"},
+			{Label: "Item 2", Href: "#", Active: true},
+			{Label: "Item 3", Href: "#"},
+		},
+		Class: "bg-base-200 rounded-box w-56",
+	}))
+	@gallery.Section("Menu with title", `@daisyui.Menu(daisyui.MenuConfig{
+	Title: "Title",
+	Items: []daisyui.MenuItem{
+		{Label: "Item 1", Href: "#"},
+		{Label: "Item 2", Href: "#"},
+		{Label: "Item 3", Href: "#"},
+	},
+	Class:    "bg-base-200 rounded-box w-56",
+})`, daisyui.Menu(daisyui.MenuConfig{
+		Title: "Title",
+		Items: []daisyui.MenuItem{
+			{Label: "Item 1", Href: "#"},
+			{Label: "Item 2", Href: "#"},
+			{Label: "Item 3", Href: "#"},
+		},
+		Class: "bg-base-200 rounded-box w-56",
+	}))
+	@gallery.Section("Menu with icons", `@daisyui.Menu(daisyui.MenuConfig{
+	Items: []daisyui.MenuItem{
+		{Label: "Item 1", Href: "#", Icon: menuIcon1()},
+		{Label: "Item 2", Href: "#", Icon: menuIcon2(), Active: true},
+		{Label: "Item 3", Href: "#", Icon: menuIcon3()},
+	},
+	Class:    "bg-base-200 rounded-box w-56",
+})`, daisyui.Menu(daisyui.MenuConfig{
+		Items: []daisyui.MenuItem{
+			{Label: "Item 1", Href: "#", Icon: menuIcon1()},
+			{Label: "Item 2", Href: "#", Icon: menuIcon2(), Active: true},
+			{Label: "Item 3", Href: "#", Icon: menuIcon3()},
+		},
+		Class: "bg-base-200 rounded-box w-56",
+	}))
+	@gallery.Section("Menu with badges", `@daisyui.Menu(daisyui.MenuConfig{
+	Items: []daisyui.MenuItem{
+		{Label: "Inbox", Href: "#", Badge: "12"},
+		{Label: "Sent", Href: "#", Badge: "3"},
+		{Label: "Drafts", Href: "#", Active: true, Badge: "5"},
+	},
+	Class:    "bg-base-200 rounded-box w-56",
+})`, daisyui.Menu(daisyui.MenuConfig{
+		Items: []daisyui.MenuItem{
+			{Label: "Inbox", Href: "#", Badge: "12"},
+			{Label: "Sent", Href: "#", Badge: "3"},
+			{Label: "Drafts", Href: "#", Active: true, Badge: "5"},
+		},
+		Class: "bg-base-200 rounded-box w-56",
+	}))
+	@gallery.Section("Menu with disabled item", `@daisyui.Menu(daisyui.MenuConfig{
+	Items: []daisyui.MenuItem{
+		{Label: "Enabled", Href: "#"},
+		{Label: "Disabled", Disabled: true},
+		{Label: "Active", Href: "#", Active: true},
+	},
+	Class:    "bg-base-200 rounded-box w-56",
+})`, daisyui.Menu(daisyui.MenuConfig{
+		Items: []daisyui.MenuItem{
+			{Label: "Enabled", Href: "#"},
+			{Label: "Disabled", Disabled: true},
+			{Label: "Active", Href: "#", Active: true},
+		},
+		Class: "bg-base-200 rounded-box w-56",
+	}))
+	@gallery.Section("Menu with submenu (collapsible)", `@daisyui.Menu(daisyui.MenuConfig{
+	Items: []daisyui.MenuItem{
+		{
+			Label:       "Parent",
+			Href:        "#",
+			Collapsible: true,
+			Open:        true,
+			Submenu: []daisyui.MenuItem{
+				{Label: "Child 1", Href: "#"},
+				{Label: "Child 2", Href: "#", Active: true},
+			},
+		},
+		{Label: "Standalone", Href: "#"},
+	},
+	Class:    "bg-base-200 rounded-box w-56",
+})`, daisyui.Menu(daisyui.MenuConfig{
+		Items: []daisyui.MenuItem{
+			{
+				Label:       "Parent",
+				Href:        "#",
+				Collapsible: true,
+				Open:        true,
+				Submenu: []daisyui.MenuItem{
+					{Label: "Child 1", Href: "#"},
+					{Label: "Child 2", Href: "#", Active: true},
+				},
+			},
+			{Label: "Standalone", Href: "#"},
+		},
+		Class: "bg-base-200 rounded-box w-56",
+	}))
+	@gallery.Section("Menu horizontal", `@daisyui.Menu(daisyui.MenuConfig{
+	Items: []daisyui.MenuItem{
+		{Label: "Item 1", Href: "#", Active: true},
+		{Label: "Item 2", Href: "#"},
+		{Label: "Item 3", Href: "#"},
+	},
+	Direction: "horizontal",
+	Class:     "bg-base-200 rounded-box",
+})`, daisyui.Menu(daisyui.MenuConfig{
+		Items: []daisyui.MenuItem{
+			{Label: "Item 1", Href: "#", Active: true},
+			{Label: "Item 2", Href: "#"},
+			{Label: "Item 3", Href: "#"},
+		},
+		Direction: "horizontal",
+		Class:     "bg-base-200 rounded-box",
+	}))
+	@gallery.Section("Menu sizes", `@daisyui.Menu(daisyui.MenuConfig{
+	Items: []daisyui.MenuItem{{Label: "XS", Href: "#", Active: true}},
+	Size:  "xs", Class: "bg-base-200 rounded-box w-56",
+})
+@daisyui.Menu(daisyui.MenuConfig{
+	Items: []daisyui.MenuItem{{Label: "SM", Href: "#", Active: true}},
+	Size:  "sm", Class: "bg-base-200 rounded-box w-56",
+})
+// ... one per size (lg, xl)`, menuSizes())
+	@gallery.Section("Menu with tooltips (icon-only)", `@daisyui.Menu(daisyui.MenuConfig{
+	UseTooltips: true,
+	Items: []daisyui.MenuItem{
+		{Label: "", Href: "#", Icon: menuIcon1(), Tooltip: "Home"},
+		{Label: "", Href: "#", Icon: menuIcon2(), Tooltip: "Search", Active: true},
+		{Label: "", Href: "#", Icon: menuIcon3(), Tooltip: "Settings"},
+	},
+	Class:    "bg-base-200 rounded-box w-20",
+})`, daisyui.Menu(daisyui.MenuConfig{
+		UseTooltips: true,
+		Items: []daisyui.MenuItem{
+			{Label: "", Href: "#", Icon: menuIcon1(), Tooltip: "Home"},
+			{Label: "", Href: "#", Icon: menuIcon2(), Tooltip: "Search", Active: true},
+			{Label: "", Href: "#", Icon: menuIcon3(), Tooltip: "Settings"},
+		},
+		Class: "bg-base-200 rounded-box w-20",
+	}))
+}
+
+templ menuSizes() {
+	<div class="flex flex-col gap-4">
+		@daisyui.Menu(daisyui.MenuConfig{
+			Items: []daisyui.MenuItem{{Label: "XS", Href: "#", Active: true}},
+			Size:  "xs", Class: "bg-base-200 rounded-box w-56",
+		})
+		@daisyui.Menu(daisyui.MenuConfig{
+			Items: []daisyui.MenuItem{{Label: "SM", Href: "#", Active: true}},
+			Size:  "sm", Class: "bg-base-200 rounded-box w-56",
+		})
+		@daisyui.Menu(daisyui.MenuConfig{
+			Items: []daisyui.MenuItem{{Label: "LG", Href: "#", Active: true}},
+			Size:  "lg", Class: "bg-base-200 rounded-box w-56",
+		})
+		@daisyui.Menu(daisyui.MenuConfig{
+			Items: []daisyui.MenuItem{{Label: "XL", Href: "#", Active: true}},
+			Size:  "xl", Class: "bg-base-200 rounded-box w-56",
+		})
+	</div>
+}
+
+templ menuIcon1() {
+	<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+	</svg>
+}
+
+templ menuIcon2() {
+	<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+	</svg>
+}
+
+templ menuIcon3() {
+	<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+	</svg>
+}

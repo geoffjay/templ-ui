@@ -1,0 +1,111 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ kbdBody() {
+	@gallery.Section("Kbd", `@daisyui.Kbd("K", "", "")`, daisyui.Kbd("K", "", ""))
+	@gallery.Section("Kbd sizes", `@daisyui.Kbd("Xsmall", "xs", "")
+@daisyui.Kbd("Small", "sm", "")
+@daisyui.Kbd("Medium", "md", "")
+@daisyui.Kbd("Large", "lg", "")
+@daisyui.Kbd("Xlarge", "xl", "")`, kbdSizeRow())
+	@gallery.Section("In text", `<span>Press @daisyui.Kbd("F", "sm", "") to pay respects.</span>`, kbdInText())
+	@gallery.Section("Key combination", `@daisyui.KbdCombo([]string{"ctrl", "shift", "del"}, "", "")`, daisyui.KbdCombo([]string{"ctrl", "shift", "del"}, "", ""))
+	@gallery.Section("Function keys", `@daisyui.Kbd("⌘", "", "")
+@daisyui.Kbd("⌥", "", "")
+@daisyui.Kbd("⇧", "", "")
+@daisyui.Kbd("⌃", "", "")`, kbdFunctionKeys())
+	@gallery.Section("A full keyboard", `<div class="overflow-x-auto">
+	<div class="flex justify-center gap-1 w-full mb-1">
+		@daisyui.Kbd("q", "", "")@daisyui.Kbd("w", "", "")@daisyui.Kbd("e", "", "")...
+	</div>
+	// ... rows for a/s/d... and z/x/c...
+</div>`, kbdFullKeyboard())
+	@gallery.Section("Arrow keys", `<div class="flex justify-center w-full">@daisyui.Kbd("▲", "", "")</div>
+<div class="flex justify-center gap-12 w-full">@daisyui.Kbd("◀︎", "", "")@daisyui.Kbd("▶︎", "", "")</div>
+<div class="flex justify-center w-full">@daisyui.Kbd("▼", "", "")</div>`, kbdArrowKeys())
+}
+
+templ kbdSizeRow() {
+	@daisyui.Kbd("Xsmall", "xs", "")
+	@daisyui.Kbd("Small", "sm", "")
+	@daisyui.Kbd("Medium", "md", "")
+	@daisyui.Kbd("Large", "lg", "")
+	@daisyui.Kbd("Xlarge", "xl", "")
+}
+
+templ kbdInText() {
+	<span>Press @daisyui.Kbd("F", "sm", "") to pay respects.</span>
+}
+
+templ kbdFunctionKeys() {
+	@daisyui.Kbd("⌘", "", "")
+	@daisyui.Kbd("⌥", "", "")
+	@daisyui.Kbd("⇧", "", "")
+	@daisyui.Kbd("⌃", "", "")
+}
+
+templ kbdFullKeyboard() {
+	<div class="overflow-x-auto">
+		<div class="flex justify-center gap-1 w-full mb-1">
+			@daisyui.Kbd("q", "", "")
+			@daisyui.Kbd("w", "", "")
+			@daisyui.Kbd("e", "", "")
+			@daisyui.Kbd("r", "", "")
+			@daisyui.Kbd("t", "", "")
+			@daisyui.Kbd("y", "", "")
+			@daisyui.Kbd("u", "", "")
+			@daisyui.Kbd("i", "", "")
+			@daisyui.Kbd("o", "", "")
+			@daisyui.Kbd("p", "", "")
+		</div>
+		<div class="flex justify-center gap-1 w-full mb-1">
+			@daisyui.Kbd("a", "", "")
+			@daisyui.Kbd("s", "", "")
+			@daisyui.Kbd("d", "", "")
+			@daisyui.Kbd("f", "", "")
+			@daisyui.Kbd("g", "", "")
+			@daisyui.Kbd("h", "", "")
+			@daisyui.Kbd("j", "", "")
+			@daisyui.Kbd("k", "", "")
+			@daisyui.Kbd("l", "", "")
+		</div>
+		<div class="flex justify-center gap-1 w-full mb-1">
+			@daisyui.Kbd("z", "", "")
+			@daisyui.Kbd("x", "", "")
+			@daisyui.Kbd("c", "", "")
+			@daisyui.Kbd("v", "", "")
+			@daisyui.Kbd("b", "", "")
+			@daisyui.Kbd("n", "", "")
+			@daisyui.Kbd("m", "", "")
+			@daisyui.Kbd("/", "", "")
+		</div>
+	</div>
+}
+
+templ kbdArrowKeys() {
+	<div class="flex justify-center w-full">
+		@daisyui.Kbd("▲", "", "")
+	</div>
+	<div class="flex justify-center gap-12 w-full">
+		@daisyui.Kbd("◀︎", "", "")
+		@daisyui.Kbd("▶︎", "", "")
+	</div>
+	<div class="flex justify-center w-full">
+		@daisyui.Kbd("▼", "", "")
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "kbd",
+		Name:        "Kbd",
+		Description: "Kbd is used to display keyboard shortcuts.",
+		Category:    "daisyui",
+		Body:        kbdBody,
+	})
+}

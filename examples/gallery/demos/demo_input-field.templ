@@ -1,0 +1,154 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+
+	icons "github.com/iota-uz/icons/phosphor"
+)
+
+templ inputFieldBody() {
+	@gallery.Section("Text input", `@daisyui.Input(daisyui.InputConfig{
+	Placeholder: "Type here",
+})`, daisyui.Input(daisyui.InputConfig{
+		Placeholder: "Type here",
+	}))
+	@gallery.Section("Text input with text label inside", `<div class="grid gap-4 w-xs">
+	@daisyui.InputLabel(daisyui.InputLabelConfig{}, templ.Raw(...search icon, input, kbd...))
+	@daisyui.InputLabel(daisyui.InputLabelConfig{}, templ.Raw(...file icon, input...))
+	@daisyui.InputLabel(daisyui.InputLabelConfig{}, templ.Raw(...Path, input, badge...))
+</div>`, inputFieldLabelInsideRow())
+	@gallery.Section("Ghost style", `@daisyui.Input(daisyui.InputConfig{
+	Placeholder: "Type here",
+	Style:       "ghost",
+})`, daisyui.Input(daisyui.InputConfig{
+		Placeholder: "Type here",
+		Style:       "ghost",
+	}))
+	@gallery.Section("With fieldset and fieldset-legend", `@daisyui.Fieldset(daisyui.FieldsetConfig{
+	Legend: "What is your name?",
+	Class:  "w-xs",
+}, templ.Raw("<input type=\"text\" class=\"input\" placeholder=\"Type here\" /><p class=\"label\">Optional</p>"))`, daisyui.Fieldset(daisyui.FieldsetConfig{
+		Legend: "What is your name?",
+		Class:  "w-xs",
+	}, templ.Raw(`
+		<input type="text" class="input" placeholder="Type here" />
+		<p class="label">Optional</p>`)))
+	@gallery.Section("Input colors", `<div class="grid gap-4 w-xs">
+	@daisyui.Input(daisyui.InputConfig{Placeholder: "neutral", Color: "neutral"})
+	@daisyui.Input(daisyui.InputConfig{Placeholder: "Primary", Color: "primary"})
+	// ... one per color
+</div>`, inputFieldColorRow())
+	@gallery.Section("Sizes", `<div class="grid gap-4 w-xs">
+	@daisyui.Input(daisyui.InputConfig{Placeholder: "Xsmall", Size: "xs"})
+	@daisyui.Input(daisyui.InputConfig{Placeholder: "Small", Size: "sm"})
+	// ... one per size
+</div>`, inputFieldSizeRow())
+	@gallery.Section("Disabled", `@daisyui.Input(daisyui.InputConfig{
+	Placeholder: "You can't touch this",
+	Disabled:    true,
+})`, daisyui.Input(daisyui.InputConfig{
+		Placeholder: "You can't touch this",
+		Disabled:    true,
+	}))
+	@gallery.Section("Date input", `@daisyui.Input(daisyui.InputConfig{Type: "date"})`, daisyui.Input(daisyui.InputConfig{Type: "date"}))
+	@gallery.Section("Time input", `@daisyui.Input(daisyui.InputConfig{Type: "time"})`, daisyui.Input(daisyui.InputConfig{Type: "time"}))
+	@gallery.Section("datetime-local input", `@daisyui.Input(daisyui.InputConfig{Type: "datetime-local"})`, daisyui.Input(daisyui.InputConfig{Type: "datetime-local"}))
+	@gallery.Section("Username text input with icon and validator", `<form class="w-full max-w-xs">
+	@daisyui.InputLabel(daisyui.InputLabelConfig{Validator: true}, templ.Raw(...user icon, input...))
+	<p class="validator-hint">
+		Must be 3 to 30 characters
+		<br/>containing only letters, numbers or dash
+	</p>
+</form>`, inputFieldUsernameValidatorForm())
+	@gallery.Section("Search input with icon", `<form class="w-full max-w-xs">
+	@daisyui.InputLabel(daisyui.InputLabelConfig{}, templ.Raw(...search icon, input...))
+</form>`, inputFieldSearchInputForm())
+}
+
+templ inputFieldLabelInsideRow() {
+	<div class="grid gap-4 w-xs">
+		@daisyui.InputLabel(daisyui.InputLabelConfig{}, inputFieldSearchBlock("Search", "⌘", "K"))
+		@daisyui.InputLabel(daisyui.InputLabelConfig{}, inputFieldFileBlock())
+		@daisyui.InputLabel(daisyui.InputLabelConfig{}, inputFieldPathBlock())
+	</div>
+}
+
+templ inputFieldSearchBlock(placeholder, kbd1, kbd2 string) {
+	@icons.MagnifyingGlass(icons.Props{Size: "16", Class: "h-[1em] opacity-50"})
+	<input type="search" class="grow" placeholder={ placeholder }/>
+	<kbd class="kbd kbd-sm">{ kbd1 }</kbd>
+	<kbd class="kbd kbd-sm">{ kbd2 }</kbd>
+}
+
+templ inputFieldFileBlock() {
+	@icons.FileText(icons.Props{Size: "16", Class: "h-[1em] opacity-50"})
+	<input type="text" class="grow" placeholder="index.php"/>
+}
+
+templ inputFieldPathBlock() {
+	Path
+	<input type="text" class="grow" placeholder="src/app/"/>
+	<span class="badge badge-neutral badge-xs">Optional</span>
+}
+
+templ inputFieldUsernameValidatorForm() {
+	<form class="w-full max-w-xs">
+		@daisyui.InputLabel(daisyui.InputLabelConfig{Validator: true}, inputFieldUsernameValidatorInner())
+		<p class="validator-hint">
+			Must be 3 to 30 characters
+			<br/>
+			containing only letters, numbers or dash
+		</p>
+	</form>
+}
+
+templ inputFieldUsernameValidatorInner() {
+	@icons.User(icons.Props{Size: "16", Class: "h-[1em] opacity-50"})
+	<input type="text" required placeholder="Username" pattern="[A-Za-z][A-Za-z0-9\-]*" minlength="3" maxlength="30" title="Only letters, numbers or dash"/>
+}
+
+templ inputFieldSearchInputForm() {
+	<form class="w-full max-w-xs">
+		@daisyui.InputLabel(daisyui.InputLabelConfig{}, inputFieldSearchInputInner())
+	</form>
+}
+
+templ inputFieldSearchInputInner() {
+	@icons.MagnifyingGlass(icons.Props{Size: "16", Class: "h-[1em] opacity-50"})
+	<input type="search" required placeholder="Search"/>
+}
+
+templ inputFieldColorRow() {
+	<div class="grid gap-4 w-xs">
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "neutral", Color: "neutral"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Primary", Color: "primary"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Secondary", Color: "secondary"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Accent", Color: "accent"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Info", Color: "info"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Success", Color: "success"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Warning", Color: "warning"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Error", Color: "error"})
+	</div>
+}
+
+templ inputFieldSizeRow() {
+	<div class="grid gap-4 w-xs">
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Xsmall", Size: "xs"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Small", Size: "sm"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Medium", Size: "md"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Large", Size: "lg"})
+		@daisyui.Input(daisyui.InputConfig{Placeholder: "Xlarge", Size: "xl"})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "input-field",
+		Name:        "Text Input",
+		Description: "Text Input is a simple input field.",
+		Category:    "daisyui",
+		Body:        inputFieldBody,
+	})
+}

@@ -1,0 +1,123 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "divider",
+		Name:        "Divider",
+		Description: "Divider will be used to separate content vertically or horizontally.",
+		Category:    "daisyui",
+		Body:        dividerBody,
+	})
+}
+
+templ dividerBody() {
+	@gallery.Section("Divider", `<div class="flex flex-col w-full">
+<div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
+@daisyui.Divider("OR", "", "", "", "")
+<div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
+</div>`, dividerVerticalRow())
+	@gallery.Section("Divider horizontal", `<div class="flex w-full">
+<div class="grid h-20 grow card bg-base-300 rounded-box place-items-center">content</div>
+@daisyui.Divider("OR", "horizontal", "", "", "")
+<div class="grid h-20 grow card bg-base-300 rounded-box place-items-center">content</div>
+</div>`, dividerHorizontalRow())
+	@gallery.Section("Divider with no text", `<div class="flex flex-col w-full">
+<div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
+@daisyui.Divider("", "", "", "", "")
+<div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
+</div>`, dividerNoTextRow())
+	@gallery.Section("Responsive (lg:divider-horizontal)", `<div class="flex flex-col w-full lg:flex-row">
+<div class="grid grow h-32 card bg-base-300 rounded-box place-items-center">content</div>
+@daisyui.Divider("OR", "", "", "", "lg:divider-horizontal")
+<div class="grid grow h-32 card bg-base-300 rounded-box place-items-center">content</div>
+</div>`, dividerResponsiveRow())
+	@gallery.Section("Divider with colors", `<div class="flex flex-col w-full">
+@daisyui.Divider("Default", "", "", "", "")
+@daisyui.Divider("Neutral", "", "neutral", "", "")
+@daisyui.Divider("Primary", "", "primary", "", "")
+@daisyui.Divider("Secondary", "", "secondary", "", "")
+@daisyui.Divider("Accent", "", "accent", "", "")
+@daisyui.Divider("Success", "", "success", "", "")
+@daisyui.Divider("Warning", "", "warning", "", "")
+@daisyui.Divider("Info", "", "info", "", "")
+@daisyui.Divider("Error", "", "error", "", "")
+</div>`, dividerColorRow())
+	@gallery.Section("Divider in different positions", `<div class="flex flex-col w-full">
+@daisyui.Divider("Start", "", "", "start", "")
+@daisyui.Divider("Default", "", "", "", "")
+@daisyui.Divider("End", "", "", "end", "")
+</div>`, dividerPlacementRow())
+	@gallery.Section("Divider in different positions (horizontal)", `<div class="flex w-full justify-center h-52">
+@daisyui.Divider("Start", "horizontal", "", "start", "")
+@daisyui.Divider("Default", "horizontal", "", "", "")
+@daisyui.Divider("End", "horizontal", "", "end", "")
+</div>`, dividerPlacementHorizontalRow())
+}
+
+templ dividerVerticalRow() {
+	<div class="flex flex-col w-full">
+		<div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
+		@daisyui.Divider("OR", "", "", "", "")
+		<div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
+	</div>
+}
+
+templ dividerHorizontalRow() {
+	<div class="flex w-full">
+		<div class="grid h-20 grow card bg-base-300 rounded-box place-items-center">content</div>
+		@daisyui.Divider("OR", "horizontal", "", "", "")
+		<div class="grid h-20 grow card bg-base-300 rounded-box place-items-center">content</div>
+	</div>
+}
+
+templ dividerNoTextRow() {
+	<div class="flex flex-col w-full">
+		<div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
+		@daisyui.Divider("", "", "", "", "")
+		<div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
+	</div>
+}
+
+templ dividerResponsiveRow() {
+	<div class="flex flex-col w-full lg:flex-row">
+		<div class="grid grow h-32 card bg-base-300 rounded-box place-items-center">content</div>
+		@daisyui.Divider("OR", "", "", "", "lg:divider-horizontal")
+		<div class="grid grow h-32 card bg-base-300 rounded-box place-items-center">content</div>
+	</div>
+}
+
+templ dividerColorRow() {
+	<div class="flex flex-col w-full">
+		@daisyui.Divider("Default", "", "", "", "")
+		@daisyui.Divider("Neutral", "", "neutral", "", "")
+		@daisyui.Divider("Primary", "", "primary", "", "")
+		@daisyui.Divider("Secondary", "", "secondary", "", "")
+		@daisyui.Divider("Accent", "", "accent", "", "")
+		@daisyui.Divider("Success", "", "success", "", "")
+		@daisyui.Divider("Warning", "", "warning", "", "")
+		@daisyui.Divider("Info", "", "info", "", "")
+		@daisyui.Divider("Error", "", "error", "", "")
+	</div>
+}
+
+templ dividerPlacementRow() {
+	<div class="flex flex-col w-full">
+		@daisyui.Divider("Start", "", "", "start", "")
+		@daisyui.Divider("Default", "", "", "", "")
+		@daisyui.Divider("End", "", "", "end", "")
+	</div>
+}
+
+templ dividerPlacementHorizontalRow() {
+	<div class="flex w-full justify-center h-52">
+		@daisyui.Divider("Start", "horizontal", "", "start", "")
+		@daisyui.Divider("Default", "horizontal", "", "", "")
+		@daisyui.Divider("End", "horizontal", "", "end", "")
+	</div>
+}

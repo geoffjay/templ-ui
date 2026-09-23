@@ -1,0 +1,177 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "drawer-sidebar",
+		Name:        "Drawer sidebar",
+		Description: "Drawer sidebar is a hidden side panel that slides in from the edge of the screen.",
+		Category:    "daisyui",
+		Body:        drawerSidebarBody,
+	})
+}
+
+templ drawerSidebarBody() {
+	@gallery.Section("Drawer with default menu items", `@daisyui.Drawer(daisyui.DrawerConfig{
+	ButtonLabel: "Open drawer",
+	SideItems: []daisyui.DrawerSidebarItem{
+		{Label: "Item 1", Href: "#"},
+		{Label: "Item 2", Href: "#"},
+		{Label: "Item 3", Href: "#"},
+	},
+})`, daisyui.Drawer(daisyui.DrawerConfig{
+		ButtonLabel: "Open drawer",
+		SideItems: []daisyui.DrawerSidebarItem{
+			{Label: "Item 1", Href: "#"},
+			{Label: "Item 2", Href: "#"},
+			{Label: "Item 3", Href: "#"},
+		},
+	}))
+	@gallery.Section("Drawer that's always open (large screens)", `@daisyui.Drawer(daisyui.DrawerConfig{
+	ButtonLabel: "Content",
+	Open:        false,
+	Class:       "lg:drawer-open",
+	SideItems: []daisyui.DrawerSidebarItem{
+		{Label: "Home", Href: "#"},
+		{Label: "About", Href: "#"},
+		{Label: "Contact", Href: "#"},
+	},
+})`, daisyui.Drawer(daisyui.DrawerConfig{
+		ButtonLabel: "Content",
+		Open:        false,
+		Class:       "lg:drawer-open",
+		SideItems: []daisyui.DrawerSidebarItem{
+			{Label: "Home", Href: "#"},
+			{Label: "About", Href: "#"},
+			{Label: "Contact", Href: "#"},
+		},
+	}))
+	@gallery.Section("Drawer forced open", `@daisyui.Drawer(daisyui.DrawerConfig{
+	ButtonLabel: "Open drawer",
+	Open:        true,
+	SideItems: []daisyui.DrawerSidebarItem{
+		{Label: "Item 1", Href: "#"},
+		{Label: "Item 2", Href: "#"},
+	},
+})`, daisyui.Drawer(daisyui.DrawerConfig{
+		ButtonLabel: "Open drawer",
+		Open:        true,
+		SideItems: []daisyui.DrawerSidebarItem{
+			{Label: "Item 1", Href: "#"},
+			{Label: "Item 2", Href: "#"},
+		},
+	}))
+	@gallery.Section("Drawer end (right side)", `@daisyui.Drawer(daisyui.DrawerConfig{
+	ButtonLabel: "Open right drawer",
+	End:         true,
+	SideItems: []daisyui.DrawerSidebarItem{
+		{Label: "Settings", Href: "#"},
+		{Label: "Profile", Href: "#"},
+	},
+})`, daisyui.Drawer(daisyui.DrawerConfig{
+		ButtonLabel: "Open right drawer",
+		End:         true,
+		SideItems: []daisyui.DrawerSidebarItem{
+			{Label: "Settings", Href: "#"},
+			{Label: "Profile", Href: "#"},
+		},
+	}))
+	@gallery.Section("Drawer with custom side content", `@daisyui.Drawer(daisyui.DrawerConfig{
+	ButtonLabel: "Open custom drawer",
+	Side:        drawerSidebarCustomSide(),
+})`, daisyui.Drawer(daisyui.DrawerConfig{
+		ButtonLabel: "Open custom drawer",
+		Side:        drawerSidebarCustomSide(),
+	}))
+	@gallery.Section("Drawer with custom toggle ID", `@daisyui.Drawer(daisyui.DrawerConfig{
+	ToggleID:    "my-drawer",
+	ButtonLabel: "Custom ID drawer",
+	SideItems: []daisyui.DrawerSidebarItem{
+		{Label: "Item 1", Href: "#"},
+		{Label: "Item 2", Href: "#"},
+	},
+})`, daisyui.Drawer(daisyui.DrawerConfig{
+		ToggleID:    "my-drawer",
+		ButtonLabel: "Custom ID drawer",
+		SideItems: []daisyui.DrawerSidebarItem{
+			{Label: "Item 1", Href: "#"},
+			{Label: "Item 2", Href: "#"},
+		},
+	}))
+	@gallery.Section("Drawer with custom content", `@daisyui.Drawer(daisyui.DrawerConfig{
+	Content: drawerSidebarPageContent(),
+	SideItems: []daisyui.DrawerSidebarItem{
+		{Label: "Dashboard", Href: "#"},
+		{Label: "Statistics", Href: "#"},
+		{Label: "Settings", Href: "#"},
+	},
+})`, daisyui.Drawer(daisyui.DrawerConfig{
+		Content: drawerSidebarPageContent(),
+		SideItems: []daisyui.DrawerSidebarItem{
+			{Label: "Dashboard", Href: "#"},
+			{Label: "Statistics", Href: "#"},
+			{Label: "Settings", Href: "#"},
+		},
+	}))
+	@gallery.Section("Drawer responsive end + open", `@daisyui.Drawer(daisyui.DrawerConfig{
+	ButtonLabel: "Open",
+	End:         true,
+	Class:       "lg:drawer-open",
+	SideItems: []daisyui.DrawerSidebarItem{
+		{Label: "Notifications", Href: "#"},
+		{Label: "Account", Href: "#"},
+	},
+})`, daisyui.Drawer(daisyui.DrawerConfig{
+		ButtonLabel: "Open",
+		End:         true,
+		Class:       "lg:drawer-open",
+		SideItems: []daisyui.DrawerSidebarItem{
+			{Label: "Notifications", Href: "#"},
+			{Label: "Account", Href: "#"},
+		},
+	}))
+	@gallery.Section("Drawer with glass sidebar", `@daisyui.Drawer(daisyui.DrawerConfig{
+	ButtonLabel: "Open drawer",
+	Glass:       true,
+	SideItems: []daisyui.DrawerSidebarItem{
+		{Label: "Item 1", Href: "#"},
+		{Label: "Item 2", Href: "#"},
+		{Label: "Item 3", Href: "#"},
+	},
+})`, gallery.GlassBackdrop(daisyui.Drawer(daisyui.DrawerConfig{
+		ButtonLabel: "Open drawer",
+		Glass:       true,
+		SideItems: []daisyui.DrawerSidebarItem{
+			{Label: "Item 1", Href: "#"},
+			{Label: "Item 2", Href: "#"},
+			{Label: "Item 3", Href: "#"},
+		},
+	})))
+}
+
+templ drawerSidebarCustomSide() {
+	<div class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+		<h2 class="menu-title">Custom sidebar</h2>
+		<ul>
+			<li><a href="#" class="font-semibold">Overview</a></li>
+			<li><a href="#">Analytics</a></li>
+			<li><a href="#">Reports</a></li>
+		</ul>
+		<div class="mt-auto pt-4">
+			<button class="btn btn-primary btn-sm w-full">Upgrade plan</button>
+		</div>
+	</div>
+}
+
+templ drawerSidebarPageContent() {
+	<div class="p-4">
+		<h1 class="text-2xl font-bold">My Dashboard</h1>
+		<p class="opacity-70 mt-2">This content lives in the drawer-content region.</p>
+		<label for="drawer-toggle" class="btn btn-primary mt-4 drawer-button">Open sidebar</label>
+	</div>
+}

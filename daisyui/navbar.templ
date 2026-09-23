@@ -1,0 +1,163 @@
+package daisyui
+
+// URLResolver resolves site-relative paths to browser-facing URLs. It is
+// satisfied by sites.LinkResolver, which prefixes links with the site path
+// (e.g. /sites/domain1.tld) when accessed directly, or returns root-relative
+// paths when accessed via the FQDN reverse proxy.
+type URLResolver interface {
+	Resolve(href string) string
+}
+
+// NavItem describes a single entry in a navbar menu or dropdown.
+type NavItem struct {
+	Label string
+	Href  string
+}
+
+// NavDropdown describes a labelled group of NavItems rendered as a submenu.
+type NavDropdown struct {
+	Label string
+	Items []NavItem
+}
+
+// NavbarData configures a Navbar. Title is rendered as the brand button on
+// the start side. StartExtra, when set, is rendered inside the navbar-start
+// region before the title — useful for a drawer-toggle menu icon. Start,
+// Center, and End are optional menu items/dropdowns placed in the
+// corresponding navbar regions. SearchPlaceholder, when set, renders a search
+// input in the navbar-end region. Resolver, when set, is used to build all
+// hrefs; without it hrefs are rendered as-is. EndExtra, when set, is rendered
+// inside the navbar-end region before the menu — useful for a theme toggle or
+// other action element.
+type NavbarData struct {
+	Title             string
+	TitleHref         string
+	StartExtra        templ.Component
+	Start             []NavItem
+	StartDropdowns    []NavDropdown
+	Center            []NavItem
+	CenterDropdowns   []NavDropdown
+	End               []NavItem
+	EndDropdowns      []NavDropdown
+	SearchPlaceholder string
+	EndExtra          templ.Component
+	Glass             bool
+	Resolver          URLResolver
+}
+
+templ Navbar(data NavbarData) {
+	<div class={ navbarClass(data) }>
+		@navbarStart(data)
+		@navbarCenter(data)
+		@navbarEnd(data)
+	</div>
+}
+
+func navbarClass(data NavbarData) string {
+	return joinClasses(
+		"navbar",
+		"bg-base-100",
+		"shadow-sm",
+		glassClass(data.Glass),
+	)
+}
+
+templ navbarStart(data NavbarData) {
+	if len(data.Start) > 0 || len(data.StartDropdowns) > 0 || data.Title != "" || data.StartExtra != nil {
+		<div class="navbar-start">
+			if data.StartExtra != nil {
+				@data.StartExtra
+			}
+			if data.Title != "" {
+				<a href={ resolveHref(data.Resolver, data.TitleHref) } class="btn btn-ghost text-xl">{ data.Title }</a>
+			}
+			if len(data.Start) > 0 || len(data.StartDropdowns) > 0 {
+				<ul class="menu menu-horizontal px-1 hidden lg:flex">
+					for _, item := range data.Start {
+						<li><a href={ resolveHref(data.Resolver, item.Href) }>{ item.Label }</a></li>
+					}
+					for _, dd := range data.StartDropdowns {
+						<li>
+							<details>
+								<summary>{ dd.Label }</summary>
+								<ul class="p-2 bg-base-100 rounded-t-none">
+									for _, item := range dd.Items {
+										<li><a href={ resolveHref(data.Resolver, item.Href) }>{ item.Label }</a></li>
+									}
+								</ul>
+							</details>
+						</li>
+					}
+				</ul>
+			}
+		</div>
+	}
+}
+
+templ navbarCenter(data NavbarData) {
+	if len(data.Center) > 0 || len(data.CenterDropdowns) > 0 {
+		<div class="navbar-center hidden lg:flex">
+			<ul class="menu menu-horizontal px-1">
+				for _, item := range data.Center {
+					<li><a href={ resolveHref(data.Resolver, item.Href) }>{ item.Label }</a></li>
+				}
+				for _, dd := range data.CenterDropdowns {
+					<li>
+						<details>
+							<summary>{ dd.Label }</summary>
+							<ul class="p-2 bg-base-100 w-40 z-1">
+								for _, item := range dd.Items {
+									<li><a href={ resolveHref(data.Resolver, item.Href) }>{ item.Label }</a></li>
+								}
+							</ul>
+						</details>
+					</li>
+				}
+			</ul>
+		</div>
+	}
+}
+
+templ navbarEnd(data NavbarData) {
+	if len(data.End) > 0 || len(data.EndDropdowns) > 0 || data.SearchPlaceholder != "" || data.EndExtra != nil {
+		<div class="navbar-end">
+			if data.EndExtra != nil {
+				@data.EndExtra
+			}
+			if data.SearchPlaceholder != "" {
+				<input type="text" placeholder={ data.SearchPlaceholder } class="input input-bordered w-24 md:w-auto"/>
+			}
+			if len(data.End) > 0 || len(data.EndDropdowns) > 0 {
+				<ul class="menu menu-horizontal px-1">
+					for _, item := range data.End {
+						<li><a href={ resolveHref(data.Resolver, item.Href) }>{ item.Label }</a></li>
+					}
+					for _, dd := range data.EndDropdowns {
+						<li>
+							<details>
+								<summary>{ dd.Label }</summary>
+								<ul class="p-2 bg-base-100 rounded-t-none">
+									for _, item := range dd.Items {
+										<li><a href={ resolveHref(data.Resolver, item.Href) }>{ item.Label }</a></li>
+									}
+								</ul>
+							</details>
+						</li>
+					}
+				</ul>
+			}
+		</div>
+	}
+}
+
+// resolveHref renders an href using the resolver when present, falling back to
+// "#" for empty values.
+func resolveHref(r URLResolver, href string) templ.SafeURL {
+	if r == nil {
+		if href == "" {
+			return templ.SafeURL("#")
+		}
+		return templ.SafeURL(href)
+	}
+	return templ.SafeURL(r.Resolve(href))
+}

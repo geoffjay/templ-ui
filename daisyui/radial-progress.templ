@@ -1,0 +1,46 @@
+package daisyui
+
+// RadialProgressConfig configures a daisyUI Radial progress. Value is the
+// numeric progress value (0-100); it populates the --value CSS variable and
+// the aria-valuenow attribute. Label, when set, is rendered inside the ring
+// (e.g. "70%"); when empty nothing is rendered inside. ColorClass, when set,
+// is applied as a utility class for color (e.g. "text-primary"); Size, when
+// set, populates the --size CSS variable (e.g. "12rem"); Thickness, when set,
+// populates the --thickness CSS variable (e.g. "2px" or "2rem"). Class lets
+// callers add extra utility classes (e.g. "bg-primary text-primary-content
+// border-4 border-primary").
+type RadialProgressConfig struct {
+	Value      string
+	Label      string
+	ColorClass string
+	Size       string
+	Thickness  string
+	Class      string
+}
+
+// RadialProgress renders a daisyUI radial progress indicator (<div
+// class="radial-progress" style="--value:...;" role="progressbar">).
+templ RadialProgress(cfg RadialProgressConfig) {
+	<div
+		class={ joinClasses("radial-progress", cfg.ColorClass, cfg.Class) }
+		style={ radialProgressStyle(cfg) }
+		aria-valuenow={ cfg.Value }
+		role="progressbar"
+	>
+		{ cfg.Label }
+	</div>
+}
+
+func radialProgressStyle(cfg RadialProgressConfig) string {
+	var out string
+	if cfg.Value != "" {
+		out += "--value:" + cfg.Value + ";"
+	}
+	if cfg.Size != "" {
+		out += "--size:" + cfg.Size + ";"
+	}
+	if cfg.Thickness != "" {
+		out += "--thickness:" + cfg.Thickness + ";"
+	}
+	return out
+}

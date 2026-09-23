@@ -1,0 +1,149 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+const heroFigureImg = "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
+const heroOverlayImg = "https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp"
+
+templ heroBody() {
+	@gallery.Section("Centered hero", `@daisyui.Hero(daisyui.HeroConfig{
+	Title:        "Hello there",
+	Subtitle:     "Provident cupiditate voluptatem et in...",
+	Class:        "min-h-[30rem] rounded bg-base-200",
+	ContentClass: "text-center",
+	Actions:      daisyui.Button(daisyui.ButtonConfig{Label: "Get Started", Color: "primary"}),
+})`, daisyui.Hero(daisyui.HeroConfig{
+		Title:        "Hello there",
+		Subtitle:     "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.",
+		Class:        "min-h-[30rem] rounded bg-base-200",
+		ContentClass: "text-center",
+		Actions:      daisyui.Button(daisyui.ButtonConfig{Label: "Get Started", Color: "primary"}),
+	}))
+	@gallery.Section("Hero with figure", `@daisyui.Hero(daisyui.HeroConfig{
+	Class:        "min-h-[30rem] rounded bg-base-200",
+	ContentClass: "flex-col lg:flex-row",
+	Content:      heroWithFigureContent(),
+})
+
+// heroWithFigureContent renders:
+<img src={ heroFigureImg } class="max-w-sm rounded-lg shadow-2xl" alt="Tailwind CSS hero component"/>
+<div>
+	<h3 class="text-5xl font-bold">Box Office News!</h3>
+	<p class="py-6">Provident cupiditate voluptatem et in...</p>
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Get Started", Color: "primary"})
+</div>`, daisyui.Hero(daisyui.HeroConfig{
+		Class:        "min-h-[30rem] rounded bg-base-200",
+		ContentClass: "flex-col lg:flex-row",
+		Content:      heroWithFigureContent(),
+	}))
+	@gallery.Section("Hero with figure but reverse order", `@daisyui.Hero(daisyui.HeroConfig{
+	Class:        "min-h-[30rem] rounded bg-base-200",
+	ContentClass: "flex-col lg:flex-row-reverse",
+	Content:      heroWithFigureContent(),
+})`, daisyui.Hero(daisyui.HeroConfig{
+		Class:        "min-h-[30rem] rounded bg-base-200",
+		ContentClass: "flex-col lg:flex-row-reverse",
+		Content:      heroWithFigureContent(),
+	}))
+	@gallery.Section("Hero with form", `@daisyui.Hero(daisyui.HeroConfig{
+	Class:        "min-h-[30rem] rounded bg-base-200",
+	ContentClass: "flex-col lg:flex-row-reverse",
+	Content:      heroWithFormContent(),
+})
+
+// heroWithFormContent renders:
+<div class="text-center lg:text-left">
+	<h3 class="text-5xl font-bold">Login now!</h3>
+	<p class="py-6">Provident cupiditate voluptatem et in...</p>
+</div>
+<div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+	<div class="card-body">
+		<fieldset class="fieldset">
+			<label class="label">Email</label>
+			<input type="email" class="input" placeholder="Email"/>
+			<label class="label">Password</label>
+			<input type="password" class="input" placeholder="Password"/>
+			<div><span class="link link-hover">Forgot password?</span></div>
+			<button class="btn btn-neutral mt-4">Login</button>
+		</fieldset>
+	</div>
+</div>`, daisyui.Hero(daisyui.HeroConfig{
+		Class:        "min-h-[30rem] rounded bg-base-200",
+		ContentClass: "flex-col lg:flex-row-reverse",
+		Content:      heroWithFormContent(),
+	}))
+	@gallery.Section("Hero with overlay image", `@daisyui.Hero(daisyui.HeroConfig{
+	Class:           "min-h-[30rem] rounded",
+	Overlay:         true,
+	BackgroundImage: heroOverlayImg,
+	ContentClass:    "text-center text-neutral-content",
+	Title:           "Hello there",
+	Subtitle:        "Provident cupiditate voluptatem et in...",
+	Actions:         daisyui.Button(daisyui.ButtonConfig{Label: "Get Started", Color: "primary"}),
+})`, daisyui.Hero(daisyui.HeroConfig{
+		Class:           "min-h-[30rem] rounded",
+		Overlay:         true,
+		BackgroundImage: heroOverlayImg,
+		ContentClass:    "text-center text-neutral-content",
+		Title:           "Hello there",
+		Subtitle:        "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.",
+		Actions:         daisyui.Button(daisyui.ButtonConfig{Label: "Get Started", Color: "primary"}),
+	}))
+	@gallery.Section("Hero with glass content", `@daisyui.Hero(daisyui.HeroConfig{
+	Class:        "min-h-[30rem] rounded bg-base-200",
+	ContentClass: "text-center",
+	Glass:        true,
+	Title:        "Hello there",
+	Subtitle:     "Provident cupiditate voluptatem et in...",
+	Actions:      daisyui.Button(daisyui.ButtonConfig{Label: "Get Started", Color: "primary"}),
+})`, gallery.GlassBackdrop(daisyui.Hero(daisyui.HeroConfig{
+		Class:        "min-h-[30rem] rounded bg-base-200",
+		ContentClass: "text-center",
+		Glass:        true,
+		Title:        "Hello there",
+		Subtitle:     "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.",
+		Actions:      daisyui.Button(daisyui.ButtonConfig{Label: "Get Started", Color: "primary"}),
+	})))
+}
+
+templ heroWithFigureContent() {
+	<img src={ templ.SafeURL(heroFigureImg) } class="max-w-sm rounded-lg shadow-2xl" alt="Tailwind CSS hero component"/>
+	<div>
+		<h3 class="text-5xl font-bold">Box Office News!</h3>
+		<p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Get Started", Color: "primary"})
+	</div>
+}
+
+templ heroWithFormContent() {
+	<div class="text-center lg:text-left">
+		<h3 class="text-5xl font-bold">Login now!</h3>
+		<p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+	</div>
+	<div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+		<div class="card-body">
+			<fieldset class="fieldset">
+				<label class="label">Email</label>
+				<input type="email" class="input" placeholder="Email"/>
+				<label class="label">Password</label>
+				<input type="password" class="input" placeholder="Password"/>
+				<div><span class="link link-hover">Forgot password?</span></div>
+				<button class="btn btn-neutral mt-4">Login</button>
+			</fieldset>
+		</div>
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "hero",
+		Name:        "Hero",
+		Description: "Hero is a component for displaying a large box or image with a title and description.",
+		Category:    "daisyui",
+		Body:        heroBody,
+	})
+}

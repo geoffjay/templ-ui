@@ -1,0 +1,124 @@
+package daisyui
+
+// TimelineItemSide determines where a TimelineItem's content sits relative to
+// the connecting line.
+type TimelineItemSide string
+
+const (
+	// TimelineSideStart places the content at the start of the timeline item.
+	TimelineSideStart TimelineItemSide = "start"
+	// TimelineSideEnd places the content at the end of the timeline item.
+	TimelineSideEnd TimelineItemSide = "end"
+)
+
+// TimelineItem describes a single <li> inside a Timeline. Side chooses whether
+// the Box content sits at the start or the end of the item (the opposite
+// side is left empty, matching the "bottom/top only" or "different sides"
+// variants). Icon, when set, renders a <div class="timeline-middle"> with the
+// given icon (typically an SVG). Box, when true, adds the timeline-box class
+// to the content (so it gets the boxed style). HRBefore and HRAfter render
+// <hr/> connectors at the start/end of the item; daisyUI uses these to draw
+// the connecting line — the first item typically omits HRBefore and the last
+// omits HRAfter. HRClass lets callers tint the connector (e.g. "bg-primary").
+// For items without a content box (icon-only or bare connectors) leave Box
+// false and Content empty.
+type TimelineItem struct {
+	Side     TimelineItemSide
+	Icon     templ.Component
+	Content  templ.Component
+	Box      bool
+	HRBefore bool
+	HRAfter  bool
+	HRClass  string
+}
+
+// TimelineConfig configures a daisyUI Timeline. Direction accepts
+// "horizontal" (default) or "vertical" (produces timeline-horizontal /
+// timeline-vertical). Modifier accepts "snap-icon" or "compact" (produces
+// timeline-snap-icon / timeline-compact); for the responsive variant use
+// Class (e.g. "max-md:timeline-compact"). Items is the ordered list of
+// timeline entries. Class lets callers add extra utility classes (e.g.
+// "timeline-vertical lg:timeline-horizontal").
+type TimelineConfig struct {
+	Direction string
+	Modifier  string
+	Items     []TimelineItem
+	Class     string
+}
+
+// Timeline renders a daisyUI timeline (<ul class="timeline ...">).
+templ Timeline(cfg TimelineConfig) {
+	<ul class={ timelineClass(cfg) }>
+		for _, item := range cfg.Items {
+			@timelineItem(item)
+		}
+	</ul>
+}
+
+templ timelineItem(item TimelineItem) {
+	<li>
+		if item.HRBefore {
+			if item.HRClass != "" {
+				<hr class={ item.HRClass }/>
+			} else {
+				<hr/>
+			}
+		}
+		if item.Side == TimelineSideStart && item.Content != nil {
+			<div class={ joinClasses("timeline-start", timelineBoxClass(item.Box)) }>
+				@item.Content
+			</div>
+		}
+		if item.Icon != nil {
+			<div class="timeline-middle">
+				@item.Icon
+			</div>
+		}
+		if item.Side == TimelineSideEnd && item.Content != nil {
+			<div class={ joinClasses("timeline-end", timelineBoxClass(item.Box)) }>
+				@item.Content
+			</div>
+		}
+		if item.HRAfter {
+			if item.HRClass != "" {
+				<hr class={ item.HRClass }/>
+			} else {
+				<hr/>
+			}
+		}
+	</li>
+}
+
+func timelineClass(cfg TimelineConfig) string {
+	return joinClasses(
+		"timeline",
+		timelineDirectionClass(cfg.Direction),
+		timelineModifierClass(cfg.Modifier),
+		cfg.Class,
+	)
+}
+
+func timelineDirectionClass(d string) string {
+	switch d {
+	case "horizontal", "vertical":
+		return "timeline-" + d
+	default:
+		return ""
+	}
+}
+
+func timelineModifierClass(m string) string {
+	switch m {
+	case "snap-icon", "compact":
+		return "timeline-" + m
+	default:
+		return ""
+	}
+}
+
+func timelineBoxClass(box bool) string {
+	if box {
+		return "timeline-box"
+	}
+	return ""
+}

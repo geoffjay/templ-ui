@@ -1,0 +1,134 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ validatorBody() {
+	@gallery.Section("Validator", `<form class="w-full max-w-xs">
+	@daisyui.Validator(daisyui.ValidatorConfig{}, templ.Raw("<input class=\"input validator\" type=\"email\" required placeholder=\"mail@site.com\" autocomplete=\"false\" />"))
+</form>`, validatorBasicForm())
+	@gallery.Section("Validator and validator-hint", `@daisyui.Validator(daisyui.ValidatorConfig{
+	Hint: "Enter valid email address",
+}, templ.Raw("<input class=\"input validator\" type=\"email\" required placeholder=\"mail@site.com\" />"))`, daisyui.Validator(daisyui.ValidatorConfig{
+		Hint: "Enter valid email address",
+	}, templ.Raw(`<input class="input validator" type="email" required placeholder="mail@site.com" />`)))
+	@gallery.Section("Password requirement validator", `@daisyui.Validator(daisyui.ValidatorConfig{
+	HintChildren: templ.Raw("Must be more than 8 characters, including<br/>At least one number<br/>At least one lowercase letter<br/>At least one uppercase letter"),
+}, templ.Raw("<input type=\"password\" class=\"input validator\" required placeholder=\"Password\" minlength=\"8\" pattern=\"(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}\" title=\"...\" />"))`, daisyui.Validator(daisyui.ValidatorConfig{
+		HintChildren: templ.Raw(`Must be more than 8 characters, including<br/>At least one number<br/>At least one lowercase letter<br/>At least one uppercase letter`),
+	}, templ.Raw(`<input type="password" class="input validator" required placeholder="Password" minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" />`)))
+	@gallery.Section("Username requirement validator", `@daisyui.Validator(daisyui.ValidatorConfig{
+	HintChildren: templ.Raw("Must be 3 to 30 characters<br/>containing only letters, numbers or dash"),
+}, templ.Raw("<input type=\"text\" class=\"input validator\" required placeholder=\"Username\" pattern=\"[A-Za-z][A-Za-z0-9\\-]*\" minlength=\"3\" maxlength=\"30\" title=\"Only letters, numbers or dash\" />"))`, daisyui.Validator(daisyui.ValidatorConfig{
+		HintChildren: templ.Raw(`Must be 3 to 30 characters<br/>containing only letters, numbers or dash`),
+	}, templ.Raw(`<input type="text" class="input validator" required placeholder="Username" pattern="[A-Za-z][A-Za-z0-9\-]*" minlength="3" maxlength="30" title="Only letters, numbers or dash" />`)))
+	@gallery.Section("Phone Number requirement validator", `@daisyui.Validator(daisyui.ValidatorConfig{
+	Hint: "Must be 10 digits",
+}, templ.Raw("<input type=\"tel\" class=\"input validator tabular-nums\" required placeholder=\"Phone\" pattern=\"[0-9]*\" minlength=\"10\" maxlength=\"10\" title=\"Must be 10 digits\" />"))`, daisyui.Validator(daisyui.ValidatorConfig{
+		Hint: "Must be 10 digits",
+	}, templ.Raw(`<input type="tel" class="input validator tabular-nums" required placeholder="Phone" pattern="[0-9]*" minlength="10" maxlength="10" title="Must be 10 digits" />`)))
+	@gallery.Section("URL input requirement validator", `@daisyui.Validator(daisyui.ValidatorConfig{
+	Hint: "Must be valid URL",
+}, templ.Raw("<input type=\"url\" class=\"input validator\" required placeholder=\"https://\" value=\"https://\" pattern=\"...\" title=\"Must be valid URL\" />"))`, daisyui.Validator(daisyui.ValidatorConfig{
+		Hint: "Must be valid URL",
+	}, templ.Raw(`<input type="url" class="input validator" required placeholder="https://" value="https://" pattern="^(https?://)?([a-zA-Z0-9]([a-zA-Z0-9\-].*[a-zA-Z0-9])?\.)+[a-zA-Z].*$" title="Must be valid URL" />`)))
+	@gallery.Section("Date input requirement validator", `@daisyui.Validator(daisyui.ValidatorConfig{
+	Hint: "Must be 2025",
+}, templ.Raw("<input type=\"date\" class=\"input validator\" required placeholder=\"Pick a date in 2025\" min=\"2025-01-01\" max=\"2025-12-31\" title=\"Must be valid URL\" />"))`, daisyui.Validator(daisyui.ValidatorConfig{
+		Hint: "Must be 2025",
+	}, templ.Raw(`<input type="date" class="input validator" required placeholder="Pick a date in 2025" min="2025-01-01" max="2025-12-31" title="Must be valid URL" />`)))
+	@gallery.Section("Number input requirement validator", `@daisyui.Validator(daisyui.ValidatorConfig{
+	Hint: "Must be between be 1 to 10",
+}, templ.Raw("<input type=\"number\" class=\"input validator\" required placeholder=\"Type a number between 1 to 10\" min=\"1\" max=\"10\" title=\"Must be between be 1 to 10\" />"))`, daisyui.Validator(daisyui.ValidatorConfig{
+		Hint: "Must be between be 1 to 10",
+	}, templ.Raw(`<input type="number" class="input validator" required placeholder="Type a number between 1 to 10" min="1" max="10" title="Must be between be 1 to 10" />`)))
+	@gallery.Section("Checkbox requirement validator", `@daisyui.Validator(daisyui.ValidatorConfig{
+	Hint: "Required",
+}, templ.Raw("<input type=\"checkbox\" class=\"checkbox validator\" required title=\"Required\" />"))`, daisyui.Validator(daisyui.ValidatorConfig{
+		Hint: "Required",
+	}, templ.Raw(`<input type="checkbox" class="checkbox validator" required title="Required" />`)))
+	@gallery.Section("Toggle requirement validator", `@daisyui.Validator(daisyui.ValidatorConfig{
+	Hint: "Required",
+}, templ.Raw("<input type=\"checkbox\" class=\"toggle validator\" required title=\"Required\" />"))`, daisyui.Validator(daisyui.ValidatorConfig{
+		Hint: "Required",
+	}, templ.Raw(`<input type="checkbox" class="toggle validator" required title="Required" />`)))
+	@gallery.Section("Select requirement validator", `<form autocomplete="off" class="w-full max-w-xs" onsubmit="event.preventDefault()">
+	@daisyui.Validator(daisyui.ValidatorConfig{
+		Hint: "Required",
+	}, templ.Raw("<select class=\"select validator\" required>...</select>"))
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Submit form", Type: "submit"})
+</form>`, validatorSelectForm())
+	@gallery.Section("Form requirement validator", `<form autocomplete="off" class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4" onsubmit="event.preventDefault()">
+	<fieldset class="fieldset">
+		<label class="label">Email</label>
+		@daisyui.Validator(daisyui.ValidatorConfig{
+			Hint:       "Required",
+			HintHidden: true,
+		}, templ.Raw("<input type=\"email\" class=\"input validator\" placeholder=\"Email\" required />"))
+	</fieldset>
+
+	<label class="fieldset">
+		<span class="label">Password</span>
+		@daisyui.Validator(daisyui.ValidatorConfig{
+			Hint:       "Required",
+			HintHidden: true,
+		}, templ.Raw("<input type=\"password\" class=\"input validator\" placeholder=\"Password\" required />"))
+	</label>
+
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Login", Color: "neutral", Type: "submit", Class: "mt-4"})
+	@daisyui.Button(daisyui.ButtonConfig{Label: "Reset", Style: "ghost", Type: "reset", Class: "mt-1"})
+</form>`, validatorLoginForm())
+}
+
+templ validatorBasicForm() {
+	<form class="w-full max-w-xs">
+		@daisyui.Validator(daisyui.ValidatorConfig{}, templ.Raw(`<input class="input validator" type="email" required placeholder="mail@site.com" autocomplete="false" />`))
+	</form>
+}
+
+templ validatorSelectForm() {
+	<form autocomplete="off" class="w-full max-w-xs" onsubmit="event.preventDefault()">
+		@daisyui.Validator(daisyui.ValidatorConfig{
+			Hint: "Required",
+		}, templ.Raw(`<select class="select validator" required>
+			<option disabled selected value="">Choose:</option>
+			<option>Tabs</option>
+			<option>Spaces</option>
+		</select>`))
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Submit form", Type: "submit"})
+	</form>
+}
+
+templ validatorLoginForm() {
+	<form autocomplete="off" class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4" onsubmit="event.preventDefault()">
+		<fieldset class="fieldset">
+			<label class="label">Email</label>
+			@daisyui.Validator(daisyui.ValidatorConfig{
+				Hint:       "Required",
+				HintHidden: true,
+			}, templ.Raw(`<input type="email" class="input validator" placeholder="Email" required />`))
+		</fieldset>
+		<label class="fieldset">
+			<span class="label">Password</span>
+			@daisyui.Validator(daisyui.ValidatorConfig{
+				Hint:       "Required",
+				HintHidden: true,
+			}, templ.Raw(`<input type="password" class="input validator" placeholder="Password" required />`))
+		</label>
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Login", Color: "neutral", Type: "submit", Class: "mt-4"})
+		@daisyui.Button(daisyui.ButtonConfig{Label: "Reset", Style: "ghost", Type: "reset", Class: "mt-1"})
+	</form>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "validator",
+		Name:        "Validator",
+		Description: "Validator class changes the color of form elements to error or success based on input's validation rules.",
+		Category:    "daisyui",
+		Body:        validatorBody,
+	})
+}

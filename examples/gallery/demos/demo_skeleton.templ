@@ -1,0 +1,64 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ skeletonBody() {
+	@gallery.Section("Skeleton", `@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "w-32 h-32"})`, daisyui.Skeleton(daisyui.SkeletonConfig{Class: "w-32 h-32"}))
+	@gallery.Section("Skeleton - circle with content", `<div class="flex flex-col gap-4 w-52">
+	<div class="flex gap-4 items-center">
+		@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "w-16 h-16 rounded-full shrink-0"})
+		<div class="flex flex-col gap-4">
+			@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-20"})
+			@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-28"})
+		</div>
+	</div>
+	@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-32 w-full"})
+</div>`, skeletonCircleWithContent())
+	@gallery.Section("Skeleton - rectangle with content", `<div class="flex flex-col gap-4 w-52">
+	@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-32 w-full"})
+	@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-28"})
+	@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-full"})
+	@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-full"})
+</div>`, skeletonRectangleWithContent())
+	@gallery.Section("skeleton-text - animated gradient text", `@daisyui.Skeleton(daisyui.SkeletonConfig{
+	Text: "AI is thinking harder...",
+})`, daisyui.Skeleton(daisyui.SkeletonConfig{
+		Text: "AI is thinking harder...",
+	}))
+}
+
+templ skeletonCircleWithContent() {
+	<div class="flex flex-col gap-4 w-52">
+		<div class="flex gap-4 items-center">
+			@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "w-16 h-16 rounded-full shrink-0"})
+			<div class="flex flex-col gap-4">
+				@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-20"})
+				@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-28"})
+			</div>
+		</div>
+		@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-32 w-full"})
+	</div>
+}
+
+templ skeletonRectangleWithContent() {
+	<div class="flex flex-col gap-4 w-52">
+		@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-32 w-full"})
+		@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-28"})
+		@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-full"})
+		@daisyui.Skeleton(daisyui.SkeletonConfig{Class: "h-4 w-full"})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "skeleton",
+		Name:        "Skeleton",
+		Description: "Skeleton is a component that can be used to show a loading state of a component.",
+		Category:    "daisyui",
+		Body:        skeletonBody,
+	})
+}

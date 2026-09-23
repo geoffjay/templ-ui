@@ -1,0 +1,55 @@
+package daisyui
+
+// WindowConfig configures a daisyUI Window mockup (an OS-window frame).
+// Bordered adds the "border border-base-300" classes shown in the docs'
+// first example (opt-in; defaults to false). Background adds "bg-base-100"
+// (opt-in; defaults to false). Class lets callers add extra utility classes
+// to the outer mockup (e.g. "w-full", "rounded"). BodyClass lets callers add
+// extra utility classes to the content area (e.g. "h-80", "grid
+// place-content-center"); when unset, the default "h-80" is applied.
+// Children is the content rendered inside the window.
+type WindowConfig struct {
+	Bordered   bool
+	Background bool
+	Class      string
+	BodyClass  string
+	Children   templ.Component
+}
+
+// Window renders a daisyUI OS-window mockup (<div class="mockup-window …">).
+templ Window(cfg WindowConfig) {
+	<div class={ windowClass(cfg) }>
+		<div class={ windowBodyClass(cfg) }>
+			if cfg.Children != nil {
+				@cfg.Children
+			}
+		</div>
+	</div>
+}
+
+func windowClass(cfg WindowConfig) string {
+	classes := []string{"mockup-window", "w-full"}
+	if cfg.Bordered {
+		classes = append(classes, "border", "border-base-300")
+	}
+	if cfg.Background {
+		classes = append(classes, "bg-base-100")
+	}
+	if cfg.Class != "" {
+		classes = append(classes, cfg.Class)
+	}
+	return joinClasses(classes...)
+}
+
+func windowBodyClass(cfg WindowConfig) string {
+	classes := []string{"grid", "place-content-center"}
+	if cfg.Bordered {
+		classes = append(classes, "border-t", "border-base-300")
+	}
+	if cfg.BodyClass != "" {
+		classes = append(classes, cfg.BodyClass)
+	} else {
+		classes = append(classes, "h-80")
+	}
+	return joinClasses(classes...)
+}

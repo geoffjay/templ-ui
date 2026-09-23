@@ -1,0 +1,126 @@
+package daisyui
+
+// AvatarConfig configures a single daisyUI Avatar. Src is the image URL
+// (ignored when Placeholder is true). Alt is the alt text. Shape accepts
+// "rounded" (default), "rounded-xl", "rounded-full", or any mask suffix
+// ("squircle", "heart", "hexagon", "hexagon-2", "decagon", "pentagon",
+// "diamond", "square", "circle", "star", "star-2", "triangle",
+// "triangle-2", "triangle-3", "triangle-4") — masks produce
+// `<div class="mask mask-<shape>">` instead of a rounded div. Size accepts
+// any Tailwind sizing class for the inner div (e.g. "w-24", "w-16", "w-12",
+// "w-8"). Status accepts "online" or "offline" (produces avatar-online /
+// avatar-offline). Ring accepts a color name (e.g. "primary") which, along
+// with the fixed ring-2 ring-offset-2 classes, renders a colored ring
+// around the avatar (set RingClass for fully custom ring utilities).
+// Placeholder, when true, renders avatar-placeholder and shows a letter
+// inside the inner div instead of an <img>; use PlaceholderText and
+// PlaceholderClass to customise the text (e.g. "text-3xl"). InnerClass lets
+// callers override/extend the inner div classes (e.g. "bg-base-300",
+// "bg-neutral text-neutral-content"). Class lets callers add extra utility
+// classes to the outer avatar div.
+type AvatarConfig struct {
+	Src              string
+	Alt              string
+	Shape            string
+	Size             string
+	Status           string
+	Ring             string
+	RingClass        string
+	Placeholder      bool
+	PlaceholderText  string
+	PlaceholderClass string
+	InnerClass       string
+	Class            string
+}
+
+// Avatar renders a single daisyUI avatar.
+templ Avatar(cfg AvatarConfig) {
+	<div class={ avatarClass(cfg) }>
+		<div class={ avatarInnerClass(cfg) }>
+			if cfg.Placeholder {
+				<span class={ cfg.PlaceholderClass }>{ cfg.PlaceholderText }</span>
+			} else {
+				<img src={ templ.SafeURL(cfg.Src) } alt={ cfg.Alt }/>
+			}
+		</div>
+	</div>
+}
+
+// AvatarGroupConfig configures a daisyUI avatar-group container. Items is the
+// list of individual avatars (use AvatarConfig; Status/Placeholder work as
+// usual). Class lets callers add extra utility classes (e.g. "-space-x-6").
+type AvatarGroupConfig struct {
+	Items []AvatarConfig
+	Class string
+}
+
+// AvatarGroup renders a daisyUI avatar-group (<div class="avatar-group">).
+templ AvatarGroup(cfg AvatarGroupConfig) {
+	<div class={ joinClasses("avatar-group", cfg.Class) }>
+		for _, item := range cfg.Items {
+			@Avatar(item)
+		}
+	</div>
+}
+
+func avatarClass(cfg AvatarConfig) string {
+	return joinClasses(
+		"avatar",
+		avatarStatusClass(cfg.Status),
+		avatarPlaceholderClass(cfg.Placeholder),
+		cfg.Class,
+	)
+}
+
+func avatarInnerClass(cfg AvatarConfig) string {
+	classes := []string{}
+	if avatarIsMask(cfg.Shape) {
+		classes = append(classes, "mask", "mask-"+cfg.Shape)
+	} else if cfg.Shape != "" {
+		classes = append(classes, cfg.Shape)
+	} else {
+		classes = append(classes, "rounded")
+	}
+	classes = append(classes, cfg.Size)
+	classes = append(classes, avatarRingClasses(cfg)...)
+	classes = append(classes, cfg.InnerClass)
+	return joinClasses(classes...)
+}
+
+func avatarStatusClass(s string) string {
+	switch s {
+	case "online", "offline":
+		return "avatar-" + s
+	default:
+		return ""
+	}
+}
+
+func avatarPlaceholderClass(p bool) string {
+	if p {
+		return "avatar-placeholder"
+	}
+	return ""
+}
+
+func avatarRingClasses(cfg AvatarConfig) []string {
+	if cfg.RingClass != "" {
+		return []string{cfg.RingClass}
+	}
+	if cfg.Ring != "" {
+		return []string{"ring-2", "ring-" + cfg.Ring, "ring-offset-2", "ring-offset-base-100"}
+	}
+	return nil
+}
+
+// avatarIsMask reports whether shape is one of the documented mask suffixes
+// (vs. the Tailwind rounded-* shorthand).
+func avatarIsMask(shape string) bool {
+	switch shape {
+	case "squircle", "heart", "hexagon", "hexagon-2", "decagon", "pentagon",
+		"diamond", "square", "circle", "star", "star-2", "triangle",
+		"triangle-2", "triangle-3", "triangle-4":
+		return true
+	}
+	return false
+}

@@ -1,0 +1,93 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ toggleBody() {
+	@gallery.Section("Toggle (switch)", `@daisyui.Toggle(daisyui.ToggleConfig{Checked: true})`, daisyui.Toggle(daisyui.ToggleConfig{Checked: true}))
+	@gallery.Section("With fieldset and label", `@daisyui.Fieldset(daisyui.FieldsetConfig{
+	Legend: "Login options",
+	Class:  "p-4 bg-base-100 border border-base-300 rounded-box w-64",
+}, templ.Raw(...)) {
+	<label class="label">
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true})
+		Remember me
+	</label>
+}`, daisyui.Fieldset(daisyui.FieldsetConfig{
+		Legend: "Login options",
+		Class:  "p-4 bg-base-100 border border-base-300 rounded-box w-64",
+	}, toggleFieldsetLabel()))
+	@gallery.Section("Sizes", `<div class="flex gap-4">
+	@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "xs"})
+	@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "sm"})
+	@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "md"})
+	@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "lg"})
+	@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "xl"})
+</div>`, toggleSizeRow())
+	@gallery.Section("Colors", `<div class="flex gap-4">
+	@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "primary"})
+	@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "secondary"})
+	// ... one per color
+</div>`, toggleColorRow())
+	@gallery.Section("Disabled", `<div class="flex gap-4">
+	@daisyui.Toggle(daisyui.ToggleConfig{Disabled: true})
+	@daisyui.Toggle(daisyui.ToggleConfig{Disabled: true, Checked: true})
+</div>`, toggleDisabledRow())
+	@gallery.Section("Toggle with custom colors", `@daisyui.Toggle(daisyui.ToggleConfig{
+	Checked: true,
+	Class:   "border-indigo-600 bg-indigo-500 checked:bg-orange-400 checked:text-orange-800 checked:border-orange-500",
+})`, daisyui.Toggle(daisyui.ToggleConfig{
+		Checked: true,
+		Class:   "border-indigo-600 bg-indigo-500 checked:bg-orange-400 checked:text-orange-800 checked:border-orange-500",
+	}))
+}
+
+templ toggleFieldsetLabel() {
+	<label class="label">
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true})
+		Remember me
+	</label>
+}
+
+templ toggleSizeRow() {
+	<div class="flex gap-4">
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "xs"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "sm"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "md"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "lg"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Size: "xl"})
+	</div>
+}
+
+templ toggleColorRow() {
+	<div class="flex gap-4">
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "primary"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "secondary"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "accent"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "neutral"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "info"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "success"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "warning"})
+		@daisyui.Toggle(daisyui.ToggleConfig{Checked: true, Color: "error"})
+	</div>
+}
+
+templ toggleDisabledRow() {
+	<div class="flex gap-4">
+		@daisyui.Toggle(daisyui.ToggleConfig{Disabled: true})
+		@daisyui.Toggle(daisyui.ToggleConfig{Disabled: true, Checked: true})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "toggle",
+		Name:        "Toggle",
+		Description: "Toggle is a checkbox that is styled to look like a switch button.",
+		Category:    "daisyui",
+		Body:        toggleBody,
+	})
+}

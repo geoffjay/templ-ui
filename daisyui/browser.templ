@@ -1,0 +1,70 @@
+package daisyui
+
+// BrowserConfig configures a daisyUI Browser mockup. URL, when set, is
+// rendered inside a <div class="mockup-browser-toolbar"> as a child
+// <div class="input"> showing the address-bar URL. When URL is empty the
+// toolbar is still rendered (so the mockup retains its frame) but without an
+// address bar. Bordered adds the "border border-base-300" classes shown in
+// the docs' first example (opt-in; defaults to false). Background adds
+// "bg-base-100" (opt-in; defaults to false). Class lets callers add extra
+// utility classes to the outer mockup (e.g. "w-full", "rounded"). BodyClass
+// lets callers add extra utility classes to the content area below the
+// toolbar (e.g. "h-80", "grid place-content-center"); when unset, the
+// default "h-80" is applied. Children is the content rendered inside the
+// browser body. Toolbar, when set, replaces the default address bar and is
+// rendered inside the toolbar (useful for adding navigation buttons or a
+// custom address bar).
+type BrowserConfig struct {
+	URL        string
+	Bordered   bool
+	Background bool
+	Class      string
+	BodyClass  string
+	Children   templ.Component
+	Toolbar    templ.Component
+}
+
+// Browser renders a daisyUI browser mockup (<div class="mockup-browser …">).
+templ Browser(cfg BrowserConfig) {
+	<div class={ browserClass(cfg) }>
+		<div class="mockup-browser-toolbar">
+			if cfg.Toolbar != nil {
+				@cfg.Toolbar
+			} else {
+				<div class="input">{ cfg.URL }</div>
+			}
+		</div>
+		<div class={ browserBodyClass(cfg) }>
+			if cfg.Children != nil {
+				@cfg.Children
+			}
+		</div>
+	</div>
+}
+
+func browserClass(cfg BrowserConfig) string {
+	classes := []string{"mockup-browser", "w-full"}
+	if cfg.Bordered {
+		classes = append(classes, "border", "border-base-300")
+	}
+	if cfg.Background {
+		classes = append(classes, "bg-base-100")
+	}
+	if cfg.Class != "" {
+		classes = append(classes, cfg.Class)
+	}
+	return joinClasses(classes...)
+}
+
+func browserBodyClass(cfg BrowserConfig) string {
+	classes := []string{"grid", "place-content-center"}
+	if cfg.Bordered {
+		classes = append(classes, "border-t", "border-base-300")
+	}
+	if cfg.BodyClass != "" {
+		classes = append(classes, cfg.BodyClass)
+	} else {
+		classes = append(classes, "h-80")
+	}
+	return joinClasses(classes...)
+}

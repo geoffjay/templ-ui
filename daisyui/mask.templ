@@ -1,0 +1,22 @@
+package daisyui
+
+// Mask applies a CSS shape mask to the wrapped children. Shape accepts the
+// documented mask suffixes (squircle, heart, hexagon, hexagon-2, decagon,
+// pentagon, diamond, square, circle, star, star-2, triangle, triangle-2,
+// triangle-3, triangle-4). Modifier may be "half-1" or "half-2" to crop only
+// that half. Class lets callers pass additional utility classes (sizing, etc).
+//
+// MaskImage renders a single masked <img> element with alt text.
+templ Mask(shape, modifier, class string, children templ.Component) {
+	<div class={ joinClasses("mask", classFor("mask", shape), classFor("mask", modifier), class) }>
+		@children
+	</div>
+}
+
+templ MaskImage(src, alt, shape, modifier, class string) {
+	<img
+		src={ templ.SafeURL(src) }
+		alt={ alt }
+		class={ joinClasses("mask", classFor("mask", shape), classFor("mask", modifier), class) }
+	/>
+}

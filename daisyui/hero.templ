@@ -1,0 +1,79 @@
+package daisyui
+
+// HeroConfig configures a daisyUI Hero. Title is rendered as an
+// <h1 class="text-5xl font-bold"> inside the hero-content. Subtitle is
+// rendered as a <p class="py-6"> below the title. Actions, when set, is
+// rendered after the subtitle (typically a primary button). Content, when
+// set, replaces the default Title + Subtitle + Actions block and is
+// rendered inside the hero-content — use this for fully custom hero bodies
+// (e.g. hero with figure, hero with form).
+//
+// Overlay, when true, renders a <div class="hero-overlay"> as the first
+// child of the hero (use BackgroundImage to set the background image via
+// inline style). BackgroundImage, when set, is rendered as an inline
+// style="background-image: url(...)" on the outer hero element. ContentClass
+// lets callers add extra utility classes to the hero-content div (e.g.
+// "text-center", "flex-col lg:flex-row", "text-neutral-content"). Class lets
+// callers add extra utility classes to the outer hero element (e.g.
+// "min-h-screen", "bg-base-200", "rounded").
+type HeroConfig struct {
+	Title           string
+	Subtitle        string
+	Actions         templ.Component
+	Content         templ.Component
+	Overlay         bool
+	BackgroundImage string
+	Glass           bool
+	ContentClass    string
+	Class           string
+}
+
+// Hero renders a daisyUI hero (<div class="hero …">).
+templ Hero(cfg HeroConfig) {
+	<div
+		class={ heroClass(cfg) }
+		if cfg.BackgroundImage != "" {
+			style={ heroStyle(cfg) }
+		}
+	>
+		if cfg.Overlay {
+			<div class="hero-overlay"></div>
+		}
+		<div class={ heroContentClass(cfg) }>
+			if cfg.Content != nil {
+				@cfg.Content
+			} else {
+				@heroDefaultContent(cfg)
+			}
+		</div>
+	</div>
+}
+
+templ heroDefaultContent(cfg HeroConfig) {
+	<div class="max-w-md">
+		if cfg.Title != "" {
+			<h1 class="text-5xl font-bold">{ cfg.Title }</h1>
+		}
+		if cfg.Subtitle != "" {
+			<p class="py-6">{ cfg.Subtitle }</p>
+		}
+		if cfg.Actions != nil {
+			@cfg.Actions
+		}
+	</div>
+}
+
+func heroClass(cfg HeroConfig) string {
+	return joinClasses("hero", cfg.Class)
+}
+
+func heroContentClass(cfg HeroConfig) string {
+	return joinClasses("hero-content", glassClass(cfg.Glass), cfg.ContentClass)
+}
+
+func heroStyle(cfg HeroConfig) string {
+	if cfg.BackgroundImage == "" {
+		return ""
+	}
+	return "background-image: url(" + cfg.BackgroundImage + ");"
+}

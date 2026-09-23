@@ -1,0 +1,100 @@
+package daisyui
+
+// DrawerSidebarItem describes a single entry in the drawer's sidebar menu.
+// Label is the visible text. Href, when set, renders the entry as an anchor;
+// otherwise a <button>.
+type DrawerSidebarItem struct {
+	Label string
+	Href  string
+}
+
+// DrawerConfig configures a daisyUI Drawer sidebar. ToggleID is the id of the
+// hidden checkbox controlling the drawer (defaults to "drawer-toggle" when
+// empty). End, when true, places the drawer on the right side
+// (drawer-end). Open, when true, forces the drawer open (drawer-open). For
+// responsive opening use Class (e.g. "lg:drawer-open"). ButtonLabel is the
+// label for the drawer-open trigger button in the content region. Side, when
+// set, is rendered inside the drawer-side region (typically a menu). When
+// Side is nil, SideItems are rendered as a default <ul class="menu">. Content
+// is the page content rendered in the drawer-content region (when nil, only
+// the trigger button is rendered). Class lets callers add extra utility
+// classes. Resolver, when set, is used to build all hrefs.
+type DrawerConfig struct {
+	ToggleID    string
+	End         bool
+	Open        bool
+	Glass       bool
+	ButtonLabel string
+	Side        templ.Component
+	SideItems   []DrawerSidebarItem
+	Content     templ.Component
+	Class       string
+	Resolver    URLResolver
+}
+
+// Drawer renders a daisyUI drawer sidebar.
+templ Drawer(cfg DrawerConfig) {
+	<div class={ drawerClass(cfg) }>
+		<input
+			id={ drawerToggleID(cfg) }
+			type="checkbox"
+			autocomplete="off"
+			class="drawer-toggle"
+		/>
+		<div class="drawer-content">
+			if cfg.Content != nil {
+				@cfg.Content
+			} else {
+				<label for={ drawerToggleID(cfg) } class="btn drawer-button">{ cfg.ButtonLabel }</label>
+			}
+		</div>
+		<div class="drawer-side z-1002">
+			<label for={ drawerToggleID(cfg) } aria-label="close sidebar" class="drawer-overlay"></label>
+			if cfg.Side != nil {
+				@cfg.Side
+			} else {
+				<ul class={ joinClasses("menu", "p-4", "w-60", "md:w-80", "min-h-full", "bg-base-200", glassClass(cfg.Glass)) }>
+					for _, item := range cfg.SideItems {
+						<li>
+							if item.Href != "" {
+								<a href={ resolveHref(cfg.Resolver, item.Href) }>{ item.Label }</a>
+							} else {
+								<button>{ item.Label }</button>
+							}
+						</li>
+					}
+				</ul>
+			}
+		</div>
+	</div>
+}
+
+func drawerClass(cfg DrawerConfig) string {
+	return joinClasses(
+		"drawer",
+		drawerEndClass(cfg.End),
+		drawerOpenClass(cfg.Open),
+		cfg.Class,
+	)
+}
+
+func drawerEndClass(end bool) string {
+	if end {
+		return "drawer-end"
+	}
+	return ""
+}
+
+func drawerOpenClass(open bool) string {
+	if open {
+		return "drawer-open"
+	}
+	return ""
+}
+
+func drawerToggleID(cfg DrawerConfig) string {
+	if cfg.ToggleID != "" {
+		return cfg.ToggleID
+	}
+	return "drawer-toggle"
+}

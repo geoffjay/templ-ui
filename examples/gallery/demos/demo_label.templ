@@ -1,0 +1,98 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "label",
+		Name:        "Label",
+		Description: "Label is used to provide a name or title for an input field. Label can be placed before or after the field.",
+		Category:    "daisyui",
+		Body:        labelBody,
+	})
+}
+
+templ labelBody() {
+	@gallery.Section("Label for input", `<label class="input">
+	@daisyui.Label(daisyui.LabelConfig{Text: "https://"})
+	<input type="text" placeholder="URL" />
+</label>`, labelForInput())
+	@gallery.Section("Label for input at the end", `<label class="input">
+	<input type="text" placeholder="domain name" />
+	@daisyui.Label(daisyui.LabelConfig{Text: ".com"})
+</label>`, labelForInputEnd())
+	@gallery.Section("Label for select", `<label class="select">
+	@daisyui.Label(daisyui.LabelConfig{Text: "Type"})
+	<select>
+		<option>Personal</option>
+		<option>Business</option>
+	</select>
+</label>`, labelForSelect())
+	@gallery.Section("Label for date input", `<label class="input">
+	@daisyui.Label(daisyui.LabelConfig{Text: "Publish date"})
+	<input type="date" />
+</label>`, labelForDate())
+	@gallery.Section("Floating Label", `@daisyui.FloatingLabel(daisyui.FloatingLabelConfig{
+	Label:       "Your Email",
+	InputType:   "email",
+	Placeholder: "mail@site.com",
+	InputClass:  "input input-md",
+	Class:       "w-full max-w-xs",
+})`, daisyui.FloatingLabel(daisyui.FloatingLabelConfig{
+		Label:       "Your Email",
+		InputType:   "email",
+		Placeholder: "mail@site.com",
+		InputClass:  "input input-md",
+		Class:       "w-full max-w-xs",
+	}))
+	@gallery.Section("Floating Label with Different Sizes", `<div class="grid gap-4 w-xs">
+	@daisyui.FloatingLabel(daisyui.FloatingLabelConfig{Label: "Extra Small", Placeholder: "Extra Small", InputClass: "input input-xs"})
+	@daisyui.FloatingLabel(daisyui.FloatingLabelConfig{Label: "Small", Placeholder: "Small", InputClass: "input input-sm"})
+	// ... one per size
+</div>`, labelFloatingLabelSizeRow())
+}
+
+templ labelForInput() {
+	<label class="input">
+		@daisyui.Label(daisyui.LabelConfig{Text: "https://"})
+		<input type="text" placeholder="URL"/>
+	</label>
+}
+
+templ labelForInputEnd() {
+	<label class="input">
+		<input type="text" placeholder="domain name"/>
+		@daisyui.Label(daisyui.LabelConfig{Text: ".com"})
+	</label>
+}
+
+templ labelForSelect() {
+	<label class="select">
+		@daisyui.Label(daisyui.LabelConfig{Text: "Type"})
+		<select>
+			<option>Personal</option>
+			<option>Business</option>
+		</select>
+	</label>
+}
+
+templ labelForDate() {
+	<label class="input">
+		@daisyui.Label(daisyui.LabelConfig{Text: "Publish date"})
+		<input type="date"/>
+	</label>
+}
+
+templ labelFloatingLabelSizeRow() {
+	<div class="grid gap-4 w-xs">
+		@daisyui.FloatingLabel(daisyui.FloatingLabelConfig{Label: "Extra Small", Placeholder: "Extra Small", InputClass: "input input-xs"})
+		@daisyui.FloatingLabel(daisyui.FloatingLabelConfig{Label: "Small", Placeholder: "Small", InputClass: "input input-sm"})
+		@daisyui.FloatingLabel(daisyui.FloatingLabelConfig{Label: "Medium", Placeholder: "Medium", InputClass: "input input-md"})
+		@daisyui.FloatingLabel(daisyui.FloatingLabelConfig{Label: "Large", Placeholder: "Large", InputClass: "input input-lg"})
+		@daisyui.FloatingLabel(daisyui.FloatingLabelConfig{Label: "Extra Large", Placeholder: "Extra Large", InputClass: "input input-xl"})
+	</div>
+}

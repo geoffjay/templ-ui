@@ -1,0 +1,77 @@
+package daisyui
+
+// DockItem describes a single entry in a dock. Label, when set, is rendered
+// inside a <span class="dock-label">. Href, when set, renders the dock entry
+// as an anchor; otherwise a <button>. Active, when true, adds dock-active.
+// Icon is rendered inside the entry (typically an SVG).
+type DockItem struct {
+	Label  string
+	Href   string
+	Active bool
+	Icon   templ.Component
+}
+
+// DockConfig configures a daisyUI Dock. Size accepts "xs", "sm", "md", "lg",
+// "xl" (produces dock-xs, etc; "md" is the default and is omitted). Class
+// lets callers add extra utility classes (e.g. "bg-neutral
+// text-neutral-content"). Resolver, when set, is used to build all hrefs.
+type DockConfig struct {
+	Items    []DockItem
+	Size     string
+	Glass    bool
+	Class    string
+	Resolver URLResolver
+}
+
+// Dock renders a daisyUI dock (<div class="dock">…</div>), the bottom
+// navigation bar.
+templ Dock(cfg DockConfig) {
+	<div class={ dockClass(cfg) }>
+		for _, item := range cfg.Items {
+			if item.Href != "" {
+				<a class={ dockItemClass(item) } href={ resolveHref(cfg.Resolver, item.Href) }>
+					if item.Icon != nil {
+						@item.Icon
+					}
+					if item.Label != "" {
+						<span class="dock-label">{ item.Label }</span>
+					}
+				</a>
+			} else {
+				<button class={ dockItemClass(item) }>
+					if item.Icon != nil {
+						@item.Icon
+					}
+					if item.Label != "" {
+						<span class="dock-label">{ item.Label }</span>
+					}
+				</button>
+			}
+		}
+	</div>
+}
+
+func dockClass(cfg DockConfig) string {
+	return joinClasses(
+		"dock",
+		dockSizeClass(cfg.Size),
+		glassClass(cfg.Glass),
+		cfg.Class,
+	)
+}
+
+func dockSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "dock-" + s
+	default:
+		return ""
+	}
+}
+
+func dockItemClass(item DockItem) string {
+	if item.Active {
+		return "dock-active"
+	}
+	return ""
+}

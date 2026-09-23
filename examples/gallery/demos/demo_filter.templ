@@ -1,0 +1,95 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "filter",
+		Name:        "Filter",
+		Description: "Filter is a group of radio buttons styled as buttons. Selecting one hides the others.",
+		Category:    "daisyui",
+		Body:        filterBody,
+	})
+}
+
+templ filterBody() {
+	@gallery.Section("Filter", `@daisyui.Filter(daisyui.FilterConfig{
+	Name: "filter-1",
+	Options: []daisyui.FilterOption{
+		{Label: "All"},
+		{Label: "Free", Checked: true},
+		{Label: "Paid"},
+	},
+})`, daisyui.Filter(daisyui.FilterConfig{
+		Name: "filter-1",
+		Options: []daisyui.FilterOption{
+			{Label: "All"},
+			{Label: "Free", Checked: true},
+			{Label: "Paid"},
+		},
+	}))
+	@gallery.Section("Filter with reset (form)", `@daisyui.Filter(daisyui.FilterConfig{
+	Name:    "filter-2",
+	Reset:   true,
+	AsForm:  true,
+	Options: []daisyui.FilterOption{{Label: "Latest"}, {Label: "Popular", Checked: true}, {Label: "Trending"}},
+})`, daisyui.Filter(daisyui.FilterConfig{
+		Name:    "filter-2",
+		Reset:   true,
+		AsForm:  true,
+		Options: []daisyui.FilterOption{{Label: "Latest"}, {Label: "Popular", Checked: true}, {Label: "Trending"}},
+	}))
+	@gallery.Section("Filter with reset (radio)", `@daisyui.Filter(daisyui.FilterConfig{
+	Name:    "filter-3",
+	Reset:   true,
+	AsForm:  false,
+	Options: []daisyui.FilterOption{{Label: "A"}, {Label: "B"}, {Label: "C", Checked: true}},
+})`, daisyui.Filter(daisyui.FilterConfig{
+		Name:    "filter-3",
+		Reset:   true,
+		AsForm:  false,
+		Options: []daisyui.FilterOption{{Label: "A"}, {Label: "B"}, {Label: "C", Checked: true}},
+	}))
+	@gallery.Section("Filter with one option", `@daisyui.Filter(daisyui.FilterConfig{
+	Name:    "filter-4",
+	Options: []daisyui.FilterOption{{Label: "Single", Checked: true}},
+})`, daisyui.Filter(daisyui.FilterConfig{
+		Name:    "filter-4",
+		Options: []daisyui.FilterOption{{Label: "Single", Checked: true}},
+	}))
+	@gallery.Section("Filter with extra class", `@daisyui.Filter(daisyui.FilterConfig{
+	Name:    "filter-5",
+	Class:   "filter-primary",
+	Options: []daisyui.FilterOption{{Label: "One", Checked: true}, {Label: "Two"}, {Label: "Three"}},
+})`, daisyui.Filter(daisyui.FilterConfig{
+		Name:    "filter-5",
+		Class:   "filter-primary",
+		Options: []daisyui.FilterOption{{Label: "One", Checked: true}, {Label: "Two"}, {Label: "Three"}},
+	}))
+	@gallery.Section("Filter as <div> (no reset)", `@daisyui.Filter(daisyui.FilterConfig{
+	Name:    "filter-6",
+	AsForm:  false,
+	Options: []daisyui.FilterOption{{Label: "Red"}, {Label: "Green", Checked: true}, {Label: "Blue"}},
+})`, daisyui.Filter(daisyui.FilterConfig{
+		Name:    "filter-6",
+		AsForm:  false,
+		Options: []daisyui.FilterOption{{Label: "Red"}, {Label: "Green", Checked: true}, {Label: "Blue"}},
+	}))
+	@gallery.Section("Filter with icons via aria-label", `@daisyui.Filter(daisyui.FilterConfig{
+	Name: "filter-icons",
+	Options: []daisyui.FilterOption{
+		{Label: "Grid", Checked: true},
+		{Label: "List"},
+	},
+})`, daisyui.Filter(daisyui.FilterConfig{
+		Name: "filter-icons",
+		Options: []daisyui.FilterOption{
+			{Label: "Grid", Checked: true},
+			{Label: "List"},
+		},
+	}))
+}

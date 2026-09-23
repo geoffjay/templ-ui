@@ -1,0 +1,67 @@
+package daisyui
+
+// FilterOption describes a single radio button rendered inside a filter. Label
+// is used as the aria-label. Checked, when true, marks the option as
+// initially checked.
+type FilterOption struct {
+	Label   string
+	Checked bool
+}
+
+// FilterConfig configures a daisyUI Filter. Name is the shared name attribute
+// for the radio group. Options is the list of filter radio options. Reset,
+// when true, prepends a reset button (using <input type="reset"> inside a
+// <form>, or a filter-reset radio when AsForm is false). AsForm, when true,
+// renders the filter as a <form> element (so the reset button resets the
+// group via native form semantics); when false renders as a <div> with a
+// filter-reset radio. Class lets callers add extra utility classes. AsForm
+// defaults to true when Reset is true and the form has no other element to
+// reset; the recommended pattern is AsForm=true with Reset=true.
+type FilterConfig struct {
+	Name    string
+	Options []FilterOption
+	Reset   bool
+	AsForm  bool
+	Class   string
+}
+
+// Filter renders a daisyUI filter — a group of radio buttons styled as
+// buttons. Choosing one option hides the others and shows a reset button next
+// to the chosen option.
+templ Filter(cfg FilterConfig) {
+	if cfg.AsForm {
+		<form class={ joinClasses("filter", cfg.Class) }>
+			@filterInner(cfg)
+		</form>
+	} else {
+		<div class={ joinClasses("filter", cfg.Class) }>
+			@filterInner(cfg)
+		</div>
+	}
+}
+
+templ filterInner(cfg FilterConfig) {
+	if cfg.Reset {
+		if cfg.AsForm {
+			<input class="btn btn-square" type="reset" value="×"/>
+		} else {
+			<input
+				class="btn filter-reset"
+				type="radio"
+				name={ cfg.Name }
+				autocomplete="off"
+				aria-label="All"
+			/>
+		}
+	}
+	for _, opt := range cfg.Options {
+		<input
+			class="btn"
+			type="radio"
+			name={ cfg.Name }
+			autocomplete="off"
+			aria-label={ opt.Label }
+			checked?={ opt.Checked }
+		/>
+	}
+}

@@ -1,0 +1,37 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+const maskImgURL = "https://img.daisyui.com/images/stock/photo-1567653418876-5bb0e566e1c2.webp"
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "mask",
+		Name:        "Mask",
+		Description: "Mask crops the content of the element to common shapes.",
+		Category:    "daisyui",
+		Body:        maskBody,
+	})
+}
+
+templ maskBody() {
+	@gallery.Section("Squircle", `@daisyui.MaskImage(maskImgURL, "Squircle CSS mask", "squircle", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Squircle CSS mask", "squircle", "", "w-40 h-40"))
+	@gallery.Section("Heart", `@daisyui.MaskImage(maskImgURL, "Heart CSS mask", "heart", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Heart CSS mask", "heart", "", "w-40 h-40"))
+	@gallery.Section("Hexagon", `@daisyui.MaskImage(maskImgURL, "Hexagon CSS mask", "hexagon", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Hexagon CSS mask", "hexagon", "", "w-40 h-40"))
+	@gallery.Section("Hexagon-2 (horizontal hexagon)", `@daisyui.MaskImage(maskImgURL, "Hexagon-2 CSS mask", "hexagon-2", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Hexagon-2 CSS mask", "hexagon-2", "", "w-40 h-40"))
+	@gallery.Section("Decagon", `@daisyui.MaskImage(maskImgURL, "Decagon CSS mask", "decagon", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Decagon CSS mask", "decagon", "", "w-40 h-40"))
+	@gallery.Section("Pentagon", `@daisyui.MaskImage(maskImgURL, "Pentagon CSS mask", "pentagon", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Pentagon CSS mask", "pentagon", "", "w-40 h-40"))
+	@gallery.Section("Diamond", `@daisyui.MaskImage(maskImgURL, "Diamond CSS mask", "diamond", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Diamond CSS mask", "diamond", "", "w-40 h-40"))
+	@gallery.Section("Square", `@daisyui.MaskImage(maskImgURL, "Square CSS mask", "square", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Square CSS mask", "square", "", "w-40 h-40"))
+	@gallery.Section("Circle", `@daisyui.MaskImage(maskImgURL, "Circle CSS mask", "circle", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Circle CSS mask", "circle", "", "w-40 h-40"))
+	@gallery.Section("Star", `@daisyui.MaskImage(maskImgURL, "Star CSS mask", "star", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Star CSS mask", "star", "", "w-40 h-40"))
+	@gallery.Section("Star-2 (bold star)", `@daisyui.MaskImage(maskImgURL, "Star-2 CSS mask", "star-2", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Star-2 CSS mask", "star-2", "", "w-40 h-40"))
+	@gallery.Section("Triangle (pointing top)", `@daisyui.MaskImage(maskImgURL, "Triangle CSS mask", "triangle", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Triangle CSS mask", "triangle", "", "w-40 h-40"))
+	@gallery.Section("Triangle-2 (pointing down)", `@daisyui.MaskImage(maskImgURL, "Triangle-2 CSS mask", "triangle-2", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Triangle-2 CSS mask", "triangle-2", "", "w-40 h-40"))
+	@gallery.Section("Triangle-3 (pointing left)", `@daisyui.MaskImage(maskImgURL, "Triangle-3 CSS mask", "triangle-3", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Triangle-3 CSS mask", "triangle-3", "", "w-40 h-40"))
+	@gallery.Section("Triangle-4 (pointing right)", `@daisyui.MaskImage(maskImgURL, "Triangle-4 CSS mask", "triangle-4", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Triangle-4 CSS mask", "triangle-4", "", "w-40 h-40"))
+}

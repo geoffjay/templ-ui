@@ -1,0 +1,155 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "modal",
+		Name:        "Modal",
+		Description: "Modal is used to show a dialog or a box when you click a button.",
+		Category:    "daisyui",
+		Body:        modalBody,
+	})
+}
+
+templ modalBody() {
+	@gallery.Section("Dialog modal", `@daisyui.Modal(daisyui.ModalConfig{
+	ID:           "modal_1",
+	Title:        "Hello!",
+	Message:      "Press ESC key or click the button below to close",
+	TriggerLabel: "open modal",
+	Actions:      modalCloseForm(),
+})`, daisyui.Modal(daisyui.ModalConfig{
+		ID:           "modal_1",
+		Title:        "Hello!",
+		Message:      "Press ESC key or click the button below to close",
+		TriggerLabel: "open modal",
+		Actions:      modalCloseForm(),
+	}))
+	@gallery.Section("Dialog modal, closes when clicked outside", `@daisyui.Modal(daisyui.ModalConfig{
+	ID:           "modal_2",
+	Title:        "Hello!",
+	Message:      "Press ESC key or click outside to close",
+	TriggerLabel: "open modal",
+	Backdrop:     true,
+})`, daisyui.Modal(daisyui.ModalConfig{
+		ID:           "modal_2",
+		Title:        "Hello!",
+		Message:      "Press ESC key or click outside to close",
+		TriggerLabel: "open modal",
+		Backdrop:     true,
+	}))
+	@gallery.Section("Dialog modal with a close button at corner", `@daisyui.Modal(daisyui.ModalConfig{
+	ID:           "modal_3",
+	Title:        "Hello!",
+	Message:      "Press ESC key or click on ✕ button to close",
+	TriggerLabel: "open modal",
+	CloseButton:  true,
+})`, daisyui.Modal(daisyui.ModalConfig{
+		ID:           "modal_3",
+		Title:        "Hello!",
+		Message:      "Press ESC key or click on ✕ button to close",
+		TriggerLabel: "open modal",
+		CloseButton:  true,
+	}))
+	@gallery.Section("Dialog modal with custom width", `@daisyui.Modal(daisyui.ModalConfig{
+	ID:           "modal_4",
+	Title:        "Hello!",
+	Message:      "Click the button below to close",
+	TriggerLabel: "open modal",
+	BoxClass:     "w-11/12 max-w-5xl",
+	Actions:      modalCloseForm(),
+})`, daisyui.Modal(daisyui.ModalConfig{
+		ID:           "modal_4",
+		Title:        "Hello!",
+		Message:      "Click the button below to close",
+		TriggerLabel: "open modal",
+		BoxClass:     "w-11/12 max-w-5xl",
+		Actions:      modalCloseForm(),
+	}))
+	@gallery.Section("Responsive", `@daisyui.Modal(daisyui.ModalConfig{
+	ID:           "modal_5",
+	Title:        "Hello!",
+	Message:      "Goes bottom on SM screen size, goes middle on MD screen size",
+	TriggerLabel: "open modal",
+	Class:        "modal-bottom sm:modal-middle",
+	Actions:      modalCloseForm(),
+})`, daisyui.Modal(daisyui.ModalConfig{
+		ID:           "modal_5",
+		Title:        "Hello!",
+		Message:      "Goes bottom on SM screen size, goes middle on MD screen size",
+		TriggerLabel: "open modal",
+		Class:        "modal-bottom sm:modal-middle",
+		Actions:      modalCloseForm(),
+	}))
+	@gallery.Section("Modal using checkbox", `@daisyui.Modal(daisyui.ModalConfig{
+	ID:           "modal_6",
+	Method:       "checkbox",
+	Title:        "Hello!",
+	Message:      "This modal works with a hidden checkbox!",
+	TriggerLabel: "open modal",
+	Actions:      templ.Raw(...), // <label for="modal_6" class="btn">Close!</label>
+})`, daisyui.Modal(daisyui.ModalConfig{
+		ID:           "modal_6",
+		Method:       "checkbox",
+		Title:        "Hello!",
+		Message:      "This modal works with a hidden checkbox!",
+		TriggerLabel: "open modal",
+		Actions:      templ.Raw(`<label for="modal_6" class="btn">Close!</label>`),
+	}))
+	@gallery.Section("Modal that closes when clicked outside (checkbox)", `@daisyui.Modal(daisyui.ModalConfig{
+	ID:           "modal_7",
+	Method:       "checkbox",
+	Title:        "Hello!",
+	Message:      "This modal works with a hidden checkbox!",
+	TriggerLabel: "open modal",
+	Backdrop:     true,
+})`, daisyui.Modal(daisyui.ModalConfig{
+		ID:           "modal_7",
+		Method:       "checkbox",
+		Title:        "Hello!",
+		Message:      "This modal works with a hidden checkbox!",
+		TriggerLabel: "open modal",
+		Backdrop:     true,
+	}))
+	@gallery.Section("Modal using anchor link", `@daisyui.Modal(daisyui.ModalConfig{
+	ID:           "modal_8",
+	Method:       "anchor",
+	Title:        "Hello!",
+	Message:      "This modal works with anchor links",
+	TriggerLabel: "open modal",
+	Actions:      daisyui.Button(daisyui.ButtonConfig{Label: "Yay!", Href: "#"}),
+})`, daisyui.Modal(daisyui.ModalConfig{
+		ID:           "modal_8",
+		Method:       "anchor",
+		Title:        "Hello!",
+		Message:      "This modal works with anchor links",
+		TriggerLabel: "open modal",
+		Actions:      daisyui.Button(daisyui.ButtonConfig{Label: "Yay!", Href: "#"}),
+	}))
+	@gallery.Section("Dialog modal with glass box", `@daisyui.Modal(daisyui.ModalConfig{
+	ID:           "modal_9",
+	Title:        "Glass!",
+	Message:      "The modal-box uses a translucent, blurred surface.",
+	TriggerLabel: "open modal",
+	Glass:        true,
+	Backdrop:     true,
+})`, gallery.GlassBackdrop(daisyui.Modal(daisyui.ModalConfig{
+		ID:           "modal_9",
+		Title:        "Glass!",
+		Message:      "The modal-box uses a translucent, blurred surface.",
+		TriggerLabel: "open modal",
+		Glass:        true,
+		Backdrop:     true,
+	})))
+}
+
+templ modalCloseForm() {
+	<form method="dialog">
+		<button class="btn">Close</button>
+	</form>
+}

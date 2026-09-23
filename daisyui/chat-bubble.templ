@@ -1,0 +1,54 @@
+package daisyui
+
+// ChatBubbleConfig configures a daisyUI Chat bubble line. End, when true,
+// aligns the chat to the end (chat-end); otherwise it aligns to the start
+// (chat-start). Author is the chat-header text. Time is rendered as a small
+// <time> inside the header (optional). Footer is text rendered below the
+// bubble (chat-footer). Avatar, when set, is rendered as the chat-image
+// (typically an avatar component). Color accepts the documented chat-bubble
+// color suffixes (neutral, primary, secondary, accent, info, success,
+// warning, error) producing e.g. "chat-bubble-primary". Message is the
+// chat-bubble text. Class lets callers add extra utility classes.
+type ChatBubbleConfig struct {
+	End     bool
+	Author  string
+	Time    string
+	Footer  string
+	Avatar  templ.Component
+	Color   string
+	Message string
+	Glass   bool
+	Class   string
+}
+
+// ChatBubble renders a daisyUI chat line (<div class="chat chat-start">).
+templ ChatBubble(cfg ChatBubbleConfig) {
+	<div class={ joinClasses("chat", chatEndClass(cfg.End), cfg.Class) }>
+		if cfg.Avatar != nil {
+			<div class="chat-image avatar">
+				@cfg.Avatar
+			</div>
+		}
+		if cfg.Author != "" || cfg.Time != "" {
+			<div class="chat-header">
+				{ cfg.Author }
+				if cfg.Time != "" {
+					<time class="text-xs opacity-50">{ cfg.Time }</time>
+				}
+			</div>
+		}
+		<div class={ joinClasses("chat-bubble", classFor("chat-bubble", cfg.Color), glassClass(cfg.Glass)) }>
+			{ cfg.Message }
+		</div>
+		if cfg.Footer != "" {
+			<div class="chat-footer opacity-50">{ cfg.Footer }</div>
+		}
+	</div>
+}
+
+func chatEndClass(end bool) string {
+	if end {
+		return "chat-end"
+	}
+	return "chat-start"
+}

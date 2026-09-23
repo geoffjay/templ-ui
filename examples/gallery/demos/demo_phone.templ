@@ -1,0 +1,66 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+const phoneWallpaper = "https://img.daisyui.com/images/stock/453966.webp"
+
+templ phoneBody() {
+	@gallery.Section("iPhone mockup", `@daisyui.Phone(daisyui.PhoneConfig{
+	Camera:       true,
+	DisplayClass: "text-white bg-neutral-900 grid place-content-center",
+	Children:     phoneGlowtime(),
+})`, daisyui.Phone(daisyui.PhoneConfig{
+		Camera:       true,
+		DisplayClass: "text-white bg-neutral-900 grid place-content-center",
+		Children:     phoneGlowtime(),
+	}))
+	@gallery.Section("With color and wallpaper", `@daisyui.Phone(daisyui.PhoneConfig{
+	Camera:       true,
+	Class:        "border-[#ff8938]",
+	WallpaperSrc: phoneWallpaper,
+})`, daisyui.Phone(daisyui.PhoneConfig{
+		Camera:       true,
+		Class:        "border-[#ff8938]",
+		WallpaperSrc: phoneWallpaper,
+	}))
+	@gallery.Section("Phone with custom content", `@daisyui.Phone(daisyui.PhoneConfig{
+	Camera:       true,
+	DisplayClass: "bg-base-100",
+	Children:     phoneCustomContent(),
+})`, daisyui.Phone(daisyui.PhoneConfig{
+		Camera:       true,
+		DisplayClass: "bg-base-100",
+		Children:     phoneCustomContent(),
+	}))
+}
+
+templ phoneGlowtime() {
+	<div class="grid place-content-center">It's Glowtime.</div>
+}
+
+templ phoneCustomContent() {
+	<div class="p-4 space-y-3">
+		<div class="text-sm font-bold text-base-content">Lock Screen</div>
+		<div class="text-xs text-base-content/70">Wednesday, June 24</div>
+		<div class="grid place-content-center h-40 text-4xl font-bold">9:41</div>
+		<div class="flex justify-around mt-4">
+			<div class="btn btn-circle btn-sm">💬</div>
+			<div class="btn btn-circle btn-sm">📧</div>
+			<div class="btn btn-circle btn-sm">📷</div>
+		</div>
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "phone",
+		Name:        "Phone mockup",
+		Description: "Phone mockup is used to show a box that looks like an iPhone.",
+		Category:    "daisyui",
+		Body:        phoneBody,
+	})
+}

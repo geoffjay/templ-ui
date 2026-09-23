@@ -1,0 +1,159 @@
+package daisyui
+
+// TableCell holds a single cell of a Table row. Text is the plain content;
+// HTML, when set, replaces Text with raw markup (use for badges, avatars,
+// nested buttons, etc.). Header, when true, renders the cell as a <th> rather
+// than a <td> (useful for the leading row-number column). Class lets callers
+// add utility classes to the cell (e.g. "hover:bg-base-300").
+type TableCell struct {
+	Text   string
+	HTML   templ.Component
+	Header bool
+	Class  string
+}
+
+// TableRow holds one <tr> of a Table. Cells is the ordered list of cells.
+// Class lets callers add utility classes to the row (e.g. "bg-base-200" for
+// an active row, "hover:bg-base-300" for a hover highlight).
+type TableRow struct {
+	Cells []TableCell
+	Class string
+}
+
+// TableConfig configures a daisyUI Table. Headers is the list of header cells
+// rendered inside <thead><tr>. Rows is the list of body rows rendered inside
+// <tbody>. Footers, when set, is rendered inside <tfoot><tr>. Size accepts
+// "xs", "sm", "md", "lg", "xl" (produces table-xs, etc; "md" is the default
+// and is omitted). Modifier accepts "zebra", "pin-rows", or "pin-cols"
+// (produces table-zebra, table-pin-rows, table-pin-cols); multiple modifiers
+// can also be passed via Class. Wrap, when true, wraps the <table> in an
+// <div class="overflow-x-auto"> (set WrapClass for e.g. "h-96" to enable
+// pinned scrolling). Class lets callers add extra utility classes to the
+// <table> itself (e.g. "bg-base-200"). Caption, when set, renders a <caption>
+// for accessibility.
+type TableConfig struct {
+	Headers   []TableCell
+	Rows      []TableRow
+	Footers   []TableCell
+	Size      string
+	Modifier  string
+	Wrap      bool
+	WrapClass string
+	Glass     bool
+	Class     string
+	Caption   string
+}
+
+// Table renders a daisyUI table.
+templ Table(cfg TableConfig) {
+	if cfg.Wrap {
+		<div class={ joinClasses("overflow-x-auto", cfg.WrapClass) }>
+			@tableInner(cfg)
+		</div>
+	} else {
+		@tableInner(cfg)
+	}
+}
+
+templ tableInner(cfg TableConfig) {
+	<table class={ tableClass(cfg) }>
+		if cfg.Caption != "" {
+			<caption class="sr-only">{ cfg.Caption }</caption>
+		}
+		if len(cfg.Headers) > 0 {
+			<thead>
+				<tr>
+					for _, c := range cfg.Headers {
+						@tableHeaderCell(c)
+					}
+				</tr>
+			</thead>
+		}
+		<tbody>
+			for _, row := range cfg.Rows {
+				@tableRow(row)
+			}
+		</tbody>
+		if len(cfg.Footers) > 0 {
+			<tfoot>
+				<tr>
+					for _, c := range cfg.Footers {
+						@tableHeaderCell(c)
+					}
+				</tr>
+			</tfoot>
+		}
+	</table>
+}
+
+templ tableHeaderCell(c TableCell) {
+	<th
+		if c.Class != "" {
+			class={ c.Class }
+		}
+	>
+		if c.HTML != nil {
+			@c.HTML
+		} else {
+			{ c.Text }
+		}
+	</th>
+}
+
+templ tableRow(row TableRow) {
+	<tr
+		if row.Class != "" {
+			class={ row.Class }
+		}
+	>
+		for _, c := range row.Cells {
+			if c.Header {
+				@tableHeaderCell(c)
+			} else {
+				@tableDataCell(c)
+			}
+		}
+	</tr>
+}
+
+templ tableDataCell(c TableCell) {
+	<td
+		if c.Class != "" {
+			class={ c.Class }
+		}
+	>
+		if c.HTML != nil {
+			@c.HTML
+		} else {
+			{ c.Text }
+		}
+	</td>
+}
+
+func tableClass(cfg TableConfig) string {
+	return joinClasses(
+		"table",
+		tableModifierClass(cfg.Modifier),
+		tableSizeClass(cfg.Size),
+		glassClass(cfg.Glass),
+		cfg.Class,
+	)
+}
+
+func tableSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "table-" + s
+	default:
+		return ""
+	}
+}
+
+func tableModifierClass(m string) string {
+	switch m {
+	case "zebra", "pin-rows", "pin-cols":
+		return "table-" + m
+	default:
+		return ""
+	}
+}

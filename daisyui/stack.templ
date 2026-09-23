@@ -1,0 +1,29 @@
+package daisyui
+
+// Stack visually layers its children on top of each other. Direction controls
+// alignment using daisyUI's stack-* modifiers:
+//   - ""           : default (stack-bottom)
+//   - "top"        : stack-top
+//   - "bottom"     : stack-bottom
+//   - "start"      : stack-start
+//   - "end"        : stack-end
+//
+// Glass, when true, applies the glass surface treatment to the stack
+// container. Class adds extra utility classes (e.g. sizing) to the stack
+// container.
+templ Stack(items []templ.Component, direction, class string, glass bool) {
+	<div class={ joinClasses("stack", stackDirClass(direction), glassClass(glass), class) }>
+		for _, item := range items {
+			@item
+		}
+	</div>
+}
+
+func stackDirClass(d string) string {
+	switch d {
+	case "top", "bottom", "start", "end":
+		return "stack-" + d
+	default:
+		return ""
+	}
+}

@@ -1,0 +1,86 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+templ progressBody() {
+	@gallery.Section("Progress", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "10", Max: "100", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "70", Max: "100", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Class: "w-56"})
+</div>`, progressColorRow(""))
+	@gallery.Section("Primary color", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Color: "primary", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Color: "primary", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Color: "primary", Class: "w-56"})
+	// ... one per value
+</div>`, progressColorRow("primary"))
+	@gallery.Section("Secondary color", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Color: "secondary", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Color: "secondary", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Color: "secondary", Class: "w-56"})
+	// ... one per value
+</div>`, progressColorRow("secondary"))
+	@gallery.Section("Accent color", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Color: "accent", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Color: "accent", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Color: "accent", Class: "w-56"})
+	// ... one per value
+</div>`, progressColorRow("accent"))
+	@gallery.Section("Neutral color", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Color: "neutral", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Color: "neutral", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Color: "neutral", Class: "w-56"})
+	// ... one per value
+</div>`, progressColorRow("neutral"))
+	@gallery.Section("Info color", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Color: "info", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Color: "info", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Color: "info", Class: "w-56"})
+	// ... one per value
+</div>`, progressColorRow("info"))
+	@gallery.Section("Success color", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Color: "success", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Color: "success", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Color: "success", Class: "w-56"})
+	// ... one per value
+</div>`, progressColorRow("success"))
+	@gallery.Section("Warning color", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Color: "warning", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Color: "warning", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Color: "warning", Class: "w-56"})
+	// ... one per value
+</div>`, progressColorRow("warning"))
+	@gallery.Section("Error color", `<div class="flex flex-col gap-2 items-center">
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Color: "error", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Color: "error", Class: "w-56"})
+	@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Color: "error", Class: "w-56"})
+	// ... one per value
+</div>`, progressColorRow("error"))
+	@gallery.Section("Indeterminate (without value)", `@daisyui.Progress(daisyui.ProgressConfig{Class: "w-56"})`, daisyui.Progress(daisyui.ProgressConfig{Class: "w-56"}))
+}
+
+templ progressColorRow(color string) {
+	<div class="flex flex-col gap-2 items-center">
+		@daisyui.Progress(daisyui.ProgressConfig{Value: "0", Max: "100", Color: color, Class: "w-56"})
+		@daisyui.Progress(daisyui.ProgressConfig{Value: "10", Max: "100", Color: color, Class: "w-56"})
+		@daisyui.Progress(daisyui.ProgressConfig{Value: "40", Max: "100", Color: color, Class: "w-56"})
+		@daisyui.Progress(daisyui.ProgressConfig{Value: "70", Max: "100", Color: color, Class: "w-56"})
+		@daisyui.Progress(daisyui.ProgressConfig{Value: "100", Max: "100", Color: color, Class: "w-56"})
+	</div>
+}
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "progress",
+		Name:        "Progress",
+		Description: "Progress bar can be used to show the progress of a task or to show the passing of time.",
+		Category:    "daisyui",
+		Body:        progressBody,
+	})
+}

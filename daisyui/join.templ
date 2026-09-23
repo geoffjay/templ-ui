@@ -1,0 +1,14 @@
+package daisyui
+
+// Join renders a group of items that share corners/borders. Items passed in
+// should carry the "join-item" class themselves (matching daisyUI's docs). Use
+// direction ("vertical", "horizontal", or "") to set the join orientation;
+// "vertical" produces `join-vertical`, etc. Class adds extra utility classes
+// to the join container.
+templ Join(items []templ.Component, direction, class string) {
+	<div class={ joinClasses("join", classFor("join", direction), class) }>
+		for _, item := range items {
+			@item
+		}
+	</div>
+}

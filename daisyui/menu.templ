@@ -1,0 +1,183 @@
+package daisyui
+
+// MenuItem describes a single entry in a menu. Label is the visible text.
+// Href, when set, renders the entry as an anchor; when empty it renders a
+// <button>. Active, when true, adds menu-active to the entry. Disabled, when
+// true, adds menu-disabled to the <li> (and disables the inner element).
+// Icon, when set, is rendered before the label. Badge, when set, is rendered
+// after the label (e.g. a count). Submenu, when non-empty, renders a nested
+// <ul> under the entry (the parent becomes a submenu toggle via <details> when
+// Collapsible is true). Tooltip, when set, is rendered as data-tip on the
+// entry along with tooltip classes (see Menu's UseTooltips).
+type MenuItem struct {
+	Label       string
+	Href        string
+	Active      bool
+	Disabled    bool
+	Icon        templ.Component
+	Badge       string
+	Submenu     []MenuItem
+	Collapsible bool
+	Open        bool
+	Tooltip     string
+}
+
+// MenuConfig configures a daisyUI Menu. Direction accepts "vertical"
+// (default, produces menu-vertical) or "horizontal" (produces
+// menu-horizontal). For responsive direction use Class (e.g.
+// "menu-vertical lg:menu-horizontal"). Size accepts "xs", "sm", "md",
+// "lg", "xl" (produces menu-xs, etc; "md" is the default and is omitted).
+// Title, when set, renders a <li class="menu-title"> as the first item.
+// UseTooltips, when true, adds tooltip classes and data-tip attributes using
+// each MenuItem's Tooltip (useful for icon-only menus). Class lets callers
+// add extra utility classes (e.g. "bg-base-200 rounded-box w-56"). Resolver,
+// when set, is used to build all hrefs.
+type MenuConfig struct {
+	Items       []MenuItem
+	Direction   string
+	Size        string
+	Title       string
+	UseTooltips bool
+	Class       string
+	Resolver    URLResolver
+}
+
+// Menu renders a daisyUI menu (<ul class="menu ...">).
+templ Menu(cfg MenuConfig) {
+	<ul class={ menuClass(cfg) }>
+		if cfg.Title != "" {
+			<li class="menu-title">{ cfg.Title }</li>
+		}
+		for _, item := range cfg.Items {
+			@menuItem(item, cfg)
+		}
+	</ul>
+}
+
+templ menuItem(item MenuItem, cfg MenuConfig) {
+	if len(item.Submenu) > 0 {
+		if item.Collapsible {
+			<li>
+				<details open?={ item.Open }>
+					<summary>
+						if item.Icon != nil {
+							@item.Icon
+						}
+						{ item.Label }
+					</summary>
+					<ul>
+						for _, sub := range item.Submenu {
+							@menuItem(sub, cfg)
+						}
+					</ul>
+				</details>
+			</li>
+		} else {
+			<li>
+				@menuEntry(item, cfg)
+				<ul>
+					for _, sub := range item.Submenu {
+						@menuItem(sub, cfg)
+					}
+				</ul>
+			</li>
+		}
+	} else {
+		<li class={ menuDisabledLiClass(item.Disabled) }>
+			@menuEntry(item, cfg)
+		</li>
+	}
+}
+
+templ menuEntry(item MenuItem, cfg MenuConfig) {
+	if item.Href != "" {
+		<a
+			href={ resolveHref(cfg.Resolver, item.Href) }
+			class={ menuEntryClass(item, cfg) }
+			if menuTipAttr(item, cfg) != "" {
+				data-tip={ menuTipAttr(item, cfg) }
+			}
+			if item.Disabled {
+				aria-disabled="true"
+			}
+		>
+			if item.Icon != nil {
+				@item.Icon
+			}
+			{ item.Label }
+			if item.Badge != "" {
+				<span class="badge badge-xs">{ item.Badge }</span>
+			}
+		</a>
+	} else {
+		<button
+			class={ menuEntryClass(item, cfg) }
+			if menuTipAttr(item, cfg) != "" {
+				data-tip={ menuTipAttr(item, cfg) }
+			}
+			disabled?={ item.Disabled }
+		>
+			if item.Icon != nil {
+				@item.Icon
+			}
+			{ item.Label }
+			if item.Badge != "" {
+				<span class="badge badge-xs">{ item.Badge }</span>
+			}
+		</button>
+	}
+}
+
+func menuClass(cfg MenuConfig) string {
+	return joinClasses(
+		"menu",
+		menuDirectionClass(cfg.Direction),
+		menuSizeClass(cfg.Size),
+		cfg.Class,
+	)
+}
+
+func menuDirectionClass(d string) string {
+	return classFor("menu", d)
+}
+
+func menuSizeClass(s string) string {
+	switch s {
+	case "xs", "sm", "lg", "xl":
+		return "menu-" + s
+	default:
+		return ""
+	}
+}
+
+func menuEntryClass(item MenuItem, cfg MenuConfig) string {
+	var parts []string
+	if item.Active {
+		parts = append(parts, "menu-active")
+	}
+	if cfg.UseTooltips && item.Tooltip != "" {
+		parts = append(parts, "tooltip")
+	}
+	return joinClasses(parts...)
+}
+
+func menuDisabledLiClass(disabled bool) string {
+	if disabled {
+		return "menu-disabled"
+	}
+	return ""
+}
+
+func menuAriaDisabled(disabled bool) string {
+	if disabled {
+		return "true"
+	}
+	return ""
+}
+
+func menuTipAttr(item MenuItem, cfg MenuConfig) string {
+	if cfg.UseTooltips && item.Tooltip != "" {
+		return item.Tooltip
+	}
+	return ""
+}

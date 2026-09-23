@@ -1,0 +1,93 @@
+package demos
+
+import (
+	"github.com/geoffjay/templ-ui/daisyui"
+	"github.com/geoffjay/templ-ui/examples/gallery"
+	"github.com/geoffjay/templ-ui/internal/registry"
+)
+
+func init() {
+	registry.Register(registry.Entry{
+		Slug:        "fieldset",
+		Name:        "Fieldset",
+		Description: "Fieldset is a container for grouping related form elements. It includes fieldset-legend as a title and label as a description.",
+		Category:    "daisyui",
+		Body:        fieldsetBody,
+	})
+}
+
+templ fieldsetBody() {
+	@gallery.Section("Fieldset fieldset-legend and label", `@daisyui.Fieldset(daisyui.FieldsetConfig{
+	Legend: "Page title",
+	Class:  "w-xs",
+}, templ.Raw(...)) // children:
+<input type="text" class="input" placeholder="My awesome page" />
+<p class="label">You can edit page title later on from settings</p>`, daisyui.Fieldset(daisyui.FieldsetConfig{
+		Legend: "Page title",
+		Class:  "w-xs",
+	}, templ.Raw(`
+	<input type="text" class="input" placeholder="My awesome page" />
+	<p class="label">You can edit page title later on from settings</p>`)))
+	@gallery.Section("Fieldset with background and border", `@daisyui.Fieldset(daisyui.FieldsetConfig{
+	Legend: "Page title",
+	Class:  "w-xs bg-base-200 border border-base-300 p-4 rounded-box",
+}, templ.Raw(...)) // children:
+<input type="text" class="input" placeholder="My awesome page" />
+<p class="label">You can edit page title later on from settings</p>`, daisyui.Fieldset(daisyui.FieldsetConfig{
+		Legend: "Page title",
+		Class:  "w-xs bg-base-200 border border-base-300 p-4 rounded-box",
+	}, templ.Raw(`
+	<input type="text" class="input" placeholder="My awesome page" />
+	<p class="label">You can edit page title later on from settings</p>`)))
+	@gallery.Section("Fieldset with multiple inputs", `@daisyui.Fieldset(daisyui.FieldsetConfig{
+	Legend: "Page details",
+	Class:  "w-xs bg-base-200 border border-base-300 p-4 rounded-box",
+}, templ.Raw(...)) // children:
+<label class="label">Title</label>
+<input type="text" class="input" placeholder="My awesome page" />
+<label class="label">Slug</label>
+<input type="text" class="input" placeholder="my-awesome-page" />
+<label class="label">Author</label>
+<input type="text" class="input" placeholder="Name" />`, daisyui.Fieldset(daisyui.FieldsetConfig{
+		Legend: "Page details",
+		Class:  "w-xs bg-base-200 border border-base-300 p-4 rounded-box",
+	}, templ.Raw(`
+	<label class="label">Title</label>
+	<input type="text" class="input" placeholder="My awesome page" />
+	<label class="label">Slug</label>
+	<input type="text" class="input" placeholder="my-awesome-page" />
+	<label class="label">Author</label>
+	<input type="text" class="input" placeholder="Name" />`)))
+	@gallery.Section("Fieldset with multiple join items", `@daisyui.Fieldset(daisyui.FieldsetConfig{
+	Legend: "Settings",
+	Class:  "w-xs bg-base-200 border border-base-300 p-4 rounded-box",
+}, templ.Raw(...)) // children:
+<div class="join">
+	<input type="text" class="input join-item" placeholder="Product name" />
+	<button class="btn join-item">save</button>
+</div>`, daisyui.Fieldset(daisyui.FieldsetConfig{
+		Legend: "Settings",
+		Class:  "w-xs bg-base-200 border border-base-300 p-4 rounded-box",
+	}, templ.Raw(`
+	<div class="join">
+		<input type="text" class="input join-item" placeholder="Product name" />
+		<button class="btn join-item">save</button>
+	</div>`)))
+	@gallery.Section("Login form with fieldset", `@daisyui.Fieldset(daisyui.FieldsetConfig{
+	Legend: "Login",
+	Class:  "w-xs bg-base-200 border border-base-300 p-4 rounded-box",
+}, templ.Raw(...)) // children:
+<label class="label">Email</label>
+<input type="email" class="input" placeholder="Email" />
+<label class="label">Password</label>
+<input type="password" class="input" placeholder="Password" />
+<button class="btn btn-neutral mt-4">Login</button>`, daisyui.Fieldset(daisyui.FieldsetConfig{
+		Legend: "Login",
+		Class:  "w-xs bg-base-200 border border-base-300 p-4 rounded-box",
+	}, templ.Raw(`
+	<label class="label">Email</label>
+	<input type="email" class="input" placeholder="Email" />
+	<label class="label">Password</label>
+	<input type="password" class="input" placeholder="Password" />
+	<button class="btn btn-neutral mt-4">Login</button>`)))
+}
