@@ -37,6 +37,6 @@ func main() {
 		}
 	})
 
-	log.Println("gallery: http://localhost:8080")
-	log.Fatal(http.ListenAndServe("localhost:8080", mux))
+	log.Println("gallery: http://localhost:8280")
+	log.Fatal(http.ListenAndServe("localhost:8280", mux))
 }

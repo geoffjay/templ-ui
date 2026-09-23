@@ -50,7 +50,7 @@ shiki:
 css:
 	$(BUN) run css
 
-## Run the gallery demo server (http://localhost:8080)
+## Run the gallery demo server (http://localhost:8280)
 run-demo:
 	go run ./examples/gallery
 

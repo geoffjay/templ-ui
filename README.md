@@ -46,7 +46,7 @@ that rendered it, with a light/dark theme switcher:
 
 ```sh
 make assets    # build shiki.js + styles.css into examples/gallery/static/
-make run-demo  # serve http://localhost:8080
+make run-demo  # serve http://localhost:8280
 ```
 
 For live development use [pitchfork](https://pitchfork.jdx.dev) (replaces

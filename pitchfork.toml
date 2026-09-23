@@ -2,7 +2,7 @@
 namespace = "templ-ui"
 
 [env]
-PORT = "8080"
+PORT = "8280"
 
 # templ codegen watch: regenerate *_templ.go on .templ changes.
 [daemons.templ]
@@ -17,7 +17,7 @@ oneshot = false
 run = "exec go run ./examples/gallery/cmd/server"
 watch = ["daisyui/*.go", "shiki/*.go", "containers/*.go", "examples/gallery/*.go", "examples/gallery/demos/*.go"]
 depends = ["templ"]
-ready_http = { url = "http://127.0.0.1:8080/", timeout = "60s" }
+ready_http = { url = "http://127.0.0.1:8280/", timeout = "60s" }
 retry = 3
 
 # Tailwind v4 + daisyUI stylesheet build (input: assets/styles.css, output:
