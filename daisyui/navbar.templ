@@ -125,7 +125,7 @@ templ navbarEnd(data NavbarData) {
 				@data.EndExtra
 			}
 			if data.SearchPlaceholder != "" {
-				<input type="text" placeholder={ data.SearchPlaceholder } class="input input-bordered w-24 md:w-auto"/>
+				<input type="text" placeholder={ data.SearchPlaceholder } class="input w-24 md:w-auto"/>
 			}
 			if len(data.End) > 0 || len(data.EndDropdowns) > 0 {
 				<ul class="menu menu-horizontal px-1">

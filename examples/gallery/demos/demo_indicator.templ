@@ -44,12 +44,12 @@ templ indicatorBody() {
 	Items: []daisyui.IndicatorItemConfig{
 		{Class: "badge", Children: templ.Raw("Required")},
 	},
-	Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address", Class: "input-bordered"}),
+	Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address"}),
 })`, daisyui.Indicator(daisyui.IndicatorConfig{
 		Items: []daisyui.IndicatorItemConfig{
 			{Class: "badge", Children: templ.Raw("Required")},
 		},
-		Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address", Class: "input-bordered"}),
+		Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address"}),
 	}))
 	@gallery.Section("A button as an indicator for a card", `@daisyui.Indicator(daisyui.IndicatorConfig{
 	Class: "my-6 mx-10",

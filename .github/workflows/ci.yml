@@ -87,6 +87,14 @@ jobs:
       - name: Install JS dependencies
         run: bun install
 
+      - name: Check safelist is up to date
+        run: |
+          bun run safelist
+          git diff --exit-code daisyui/safelist.css || {
+            echo "daisyui/safelist.css is stale: run 'bun run safelist' and commit it."
+            exit 1
+          }
+
       - name: Build assets
         run: bun run build
 
@@ -96,3 +104,6 @@ jobs:
           test -f examples/gallery/dist/index.html
           test -f examples/gallery/dist/static/styles.css
           test -f examples/gallery/dist/static/shiki.js
+
+      - name: CSS coverage audit
+        run: bun run css:audit examples/gallery/dist examples/gallery/dist/static/styles.css

@@ -105,11 +105,11 @@ func filterBody() templ.Component {
 		}
 		templ_7745c5c3_Err = gallery.Section("Filter with extra class", `@daisyui.Filter(daisyui.FilterConfig{
 	Name:    "filter-5",
-	Class:   "filter-primary",
+	Class:   "gap-4",
 	Options: []daisyui.FilterOption{{Label: "One", Checked: true}, {Label: "Two"}, {Label: "Three"}},
 })`, daisyui.Filter(daisyui.FilterConfig{
 			Name:    "filter-5",
-			Class:   "filter-primary",
+			Class:   "gap-4",
 			Options: []daisyui.FilterOption{{Label: "One", Checked: true}, {Label: "Two"}, {Label: "Three"}},
 		})).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {

@@ -58,9 +58,9 @@ func themeControllerBody() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = gallery.Section("Theme Controller using a toggle with text", `<label class="flex cursor-pointer gap-2">
-	<span class="label-text">Default</span>
+	<span>Default</span>
 	@daisyui.ThemeController(daisyui.ThemeControllerConfig{InputClass: "toggle", Value: "synthwave"})
-	<span class="label-text">Synthwave</span>
+	<span>Synthwave</span>
 </label>`, themeControllerToggleWithText()).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -115,7 +115,7 @@ func themeControllerToggleWithText() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<label class=\"flex cursor-pointer gap-2\"><span class=\"label-text\">Default</span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<label class=\"flex cursor-pointer gap-2\"><span>Default</span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -123,7 +123,7 @@ func themeControllerToggleWithText() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span class=\"label-text\">Synthwave</span></label>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span>Synthwave</span></label>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

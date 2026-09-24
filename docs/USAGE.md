@@ -21,6 +21,9 @@ point):
 ```css
 @import "tailwindcss";
 
+/* Every class templ-ui components can render (see "The safelist" below). */
+@import "../vendor/templ-ui/safelist.css";
+
 @plugin "@tailwindcss/typography";   /* optional: for prose content */
 
 @plugin "daisyui" {
@@ -41,8 +44,28 @@ Notes:
 - The `.glass` and `.component-preview` rules in `assets/styles.css` are
   owned by templ-ui (the `Glass` flag on several daisyui components relies
   on `.glass`). Keep them in your compiled stylesheet.
-- Tailwind v4 scans templates for class names automatically; if your templ
-  files live outside the source root, add `@source` directives.
+
+### The safelist (required)
+
+Tailwind and daisyUI only emit CSS for class names they find in scanned
+sources. That breaks for templ-ui in two ways: the component sources live in
+the Go module cache, which Tailwind never scans, and many daisyUI modifiers
+are assembled at runtime (`"btn-" + cfg.Color`), so no scanner could find
+them anyway. The symptom is silent: components render with missing styles
+(e.g. every `tab-content` panel visible at once, colorless buttons).
+
+templ-ui ships `daisyui/safelist.css`, a generated list of Tailwind v4
+`@source inline(...)` directives covering every class the components emit.
+Copy it from the module into your CSS build inputs whenever you bump
+templ-ui:
+
+```sh
+cp "$(go list -m -f '{{.Dir}}' github.com/geoffjay/templ-ui)/daisyui/safelist.css vendor/templ-ui/
+```
+
+Classes you write in your own templates (including a component's `Class`
+field) are still picked up by Tailwind's normal scan of your sources; add
+`@source` directives if your templ files live outside the source root.
 
 ## 2. shiki code highlighting
 

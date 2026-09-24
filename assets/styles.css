@@ -9,6 +9,11 @@
  Requirements documented in docs/USAGE.md:
   - Tailwind CSS v4 (`@import "tailwindcss"`) — daisyUI 5 is a Tailwind v4
     plugin and generates its components layer from it.
+  - templ-ui's generated safelist (daisyui/safelist.css). Tailwind and daisyUI
+    only emit classes they find in scanned sources; component sources live in
+    the Go module cache (never scanned) and many daisyUI modifiers are built
+    at runtime ("btn-" + Color), so without the safelist those classes are
+    silently missing.
   - The daisyUI plugin listing every theme your app switches between
     (daisyUI emits CSS custom properties per theme; unlisted themes are not
     available at runtime).
@@ -20,6 +25,9 @@
 */
 
 @import "tailwindcss";
+
+/* In-repo path; consuming apps point this at the module copy (docs/USAGE.md). */
+@import "../daisyui/safelist.css";
 
 @plugin "@tailwindcss/typography";
 

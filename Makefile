@@ -1,4 +1,4 @@
-.PHONY: all templ generate build test vet fmt lint assets css shiki run export demo tidy clean ci
+.PHONY: all templ generate build test vet fmt lint assets css shiki safelist css-audit run export demo tidy clean ci
 
 TEMPL_PKG := github.com/a-h/templ/cmd/templ
 TEMPL_VERSION := v0.3.1020
@@ -39,8 +39,8 @@ fmt:
 ## Lint (vet + fmt)
 lint: vet fmt
 
-## Build frontend assets: shiki bundle + compiled stylesheet
-assets: shiki css
+## Build frontend assets: safelist + shiki bundle + compiled stylesheet
+assets: safelist shiki css
 
 ## Build the shiki highlighter bundle into examples/gallery/static/
 shiki:
@@ -50,9 +50,19 @@ shiki:
 css:
 	$(BUN) run css
 
+## Regenerate daisyui/safelist.css (every class the components can render)
+safelist:
+	$(BUN) run safelist
+
+## Export the gallery and fail if any rendered class is missing from the stylesheet
+css-audit: assets
+	rm -rf /tmp/templ-ui-audit
+	go run ./examples/gallery/cmd/export /tmp/templ-ui-audit
+	$(BUN) run css:audit /tmp/templ-ui-audit examples/gallery/static/styles.css
+
 ## Run the gallery demo server (http://localhost:8280)
 run-demo:
-	go run ./examples/gallery
+	go run ./examples/gallery/cmd/server
 
 ## Export the gallery to static HTML for GitHub Pages (writes examples/gallery/dist/)
 export:

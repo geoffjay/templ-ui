@@ -9,7 +9,9 @@
     "watch:shiki": "esbuild assets/shiki.js --bundle --format=esm --target=es2022 --outfile=examples/gallery/static/shiki.js --watch",
     "css": "tailwindcss -i ./assets/styles.css -o ./examples/gallery/static/styles.css",
     "css:watch": "tailwindcss -i ./assets/styles.css -o ./examples/gallery/static/styles.css --watch",
-    "build": "bun run build:shiki && bun run css"
+    "build": "bun run build:shiki && bun run css",
+    "safelist": "bun scripts/safelist.ts",
+    "css:audit": "bun scripts/css-audit.ts"
   },
   "dependencies": {
     "@tailwindcss/cli": "4.3.1",

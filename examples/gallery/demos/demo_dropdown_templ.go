@@ -184,7 +184,7 @@ func dropdownCustomCard() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"card card-compact w-64 bg-base-100 shadow-sm\"><div class=\"card-body\"><h3 class=\"card-title\">Card dropdown</h3><p class=\"text-sm opacity-70\">Any templ component can be rendered inside a dropdown.</p><div class=\"card-actions justify-end\"><button class=\"btn btn-primary btn-sm\">Close</button></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"card card-sm w-64 bg-base-100 shadow-sm\"><div class=\"card-body\"><h3 class=\"card-title\">Card dropdown</h3><p class=\"text-sm opacity-70\">Any templ component can be rendered inside a dropdown.</p><div class=\"card-actions justify-end\"><button class=\"btn btn-primary btn-sm\">Close</button></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

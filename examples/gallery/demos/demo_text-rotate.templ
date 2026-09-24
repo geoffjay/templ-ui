@@ -21,7 +21,7 @@ templ textRotateBody() {
 		},
 	}))
 	@gallery.Section("Rotating 6 words (big, centered)", `@daisyui.TextRotate(daisyui.TextRotateConfig{
-	Class:      "max-md:text-3xl text-7xl font-title",
+	Class:      "max-md:text-3xl text-7xl",
 	InnerClass: "justify-items-center",
 	Lines: []daisyui.TextRotateLine{
 		{Text: "DESIGN"},
@@ -32,7 +32,7 @@ templ textRotateBody() {
 		{Text: "REPEAT"},
 	},
 })`, daisyui.TextRotate(daisyui.TextRotateConfig{
-		Class:      "max-md:text-3xl text-7xl font-title",
+		Class:      "max-md:text-3xl text-7xl",
 		InnerClass: "justify-items-center",
 		Lines: []daisyui.TextRotateLine{
 			{Text: "DESIGN"},
@@ -54,14 +54,16 @@ templ textRotateBody() {
 	})
 </div>`, textRotateInSentence())
 	@gallery.Section("Custom duration (6s)", `@daisyui.TextRotate(daisyui.TextRotateConfig{
-	Class:      "max-md:text-3xl text-7xl font-title duration-6000",
+	Class:      "max-md:text-3xl text-7xl",
+	Duration:   6000,
 	InnerClass: "justify-items-center",
 	Lines: []daisyui.TextRotateLine{
 		{Text: "BLAZING"},
 		{Text: "FAST ▶︎▶︎", Class: "font-bold italic px-2"},
 	},
 })`, daisyui.TextRotate(daisyui.TextRotateConfig{
-		Class:      "max-md:text-3xl text-7xl font-title duration-6000",
+		Class:      "max-md:text-3xl text-7xl",
+		Duration:   6000,
 		InnerClass: "justify-items-center",
 		Lines: []daisyui.TextRotateLine{
 			{Text: "BLAZING"},
@@ -69,7 +71,7 @@ templ textRotateBody() {
 		},
 	}))
 	@gallery.Section("Custom line height", `@daisyui.TextRotate(daisyui.TextRotateConfig{
-	Class:      "max-md:text-3xl text-7xl font-title leading-[2]",
+	Class:      "max-md:text-3xl text-7xl leading-[2]",
 	InnerClass: "justify-items-center",
 	Lines: []daisyui.TextRotateLine{
 		{Text: "📐 DESIGN"},
@@ -80,7 +82,7 @@ templ textRotateBody() {
 		{Text: "♻️ REPEAT"},
 	},
 })`, daisyui.TextRotate(daisyui.TextRotateConfig{
-		Class:      "max-md:text-3xl text-7xl font-title leading-[2]",
+		Class:      "max-md:text-3xl text-7xl leading-[2]",
 		InnerClass: "justify-items-center",
 		Lines: []daisyui.TextRotateLine{
 			{Text: "📐 DESIGN"},

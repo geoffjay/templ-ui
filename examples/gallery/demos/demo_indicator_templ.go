@@ -83,12 +83,12 @@ func indicatorBody() templ.Component {
 	Items: []daisyui.IndicatorItemConfig{
 		{Class: "badge", Children: templ.Raw("Required")},
 	},
-	Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address", Class: "input-bordered"}),
+	Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address"}),
 })`, daisyui.Indicator(daisyui.IndicatorConfig{
 			Items: []daisyui.IndicatorItemConfig{
 				{Class: "badge", Children: templ.Raw("Required")},
 			},
-			Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address", Class: "input-bordered"}),
+			Children: daisyui.Input(daisyui.InputConfig{Type: "text", Placeholder: "Your email address"}),
 		})).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

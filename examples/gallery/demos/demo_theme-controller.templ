@@ -22,9 +22,9 @@ templ themeControllerBody() {
 		Value:      "synthwave",
 	}))
 	@gallery.Section("Theme Controller using a toggle with text", `<label class="flex cursor-pointer gap-2">
-	<span class="label-text">Default</span>
+	<span>Default</span>
 	@daisyui.ThemeController(daisyui.ThemeControllerConfig{InputClass: "toggle", Value: "synthwave"})
-	<span class="label-text">Synthwave</span>
+	<span>Synthwave</span>
 </label>`, themeControllerToggleWithText())
 	@gallery.Section("Theme Controller using a toggle with icons", `<label class="flex cursor-pointer gap-2">
 	<svg ...>...</svg>
@@ -46,9 +46,9 @@ templ themeControllerBody() {
 
 templ themeControllerToggleWithText() {
 	<label class="flex cursor-pointer gap-2">
-		<span class="label-text">Default</span>
+		<span>Default</span>
 		@daisyui.ThemeController(daisyui.ThemeControllerConfig{InputClass: "toggle", Value: "synthwave"})
-		<span class="label-text">Synthwave</span>
+		<span>Synthwave</span>
 	</label>
 }
 

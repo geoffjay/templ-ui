@@ -17,8 +17,8 @@ func TestTextRotate(t *testing.T) {
 	mustContain(t, got, `<span class="">ONE</span>`)
 	mustContain(t, got, `<span class="">TWO</span>`)
 	mustContain(t, got, `<span class="">THREE</span>`)
-	if strings.Contains(got, "duration-") {
-		t.Errorf("expected no duration class by default; got:\n%s", got)
+	if strings.Contains(got, "--tw-duration") || strings.Contains(got, "duration-") {
+		t.Errorf("expected no duration override by default; got:\n%s", got)
 	}
 }
 
@@ -32,7 +32,10 @@ func TestTextRotateDuration(t *testing.T) {
 		},
 		InnerClass: "justify-items-center",
 	}))
-	mustContain(t, got, `<span class="text-rotate duration-6000 text-7xl font-title">`)
+	// Duration is an inline --tw-duration (read by daisyUI's .text-rotate),
+	// not a duration-<ms> utility class the consumer's Tailwind build would
+	// have to generate.
+	mustContain(t, got, `<span class="text-rotate text-7xl font-title" style="--tw-duration:6000ms;">`)
 	mustContain(t, got, `<span class="justify-items-center">`)
 	mustContain(t, got, `<span class="">BLAZING</span>`)
 	mustContain(t, got, `<span class="font-bold italic px-2">FAST</span>`)

@@ -77,10 +77,6 @@ func maskBody() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = gallery.Section("Square", `@daisyui.MaskImage(maskImgURL, "Square CSS mask", "square", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Square CSS mask", "square", "", "w-40 h-40")).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		templ_7745c5c3_Err = gallery.Section("Circle", `@daisyui.MaskImage(maskImgURL, "Circle CSS mask", "circle", "", "w-40 h-40")`, daisyui.MaskImage(maskImgURL, "Circle CSS mask", "circle", "", "w-40 h-40")).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
