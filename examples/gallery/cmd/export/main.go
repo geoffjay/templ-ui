@@ -3,28 +3,48 @@
 // the built assets copied into the output tree. templ components render to
 // strings server-side, so the export is a plain render loop — no headless
 // browser needed.
+//
+//	export [-base /templ-ui] [outdir]
+//
+// -base is the URL path prefix the site is served under (GitHub Pages
+// project sites live at /<repo>/); every gallery link and asset URL is
+// rendered with it.
 package main
 
 import (
 	"bytes"
 	"context"
+	"flag"
 	"fmt"
 	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/a-h/templ"
 	"github.com/geoffjay/templ-ui/examples/gallery"
 	_ "github.com/geoffjay/templ-ui/examples/gallery/demos"
 	"github.com/geoffjay/templ-ui/internal/registry"
+	"github.com/geoffjay/templ-ui/shiki"
 )
 
 func main() {
+	base := flag.String("base", "", `URL path prefix the site is served under, e.g. "/templ-ui"`)
+	flag.Parse()
 	outDir := "dist"
-	if len(os.Args) > 1 {
-		outDir = os.Args[1]
+	if flag.NArg() > 0 {
+		outDir = flag.Arg(0)
 	}
+
+	// Normalize to "" or "/prefix" (no trailing slash) so URL("/x") joins
+	// cleanly.
+	b := strings.TrimSuffix(*base, "/")
+	if b != "" && !strings.HasPrefix(b, "/") {
+		b = "/" + b
+	}
+	gallery.Base = b
+	shiki.ScriptSrc = gallery.URL("/static/shiki.js")
 
 	ctx := context.Background()
 

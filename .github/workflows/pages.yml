@@ -44,20 +44,16 @@ jobs:
         run: bun run build
 
       - name: Export static site
-        run: go run ./examples/gallery/cmd/export site
+        # GitHub Pages serves this repo at /<repo>/; the export renders every
+        # gallery link and asset URL under that base.
+        run: go run ./examples/gallery/cmd/export -base "/${{ github.event.repository.name }}" site
 
-      - name: Fix asset paths for project pages
-        # GitHub Pages serves this repo at /<repo>/, so rewrite the
-        # gallery-relative asset URLs to the repo-relative base. The site is
-        # self-contained under site/ afterwards.
+      - name: Check asset URLs carry the base
         run: |
-          BASE="/templ-ui"
-          find site -name '*.html' -exec sed -i \
-            -e "s|href=\"static/|href=\"$BASE/static/|g" \
-            -e "s|src=\"static/|src=\"$BASE/static/|g" \
-            -e "s|href=\"/components/|href=\"$BASE/components/|g" \
-            -e "s|href=\"/\"|href=\"$BASE/\"|g" \
-            {} +
+          if grep -rlE '(href|src)="/static/' site --include='*.html'; then
+            echo "exported pages reference /static/ without the Pages base"
+            exit 1
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

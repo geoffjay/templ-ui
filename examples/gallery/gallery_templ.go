@@ -19,6 +19,17 @@ import (
 	"github.com/geoffjay/templ-ui/shiki"
 )
 
+// Base is the URL path prefix the gallery is served under: "" for the live
+// server at /, "/templ-ui" for the GitHub Pages project site. The static
+// export sets it from its -base flag. Every gallery-owned link and asset URL
+// goes through URL so the rendered HTML is correct at either mount point.
+var Base string
+
+// URL prefixes a root-absolute gallery path ("/components/alert") with Base.
+func URL(path string) string {
+	return Base + path
+}
+
 // pageShell renders a component page inside the shared gallery layout:
 // the AppShell container with the sidebar listing every registry entry,
 // grouped by category. The AppShell's theme toggle switches between the
@@ -46,7 +57,7 @@ func pageShell(title, description string, body templ.Component) templ.Component 
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = containers.AppShell(containers.AppShellConfig{
 			Title:       "templ-ui",
-			TitleHref:   "/",
+			TitleHref:   URL("/"),
 			NavSections: navSections(),
 			Content:     pageMain(title, description, body),
 			Theme: containers.ThemeConfig{
@@ -74,7 +85,7 @@ func navSections() []containers.NavSection {
 		}
 		byCategory[e.Category] = append(byCategory[e.Category], daisyui.MenuItem{
 			Label: e.Name,
-			Href:  "/components/" + e.Slug,
+			Href:  URL("/components/" + e.Slug),
 		})
 	}
 	sections := make([]containers.NavSection, 0, len(order))
@@ -117,7 +128,7 @@ func pageMain(title, description string, body templ.Component) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 59, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 70, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -130,7 +141,7 @@ func pageMain(title, description string, body templ.Component) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 60, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 71, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -186,7 +197,7 @@ func Section(title, code string, body templ.Component) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 73, Col: 44}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 84, Col: 44}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -199,7 +210,7 @@ func Section(title, code string, body templ.Component) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(tabGroup(title))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 77, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 88, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
@@ -220,7 +231,7 @@ func Section(title, code string, body templ.Component) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(tabGroup(title))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 88, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `examples/gallery/gallery.templ`, Line: 99, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {

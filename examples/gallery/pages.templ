@@ -25,13 +25,13 @@ templ document(title string, body templ.Component) {
 }
 
 // head renders the asset links for the gallery via the library's Head
-// helper. Paths are root-absolute so they resolve identically from / and
-// from /components/<slug>; the static export copies the built assets under
-// /static/ next to the exported HTML files. The Pages workflow rewrites
-// them to the /templ-ui/ project base at deploy time.
+// helper. Paths are root-absolute (prefixed with Base) so they resolve
+// identically from the index and from /components/<slug>; the static export
+// copies the built assets under static/ next to the exported HTML files.
+// The shiki script URL is shiki.ScriptSrc, which the export prefixes too.
 templ head() {
 	@shiki.Head(shiki.HeadConfig{
-		Stylesheet: "/static/styles.css",
+		Stylesheet: URL("/static/styles.css"),
 		Shiki:      true,
 	})
 }
@@ -65,7 +65,7 @@ templ indexMain() {
 				<h2 class="text-2xl font-semibold">{ cat }</h2>
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 					for _, e := range indexEntries(cat) {
-						<a class="card bg-base-100 shadow-sm border border-base-300" href={ templ.URL("/components/" + e.Slug) }>
+						<a class="card bg-base-100 shadow-sm border border-base-300" href={ templ.URL(URL("/components/" + e.Slug)) }>
 							<div class="card-body">
 								<h3 class="card-title text-primary">{ e.Name }</h3>
 								<p class="text-base-content/70 text-sm">{ e.Description }</p>

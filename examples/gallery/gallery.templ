@@ -9,6 +9,17 @@ import (
 	"github.com/geoffjay/templ-ui/shiki"
 )
 
+// Base is the URL path prefix the gallery is served under: "" for the live
+// server at /, "/templ-ui" for the GitHub Pages project site. The static
+// export sets it from its -base flag. Every gallery-owned link and asset URL
+// goes through URL so the rendered HTML is correct at either mount point.
+var Base string
+
+// URL prefixes a root-absolute gallery path ("/components/alert") with Base.
+func URL(path string) string {
+	return Base + path
+}
+
 // pageShell renders a component page inside the shared gallery layout:
 // the AppShell container with the sidebar listing every registry entry,
 // grouped by category. The AppShell's theme toggle switches between the
@@ -16,7 +27,7 @@ import (
 templ pageShell(title, description string, body templ.Component) {
 	@containers.AppShell(containers.AppShellConfig{
 		Title:       "templ-ui",
-		TitleHref:   "/",
+		TitleHref:   URL("/"),
 		NavSections: navSections(),
 		Content:     pageMain(title, description, body),
 		Theme: containers.ThemeConfig{
@@ -39,7 +50,7 @@ func navSections() []containers.NavSection {
 		}
 		byCategory[e.Category] = append(byCategory[e.Category], daisyui.MenuItem{
 			Label: e.Name,
-			Href:  "/components/" + e.Slug,
+			Href:  URL("/components/" + e.Slug),
 		})
 	}
 	sections := make([]containers.NavSection, 0, len(order))
