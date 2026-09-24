@@ -54,13 +54,25 @@ are assembled at runtime (`"btn-" + cfg.Color`), so no scanner could find
 them anyway. The symptom is silent: components render with missing styles
 (e.g. every `tab-content` panel visible at once, colorless buttons).
 
-templ-ui ships `daisyui/safelist.css`, a generated list of Tailwind v4
-`@source inline(...)` directives covering every class the components emit.
-Copy it from the module into your CSS build inputs whenever you bump
-templ-ui:
+templ-ui embeds a generated list of Tailwind v4 `@source inline(...)`
+directives covering every class the components emit (`daisyui.Safelist`).
+Write it into your CSS build inputs as the first step of your CSS build:
 
 ```sh
-cp "$(go list -m -f '{{.Dir}}' github.com/geoffjay/templ-ui)/daisyui/safelist.css assets/vendor/templ-ui/
+go run github.com/geoffjay/templ-ui/cmd/templ-ui safelist -o assets/vendor/templ-ui/safelist.css
+```
+
+`go run` resolves templ-ui at the version pinned in your `go.mod`, so the
+safelist always matches the components you render: bump templ-ui and the
+next CSS build picks up any new classes. Treat the output as a build
+artifact (gitignore it) or commit it; either way, regenerate it in the build
+rather than copying it by hand. For example, in `package.json`:
+
+```json
+"scripts": {
+  "safelist": "go run github.com/geoffjay/templ-ui/cmd/templ-ui safelist -o assets/vendor/templ-ui/safelist.css",
+  "css": "bun run safelist && tailwindcss -i ./assets/styles.css -o ./static/styles.css"
+}
 ```
 
 Avoid a top-level `vendor/` directory in a Go module: its presence switches
