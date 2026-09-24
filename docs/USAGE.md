@@ -22,7 +22,7 @@ point):
 @import "tailwindcss";
 
 /* Every class templ-ui components can render (see "The safelist" below). */
-@import "../vendor/templ-ui/safelist.css";
+@import "./vendor/templ-ui/safelist.css";   /* e.g. assets/vendor/ next to this file */
 
 @plugin "@tailwindcss/typography";   /* optional: for prose content */
 
@@ -60,8 +60,11 @@ Copy it from the module into your CSS build inputs whenever you bump
 templ-ui:
 
 ```sh
-cp "$(go list -m -f '{{.Dir}}' github.com/geoffjay/templ-ui)/daisyui/safelist.css vendor/templ-ui/
+cp "$(go list -m -f '{{.Dir}}' github.com/geoffjay/templ-ui)/daisyui/safelist.css assets/vendor/templ-ui/
 ```
+
+Avoid a top-level `vendor/` directory in a Go module: its presence switches
+the go command into vendoring mode.
 
 Classes you write in your own templates (including a component's `Class`
 field) are still picked up by Tailwind's normal scan of your sources; add
