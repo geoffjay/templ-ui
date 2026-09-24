@@ -11,6 +11,8 @@ import (
 )
 
 import (
+	"fmt"
+
 	"github.com/geoffjay/templ-ui/daisyui"
 	"github.com/iota-uz/icons/phosphor"
 )
@@ -60,15 +62,16 @@ const defaultThemeStorageKey = "appshell-theme"
 // AppShellConfig configures an AppShell container. Title and TitleHref are
 // rendered as the navbar brand. NavItems are rendered in the navbar-end region.
 // MenuItems are rendered in the sidebar as a flat vertical menu (rendered
-// above any NavSections). NavSections, when set, renders additional titled
-// groups of items below the flat menu — use this for documentation-style
-// sidebars grouped by category. Content is the page content rendered in the
-// main region. SidebarState is the initial sidebar state (overridden by
-// localStorage on the client). HeaderExtra, when set, is rendered in the
-// navbar-end before NavItems (e.g. a theme toggle). Theme, when set with both
-// LightTheme and DarkTheme, renders a sun/moon swap toggle in the navbar-end
-// and emits restore/persist scripts so the chosen theme survives reloads.
-// Resolver, when set, is used to build all hrefs.
+// above any NavSections) and in the mobile menu on small screens. NavSections,
+// when set, renders additional titled groups of items below the flat menu —
+// use this for documentation-style sidebars grouped by category. Content is
+// the page content rendered in the main region. SidebarState is the initial
+// sidebar state (overridden by localStorage on the client; only honored at
+// the large breakpoint). HeaderExtra, when set, is rendered in the navbar-end
+// before NavItems (e.g. a theme toggle). Theme, when set with both LightTheme
+// and DarkTheme, renders a sun/moon swap toggle in the navbar-end and emits
+// restore/persist scripts so the chosen theme survives reloads. Resolver, when
+// set, is used to build all hrefs.
 type AppShellConfig struct {
 	Title        string
 	TitleHref    string
@@ -87,10 +90,22 @@ type AppShellConfig struct {
 // closed) persisted to localStorage. The page content fills the remaining
 // height and width and scrolls behind the fixed header.
 //
+// The shell is responsive across three ranges: small (<md) hides the sidebar
+// entirely and shows a hamburger button in the header that opens a menu
+// expanding from the top down below the header; medium (md–lg) renders the
+// sidebar as a collapsed icon rail; large (lg and up) renders the sidebar per
+// its persisted state.
+//
 // When cfg.Theme is configured (both LightTheme and DarkTheme set) a
 // theme-restore script runs before paint to apply the saved theme, a sun/moon
 // swap toggle is rendered in the navbar-end, and a persist script syncs the
 // toggle state and writes the chosen theme to localStorage on change.
+
+// appShellSeq assigns each AppShell instance a monotonically increasing id so
+// its script can scope DOM queries to its own root even when multiple shells
+// (or shells nested inside another shell's content) are on one page.
+var appShellSeq int
+
 func AppShell(cfg AppShellConfig) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -112,6 +127,7 @@ func AppShell(cfg AppShellConfig) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		appshellID := nextAppShellID()
 		if hasTheme(cfg.Theme) {
 			templ_7745c5c3_Err = themeConfigScript(cfg.Theme).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
@@ -126,7 +142,20 @@ func AppShell(cfg AppShellConfig) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"h-screen w-full flex flex-col overflow-hidden\" data-appshell=\"root\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div id=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(appshellID)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 106, Col: 17}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"h-screen w-full flex flex-col overflow-hidden\" data-appshell=\"root\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -134,7 +163,11 @@ func AppShell(cfg AppShellConfig) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"flex flex-1 min-h-0\">")
+		templ_7745c5c3_Err = AppShellMobileMenu(cfg).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"flex flex-1 min-h-0\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -146,11 +179,11 @@ func AppShell(cfg AppShellConfig) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = AppShellScript(sidebarStateValue(cfg.SidebarState), sidebarStorageKey).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = AppShellScript(sidebarStateValue(cfg.SidebarState), sidebarStorageKey, appshellID).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -162,6 +195,16 @@ func AppShell(cfg AppShellConfig) templ.Component {
 		}
 		return nil
 	})
+}
+
+// nextAppShellID returns the next AppShell instance id, rendered into the
+// root div id and passed to the script as a pure expression (templ only
+// hoists `x := ...` declarations when they are the very first statements of
+// the template body; an if block ahead of them makes the declaration render
+// as literal text, so a helper keeps the body expression-only).
+func nextAppShellID() string {
+	appShellSeq++
+	return fmt.Sprintf("appshell-%d", appShellSeq)
 }
 
 // hasTheme reports whether cfg has both a light and dark theme configured, the
@@ -217,9 +260,10 @@ func resolveHref(r daisyui.URLResolver, href string) templ.SafeURL {
 }
 
 // AppShellHeader renders the fixed full-width navbar. The start region contains
-// the sidebar toggle button (Aperture icon) followed by the brand title. The
-// end region renders the theme toggle (when configured), then HeaderExtra
-// (when set), followed by NavItems.
+// the hamburger button (small screens only) followed by the sidebar toggle
+// button (large screens only) and the brand title. The end region renders the
+// theme toggle (when configured), then HeaderExtra (when set), followed by
+// NavItems.
 func AppShellHeader(cfg AppShellConfig) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -236,9 +280,9 @@ func AppShellHeader(cfg AppShellConfig) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = daisyui.Navbar(daisyui.NavbarData{
@@ -247,8 +291,44 @@ func AppShellHeader(cfg AppShellConfig) templ.Component {
 			End:        cfg.NavItems,
 			EndExtra:   appShellHeaderExtra(cfg),
 			Resolver:   cfg.Resolver,
-			StartExtra: AppShellSidebarToggle(),
+			StartExtra: appShellHeaderStart(),
 		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+// appShellHeaderStart composes the navbar-start extra region: the mobile menu
+// hamburger button (visible on small screens) and the sidebar toggle button
+// (visible at the large breakpoint and up).
+func appShellHeaderStart() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = AppShellMobileToggle().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AppShellSidebarToggle().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -275,9 +355,9 @@ func appShellHeaderExtra(cfg AppShellConfig) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		if hasTheme(cfg.Theme) {
@@ -318,25 +398,25 @@ func themeSwapToggle(theme ThemeConfig) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var4 == nil {
-			templ_7745c5c3_Var4 = templ.NopComponent
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<label class=\"swap swap-rotate btn btn-ghost btn-circle\" aria-label=\"Toggle theme\"><input type=\"checkbox\" class=\"theme-controller\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<label class=\"swap swap-rotate btn btn-ghost btn-circle\" aria-label=\"Toggle theme\"><input type=\"checkbox\" class=\"theme-controller\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(theme.DarkTheme)
+		var templ_7745c5c3_Var7 string
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(theme.DarkTheme)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 192, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 229, Col: 73}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" autocomplete=\"off\"> <svg class=\"swap-off h-5 w-5 fill-current\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z\"></path></svg> <svg class=\"swap-on h-5 w-5 fill-current\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z\"></path></svg></label>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" autocomplete=\"off\"> <svg class=\"swap-off h-5 w-5 fill-current\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z\"></path></svg> <svg class=\"swap-on h-5 w-5 fill-current\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z\"></path></svg></label>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -375,9 +455,9 @@ func themeConfigScript(theme ThemeConfig) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var6 == nil {
-			templ_7745c5c3_Var6 = templ.NopComponent
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templ.JSONScript(themeConfigID, themeConfigPayload{
@@ -424,12 +504,12 @@ func themeRestoreScript(theme ThemeConfig) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var7 == nil {
-			templ_7745c5c3_Var7 = templ.NopComponent
+		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var9 == nil {
+			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<script nonce=\"\">\n\t\t(function () {\n\t\t\ttry {\n\t\t\t\tvar cfg = JSON.parse(\n\t\t\t\t\tdocument.getElementById(\"appshell-theme-config\").textContent\n\t\t\t\t);\n\t\t\t\tvar t = localStorage.getItem(cfg.storageKey);\n\t\t\t\tif (t === cfg.light || t === cfg.dark) {\n\t\t\t\t\tdocument.documentElement.setAttribute(\"data-theme\", t);\n\t\t\t\t}\n\t\t\t} catch (e) {\n\t\t\t\t/* storage disabled */\n\t\t\t}\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<script nonce=\"\">\n\t\t(function () {\n\t\t\ttry {\n\t\t\t\tvar cfg = JSON.parse(\n\t\t\t\t\tdocument.getElementById(\"appshell-theme-config\").textContent\n\t\t\t\t);\n\t\t\t\tvar t = localStorage.getItem(cfg.storageKey);\n\t\t\t\tif (t === cfg.light || t === cfg.dark) {\n\t\t\t\t\tdocument.documentElement.setAttribute(\"data-theme\", t);\n\t\t\t\t}\n\t\t\t} catch (e) {\n\t\t\t\t/* storage disabled */\n\t\t\t}\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -458,12 +538,12 @@ func themePersistScript(theme ThemeConfig) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var8 == nil {
-			templ_7745c5c3_Var8 = templ.NopComponent
+		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var10 == nil {
+			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<script nonce=\"\">\n\t\t(function () {\n\t\t\tvar cfg;\n\t\t\ttry {\n\t\t\t\tcfg = JSON.parse(\n\t\t\t\t\tdocument.getElementById(\"appshell-theme-config\").textContent\n\t\t\t\t);\n\t\t\t} catch (e) {\n\t\t\t\treturn;\n\t\t\t}\n\t\t\tvar cb = document.querySelector(\".swap .theme-controller\");\n\t\t\tif (!cb) return;\n\t\t\tcb.checked =\n\t\t\t\tdocument.documentElement.getAttribute(\"data-theme\") === cfg.dark;\n\t\t\tcb.addEventListener(\"change\", function () {\n\t\t\t\tvar next = cb.checked ? cfg.dark : cfg.light;\n\t\t\t\tdocument.documentElement.setAttribute(\"data-theme\", next);\n\t\t\t\ttry {\n\t\t\t\t\tlocalStorage.setItem(cfg.storageKey, next);\n\t\t\t\t} catch (e) {}\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<script nonce=\"\">\n\t\t(function () {\n\t\t\tvar cfg;\n\t\t\ttry {\n\t\t\t\tcfg = JSON.parse(\n\t\t\t\t\tdocument.getElementById(\"appshell-theme-config\").textContent\n\t\t\t\t);\n\t\t\t} catch (e) {\n\t\t\t\treturn;\n\t\t\t}\n\t\t\tvar cb = document.querySelector(\".swap .theme-controller\");\n\t\t\tif (!cb) return;\n\t\t\tcb.checked =\n\t\t\t\tdocument.documentElement.getAttribute(\"data-theme\") === cfg.dark;\n\t\t\tcb.addEventListener(\"change\", function () {\n\t\t\t\tvar next = cb.checked ? cfg.dark : cfg.light;\n\t\t\t\tdocument.documentElement.setAttribute(\"data-theme\", next);\n\t\t\t\ttry {\n\t\t\t\t\tlocalStorage.setItem(cfg.storageKey, next);\n\t\t\t\t} catch (e) {}\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -472,8 +552,10 @@ func themePersistScript(theme ThemeConfig) templ.Component {
 }
 
 // AppShellSidebarToggle renders the icon button in the header that toggles the
-// sidebar between its current state and closed. Uses the phosphor Aperture
-// icon.
+// sidebar between its current state and closed. Visible only at the large
+// breakpoint where the persisted sidebar state applies — medium screens show a
+// fixed collapsed rail and small screens show the AppShellMobileToggle
+// hamburger instead. Uses the phosphor Aperture icon.
 func AppShellSidebarToggle() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -490,12 +572,12 @@ func AppShellSidebarToggle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var9 == nil {
-			templ_7745c5c3_Var9 = templ.NopComponent
+		templ_7745c5c3_Var11 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var11 == nil {
+			templ_7745c5c3_Var11 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<button type=\"button\" class=\"btn btn-ghost btn-circle\" aria-label=\"Toggle sidebar\" data-appshell=\"toggle\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<button type=\"button\" class=\"btn btn-ghost btn-circle hidden lg:inline-flex\" aria-label=\"Toggle sidebar\" data-appshell=\"toggle\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -503,7 +585,7 @@ func AppShellSidebarToggle() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -511,14 +593,189 @@ func AppShellSidebarToggle() templ.Component {
 	})
 }
 
-// AppShellSidebar renders the left navigation sidebar. The sidebar width
-// transitions between open (w-64), collapsed (w-16), and closed (w-0). When
-// MenuItems are set they render as a flat vertical menu at the top. When
-// NavSections are set each section renders with a menu-title heading followed
-// by its items. The menu-entry spans carry data-appshell="menu-label" so CSS
-// hides labels and centers icons in the collapsed state. A collapse toggle
-// button is pinned to the bottom of the sidebar and switches between open and
-// collapsed using the phosphor CaretCircleLeft / CaretCircleRight icons.
+// AppShellMobileToggle renders the hamburger icon button in the header,
+// visible only below the medium breakpoint, that opens the top-down mobile
+// menu. The icon swaps between List (menu closed) and X (menu open);
+// AppShellScript's setMobileMenu flips the two spans. Uses phosphor List / X.
+func AppShellMobileToggle() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var12 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var12 == nil {
+			templ_7745c5c3_Var12 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<button type=\"button\" class=\"btn btn-ghost btn-circle md:hidden\" aria-label=\"Toggle menu\" aria-expanded=\"false\" data-appshell=\"mobile-toggle\"><span data-appshell=\"mobile-icon-list\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = phosphor.List(phosphor.Props{Size: "24", Variant: phosphor.Regular}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</span> <span data-appshell=\"mobile-icon-close\" class=\"hidden\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = phosphor.X(phosphor.Props{Size: "24", Variant: phosphor.Regular}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</span></button>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+// AppShellMobileMenu renders the menu that expands from the top down directly
+// below the header on small screens (<md; hidden from the medium breakpoint
+// up). It lists the same MenuItems and NavSections as the sidebar. The
+// expansion animates via a grid-template-rows 0fr→1fr transition keyed off the
+// data-open attribute; AppShellScript toggles the attribute from the
+// hamburger button and closes the menu when a link inside is clicked or when
+// the viewport leaves the small range.
+func AppShellMobileMenu(cfg AppShellConfig) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var13 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var13 == nil {
+			templ_7745c5c3_Var13 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"md:hidden bg-base-100\" data-appshell=\"mobile-menu\" data-open=\"false\"><style>\n\t\t\t/* Scoped to the small range so it never fights the md:hidden\n\t\t\t   utility: below md the menu expands top-down via a\n\t\t\t   grid-template-rows 0fr→1fr transition; at md and up\n\t\t\t   Tailwind hides the element entirely. */\n\t\t\t@media (max-width: 767px) {\n\t\t\t\t[data-appshell=\"mobile-menu\"] {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-rows: 0fr;\n\t\t\t\t\ttransition: grid-template-rows 300ms ease;\n\t\t\t\t}\n\t\t\t\t[data-appshell=\"mobile-menu\"][data-open=\"true\"] {\n\t\t\t\t\tgrid-template-rows: 1fr;\n\t\t\t\t}\n\t\t\t}\n\t\t</style><nav class=\"overflow-hidden min-h-0 border-b border-base-300\" data-appshell=\"mobile-menu-inner\"><ul class=\"menu w-full p-4 bg-base-100\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		for _, item := range cfg.MenuItems {
+			templ_7745c5c3_Var14 := []any{menuDisabledLiClass(item.Disabled)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var14...)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<li class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var15 string
+			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var14).String())
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 1, Col: 0}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = menuEntry(item, cfg).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</li>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		for _, section := range cfg.NavSections {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<li class=\"menu-title\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var16 string
+			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(section.Title)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 404, Col: 43}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</li>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for _, item := range section.Items {
+				templ_7745c5c3_Var17 := []any{menuDisabledLiClass(item.Disabled)}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var17...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<li class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var18 string
+				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var17).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = menuEntry(item, cfg).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</li>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</ul></nav></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+// AppShellSidebar renders the left navigation sidebar, hidden below the
+// medium breakpoint (small screens use the AppShellMobileMenu instead). The
+// sidebar width transitions between open (w-64), collapsed (w-16), and
+// closed (w-0); from md to lg the script forces the collapsed icon rail, and
+// at lg and up the persisted state applies. When MenuItems are set they
+// render as a flat vertical menu at the top. When NavSections are set each
+// section renders with a menu-title heading followed by its items. The
+// menu-entry spans carry data-appshell="menu-label" so CSS hides labels and
+// centers icons in the collapsed state. A collapse toggle button is pinned to
+// the bottom of the sidebar and switches between open and collapsed using the
+// phosphor CaretCircleLeft / CaretCircleRight icons.
 func AppShellSidebar(cfg AppShellConfig) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -535,48 +792,48 @@ func AppShellSidebar(cfg AppShellConfig) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var10 == nil {
-			templ_7745c5c3_Var10 = templ.NopComponent
+		templ_7745c5c3_Var19 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var19 == nil {
+			templ_7745c5c3_Var19 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<aside class=\"flex flex-col bg-base-200 border-r border-base-300 transition-all duration-300 overflow-hidden shrink-0\" data-appshell=\"sidebar\" data-state=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<aside class=\"hidden md:flex flex-col bg-base-200 border-r border-base-300 transition-all duration-300 overflow-hidden shrink-0\" data-appshell=\"sidebar\" data-state=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(sidebarStateValue(cfg.SidebarState))
+		var templ_7745c5c3_Var20 string
+		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.ResolveAttributeValue(sidebarStateValue(cfg.SidebarState))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 316, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 431, Col: 50}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var20)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\"><style>\n\t\t\t[data-appshell=\"sidebar\"][data-state=\"collapsed\"]\n\t\t\t\t[data-appshell=\"menu-label\"] {\n\t\t\t\tdisplay: none;\n\t\t\t}\n\t\t\t[data-appshell=\"sidebar\"][data-state=\"collapsed\"]\n\t\t\t\t[data-appshell=\"menu-entry\"] {\n\t\t\t\tjustify-content: center;\n\t\t\t}\n\t\t\t[data-appshell=\"sidebar\"][data-state=\"collapsed\"]\n\t\t\t\t[data-appshell=\"section-title\"] {\n\t\t\t\tdisplay: none;\n\t\t\t}\n\t\t</style><nav class=\"flex-1 overflow-y-auto py-4\"><ul class=\"menu menu-vertical bg-base-200 w-full\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\"><style>\n\t\t\t[data-appshell=\"sidebar\"][data-state=\"collapsed\"]\n\t\t\t\t[data-appshell=\"menu-label\"] {\n\t\t\t\tdisplay: none;\n\t\t\t}\n\t\t\t[data-appshell=\"sidebar\"][data-state=\"collapsed\"]\n\t\t\t\t[data-appshell=\"menu-entry\"] {\n\t\t\t\tjustify-content: center;\n\t\t\t}\n\t\t\t[data-appshell=\"sidebar\"][data-state=\"collapsed\"]\n\t\t\t\t[data-appshell=\"section-title\"] {\n\t\t\t\tdisplay: none;\n\t\t\t}\n\t\t</style><nav class=\"flex-1 overflow-y-auto py-4\"><ul class=\"menu menu-vertical bg-base-200 w-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, item := range cfg.MenuItems {
-			templ_7745c5c3_Var12 := []any{menuDisabledLiClass(item.Disabled)}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var12...)
+			templ_7745c5c3_Var21 := []any{menuDisabledLiClass(item.Disabled)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var21...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<li class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<li class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var13 string
-			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var12).String())
+			var templ_7745c5c3_Var22 string
+			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var21).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var22)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -584,49 +841,49 @@ func AppShellSidebar(cfg AppShellConfig) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
 		for _, section := range cfg.NavSections {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<li class=\"menu-title\" data-appshell=\"section-title\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<li class=\"menu-title\" data-appshell=\"section-title\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var14 string
-			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(section.Title)
+			var templ_7745c5c3_Var23 string
+			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(section.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 340, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 455, Col: 73}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, item := range section.Items {
-				templ_7745c5c3_Var15 := []any{menuDisabledLiClass(item.Disabled)}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var15...)
+				templ_7745c5c3_Var24 := []any{menuDisabledLiClass(item.Disabled)}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var24...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<li class=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<li class=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var16 string
-				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var15).String())
+				var templ_7745c5c3_Var25 string
+				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var24).String())
 				if templ_7745c5c3_Err != nil {
 					return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 1, Col: 0}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var25)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -634,13 +891,13 @@ func AppShellSidebar(cfg AppShellConfig) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</li>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</ul></nav><div class=\"p-2 border-t border-base-300\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</ul></nav><div class=\"p-2 border-t border-base-300 hidden lg:block\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -648,7 +905,7 @@ func AppShellSidebar(cfg AppShellConfig) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div></aside>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</div></aside>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -676,49 +933,49 @@ func menuEntry(item daisyui.MenuItem, cfg AppShellConfig) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var17 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var17 == nil {
-			templ_7745c5c3_Var17 = templ.NopComponent
+		templ_7745c5c3_Var26 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var26 == nil {
+			templ_7745c5c3_Var26 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		if item.Href != "" {
-			templ_7745c5c3_Var18 := []any{menuEntryClass(item)}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var18...)
+			templ_7745c5c3_Var27 := []any{menuEntryClass(item)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var27...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var19 templ.SafeURL
-			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinURLErrs(resolveHref(cfg.Resolver, item.Href))
+			var templ_7745c5c3_Var28 templ.SafeURL
+			templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinURLErrs(resolveHref(cfg.Resolver, item.Href))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 362, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 477, Col: 46}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\" class=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var20 string
-			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var18).String())
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\" class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var29 string
+			templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var27).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var20)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var29)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\" data-appshell=\"menu-entry\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "\" data-appshell=\"menu-entry\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if item.Icon != nil {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<span class=\"shrink-0\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<span class=\"shrink-0\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -726,63 +983,63 @@ func menuEntry(item daisyui.MenuItem, cfg AppShellConfig) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</span> ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</span> ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<span data-appshell=\"menu-label\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<span data-appshell=\"menu-label\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var21 string
-			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
+			var templ_7745c5c3_Var30 string
+			templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 371, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 486, Col: 48}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</span></a>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</span></a>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Var22 := []any{menuEntryClass(item)}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var22...)
+			templ_7745c5c3_Var31 := []any{menuEntryClass(item)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var31...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<button class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<button class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var23 string
-			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var22).String())
+			var templ_7745c5c3_Var32 string
+			templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var31).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var23)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var32)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" data-appshell=\"menu-entry\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "\" data-appshell=\"menu-entry\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if item.Disabled {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, " disabled")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, " disabled")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, ">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, ">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if item.Icon != nil {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<span class=\"shrink-0\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<span class=\"shrink-0\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -790,25 +1047,25 @@ func menuEntry(item daisyui.MenuItem, cfg AppShellConfig) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</span> ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</span> ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<span data-appshell=\"menu-label\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<span data-appshell=\"menu-label\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var24 string
-			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
+			var templ_7745c5c3_Var33 string
+			templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 384, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `containers/appshell.templ`, Line: 499, Col: 48}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</span></button>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</span></button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -820,7 +1077,8 @@ func menuEntry(item daisyui.MenuItem, cfg AppShellConfig) templ.Component {
 // AppShellCollapseToggle renders the icon button pinned to the bottom of the
 // sidebar that toggles between the open and collapsed states. The icon flips
 // between CaretCircleLeft (open state, click to collapse) and
-// CaretCircleRight (collapsed state, click to expand).
+// CaretCircleRight (collapsed state, click to expand). Only visible at the
+// large breakpoint; below it the sidebar renders as a fixed collapsed rail.
 func AppShellCollapseToggle() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -837,12 +1095,12 @@ func AppShellCollapseToggle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var25 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var25 == nil {
-			templ_7745c5c3_Var25 = templ.NopComponent
+		templ_7745c5c3_Var34 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var34 == nil {
+			templ_7745c5c3_Var34 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<button type=\"button\" class=\"btn btn-ghost btn-circle w-full\" aria-label=\"Collapse sidebar\" data-appshell=\"collapse\"><span data-appshell=\"collapse-icon-open\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<button type=\"button\" class=\"btn btn-ghost btn-circle w-full\" aria-label=\"Collapse sidebar\" data-appshell=\"collapse\"><span data-appshell=\"collapse-icon-open\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -850,7 +1108,7 @@ func AppShellCollapseToggle() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</span> <span data-appshell=\"collapse-icon-collapsed\" class=\"hidden\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</span> <span data-appshell=\"collapse-icon-collapsed\" class=\"hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -858,7 +1116,7 @@ func AppShellCollapseToggle() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</span></button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</span></button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -884,12 +1142,12 @@ func AppShellContent(cfg AppShellConfig) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var26 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var26 == nil {
-			templ_7745c5c3_Var26 = templ.NopComponent
+		templ_7745c5c3_Var35 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var35 == nil {
+			templ_7745c5c3_Var35 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<main class=\"flex-1 min-w-0 overflow-y-auto bg-base-200\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<main class=\"flex-1 min-w-0 overflow-y-auto bg-base-200\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -899,7 +1157,7 @@ func AppShellContent(cfg AppShellConfig) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -907,23 +1165,40 @@ func AppShellContent(cfg AppShellConfig) templ.Component {
 	})
 }
 
-// AppShellScript wires up sidebar state transitions and localStorage
-// persistence. The initial state is read from localStorage (falling back to
-// the provided initialState) and applied on load. Click handlers are attached
-// to the header toggle (data-appshell="toggle") and the sidebar collapse
-// button (data-appshell="collapse") via addEventListener.
-func AppShellScript(initialState string, storageKey string) templ.ComponentScript {
+// AppShellScript wires up sidebar state transitions, localStorage
+// persistence, and responsive breakpoint behavior. The persisted state (read
+// from localStorage, falling back to the provided initialState) applies only
+// at the large breakpoint; at medium the sidebar is forced to the collapsed
+// icon rail, and at small the sidebar is display:none via CSS and the mobile
+// menu takes over. Viewport changes are tracked with matchMedia so crossing a
+// breakpoint re-applies the right state without a reload.
+//
+// Click handlers are attached to the header sidebar toggle
+// (data-appshell="toggle"), the hamburger button (data-appshell="mobile-toggle"),
+// and the sidebar collapse button (data-appshell="collapse") via
+// addEventListener. The mobile menu closes when any link inside it is clicked.
+// The media queries must stay in sync with the md/lg Tailwind tokens used in
+// the markup. rootID is the unique id AppShell assigns to its root div; the
+// script scopes every query to that element so multiple shells (including
+// shells nested inside another shell's content region) never interfere.
+func AppShellScript(initialState string, storageKey string, rootID string) templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_AppShellScript_d2e1`,
-		Function: `function __templ_AppShellScript_d2e1(initialState, storageKey){const states = { open: "open", collapsed: "collapsed", closed: "closed" };
+		Name: `__templ_AppShellScript_8082`,
+		Function: `function __templ_AppShellScript_8082(initialState, storageKey, rootID){const states = { open: "open", collapsed: "collapsed", closed: "closed" };
 	const widths = { open: "w-64", collapsed: "w-16", closed: "w-0" };
-	const root = document.currentScript.closest("[data-appshell='root']") || document;
+	const root = document.getElementById(rootID) || document;
 	const sidebar = root.querySelector('[data-appshell="sidebar"]');
 	const toggleBtn = root.querySelector('[data-appshell="toggle"]');
 	const collapseBtn = root.querySelector('[data-appshell="collapse"]');
 	const iconOpen = root.querySelector('[data-appshell="collapse-icon-open"]');
 	const iconCollapsed = root.querySelector('[data-appshell="collapse-icon-collapsed"]');
-	let lastOpen = states.open;
+	const mobileToggle = root.querySelector('[data-appshell="mobile-toggle"]');
+	const mobileMenu = root.querySelector('[data-appshell="mobile-menu"]');
+	const mobileIconList = root.querySelector('[data-appshell="mobile-icon-list"]');
+	const mobileIconClose = root.querySelector('[data-appshell="mobile-icon-close"]');
+	const mdQuery = window.matchMedia("(min-width: 768px)");
+	const lgQuery = window.matchMedia("(min-width: 1024px)");
+	let persisted = readState();
 
 	function readState() {
 		const saved = localStorage.getItem(storageKey);
@@ -948,41 +1223,76 @@ func AppShellScript(initialState string, storageKey string) templ.ComponentScrip
 		}
 	}
 
-	function currentState() {
-		return sidebar ? sidebar.dataset.state : readState();
+	function setMobileMenu(open) {
+		if (!mobileMenu) return;
+		mobileMenu.dataset.open = open ? "true" : "false";
+		if (mobileToggle) {
+			mobileToggle.setAttribute("aria-expanded", open ? "true" : "false");
+		}
+		if (mobileIconList && mobileIconClose) {
+			mobileIconList.classList.toggle("hidden", open);
+			mobileIconClose.classList.toggle("hidden", !open);
+		}
 	}
 
 	function toggleSidebar() {
-		const cur = currentState();
-		if (cur === states.closed) {
-			const next = lastOpen || states.open;
-			applyState(next);
-			writeState(next);
-		} else {
-			lastOpen = cur;
-			applyState(states.closed);
-			writeState(states.closed);
+		const cur = sidebar ? sidebar.dataset.state : persisted;
+		persisted = cur === states.closed ? states.open : states.closed;
+		if (lgQuery.matches) {
+			applyState(persisted);
+			writeState(persisted);
 		}
 	}
 
 	function toggleCollapse() {
-		const cur = currentState();
+		const cur = sidebar ? sidebar.dataset.state : persisted;
 		if (cur === states.closed) return;
 		const next = cur === states.open ? states.collapsed : states.open;
-		lastOpen = next;
+		persisted = next;
 		applyState(next);
 		writeState(next);
 	}
 
+	function syncViewport() {
+		if (lgQuery.matches) {
+			applyState(persisted);
+		} else if (mdQuery.matches) {
+			applyState(states.collapsed);
+		} else {
+			setMobileMenu(false);
+		}
+	}
+
 	if (toggleBtn) toggleBtn.addEventListener("click", toggleSidebar);
 	if (collapseBtn) collapseBtn.addEventListener("click", toggleCollapse);
+	if (mobileToggle) {
+		mobileToggle.addEventListener("click", function () {
+			setMobileMenu(mobileMenu.dataset.open !== "true");
+		});
+	}
+	if (mobileMenu) {
+		mobileMenu
+			.querySelectorAll('[data-appshell="menu-entry"][href]')
+			.forEach(function (entry) {
+				entry.addEventListener("click", function () {
+					setMobileMenu(false);
+				});
+			});
+	}
 
-	const initial = readState();
-	if (initial !== states.closed) lastOpen = initial;
-	applyState(initial);
+	if (mdQuery.addEventListener) {
+		mdQuery.addEventListener("change", syncViewport);
+		lgQuery.addEventListener("change", syncViewport);
+	} else {
+		/* Safari < 14 */
+		mdQuery.addListener(syncViewport);
+		lgQuery.addListener(syncViewport);
+	}
+
+	syncViewport();
 }`,
-		Call:       templ.SafeScript(`__templ_AppShellScript_d2e1`, initialState, storageKey),
-		CallInline: templ.SafeScriptInline(`__templ_AppShellScript_d2e1`, initialState, storageKey),
+		Call:       templ.SafeScript(`__templ_AppShellScript_8082`, initialState, storageKey, rootID),
+		CallInline: templ.SafeScriptInline(`__templ_AppShellScript_8082`, initialState, storageKey, rootID),
 	}
 }
 

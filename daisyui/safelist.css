@@ -188,7 +188,7 @@
 @source inline("avatar avatar-group avatar-offline avatar-online avatar-placeholder");
 @source inline("badge badge-accent badge-dash badge-error badge-ghost badge-info badge-lg badge-md badge-neutral badge-outline badge-primary badge-secondary badge-sm badge-soft badge-success badge-warning badge-xl badge-xs");
 @source inline("bg-base-100 bg-base-200 bg-base-200/50 bg-base-300 bg-error/20 bg-green-500 bg-neutral bg-neutral-900 bg-orange-400 bg-primary bg-success/20 bg-teal-400 bg-warning hover:bg-base-300");
-@source inline("block");
+@source inline("block lg:block");
 @source inline("blur");
 @source inline("border border-4 border-[#ff8938] border-b border-base-300 border-indigo-600 border-primary border-r border-t");
 @source inline("breadcrumbs");
@@ -217,7 +217,7 @@
 @source inline("fill-current");
 @source inline("filter filter-reset");
 @source inline("fixed");
-@source inline("flex flex-1 flex-col lg:flex lg:flex-row");
+@source inline("flex flex-1 flex-col lg:flex lg:flex-row md:flex");
 @source inline("floating-label");
 @source inline("font-bold font-mono font-semibold");
 @source inline("footer footer-center footer-horizontal footer-title footer-vertical sm:footer-horizontal");
@@ -228,11 +228,11 @@
 @source inline("h-24 h-32 h-4 h-5 h-80 h-96 h-screen");
 @source inline("has-event");
 @source inline("hero hero-content hero-overlay");
-@source inline("hidden");
+@source inline("hidden md:hidden");
 @source inline("hover-3d hover-gallery");
 @source inline("image-full");
 @source inline("indicator indicator-bottom indicator-center indicator-end indicator-item indicator-middle indicator-start indicator-top");
-@source inline("inline inline-flex");
+@source inline("inline inline-flex lg:inline-flex");
 @source inline("input input-accent input-error input-ghost input-info input-lg input-md input-neutral input-primary input-secondary input-sm input-success input-warning input-xl input-xs");
 @source inline("is-bound is-disabled is-endrange is-hidden is-inrange is-outside-current-month is-selected is-selection-disabled is-startrange is-today");
 @source inline("italic");
@@ -312,7 +312,7 @@
 @source inline("top-1/2 top-2");
 @source inline("tracking-wide");
 @source inline("transform");
-@source inline("transition-all");
+@source inline("transition transition-all");
 @source inline("truncate");
 @source inline("underline");
 @source inline("validator validator-hint");

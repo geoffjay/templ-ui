@@ -22,7 +22,7 @@ func init() {
 	registry.Register(registry.Entry{
 		Slug:        "appshell",
 		Name:        "AppShell",
-		Description: "A full-height application shell with a fixed navbar, a three-state collapsible sidebar, and theme persistence.",
+		Description: "A responsive application shell: fixed navbar, three-state sidebar on large screens, icon rail on medium, and a top-down mobile menu on small.",
 		Category:    "containers",
 		Body:        appshellBody,
 	})

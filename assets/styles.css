@@ -47,6 +47,111 @@
     nord-dark;
 }
 
+@plugin "daisyui/theme" {
+  name: "kanagawa-light";
+  default: false;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: #c8c093;
+  --color-base-200: #dcd7ba;
+  --color-base-300: #c8c093;
+  --color-base-content: #16161d;
+  --color-primary: #54546d;
+  --color-primary-content: #c8c093;
+  --color-secondary: #76946a;
+  --color-secondary-content: #c8c093;
+  --color-accent: #658594;
+  --color-accent-content: #c8c093;
+  --color-neutral: #2a2a37;
+  --color-neutral-content: #dcd7ba;
+  --color-info: #7aa89f;
+  --color-info-content: #16161d;
+  --color-success: #98bb6c;
+  --color-success-content: #16161d;
+  --color-warning: #ffa066;
+  --color-warning-content: #16161d;
+  --color-error: #e46876;
+  --color-error-content: #16161d;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.3125rem;
+  --size-field: 0.3125rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 1;
+}
+
+@plugin "daisyui/theme" {
+  name: "kanagawa-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: #2a2a37;
+  --color-base-200: #16161d;
+  --color-base-300: #1f1f28;
+  --color-base-content: #c8c093;
+  --color-primary: #54546d;
+  --color-primary-content: #c8c093;
+  --color-secondary: #76946a;
+  --color-secondary-content: #c8c093;
+  --color-accent: #658594;
+  --color-accent-content: #c8c093;
+  --color-neutral: oklch(26% 0 0);
+  --color-neutral-content: #dcd7ba;
+  --color-info: #7aa89f;
+  --color-info-content: #16161d;
+  --color-success: #98bb6c;
+  --color-success-content: #16161d;
+  --color-warning: #ffa066;
+  --color-warning-content: #16161d;
+  --color-error: #e46876;
+  --color-error-content: #16161d;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.3125rem;
+  --size-field: 0.3125rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 1;
+}
+
+@plugin "daisyui/theme" {
+  name: "nord-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(24.399% 0.016 264.182);
+  --color-base-200: oklch(20.876% 0.018 263.844);
+  --color-base-300: oklch(17.362% 0.019 264.131);
+  --color-base-content: oklch(89.925% 0.016 262.749);
+  --color-primary: oklch(59.435% 0.077 254.027);
+  --color-primary-content: oklch(95.127% 0.007 260.731);
+  --color-secondary: oklch(69.651% 0.059 248.687);
+  --color-secondary-content: oklch(95.127% 0.007 260.731);
+  --color-accent: oklch(77.464% 0.062 217.469);
+  --color-accent-content: oklch(24.399% 0.016 264.182);
+  --color-neutral: oklch(32.437% 0.022 264.182);
+  --color-neutral-content: oklch(89.925% 0.016 262.749);
+  --color-info: oklch(69.207% 0.062 332.664);
+  --color-info-content: oklch(17.362% 0.019 264.131);
+  --color-success: oklch(76.827% 0.074 131.063);
+  --color-success-content: oklch(17.362% 0.019 264.131);
+  --color-warning: oklch(85.486% 0.089 84.093);
+  --color-warning-content: oklch(17.362% 0.019 264.131);
+  --color-error: oklch(60.61% 0.12 15.341);
+  --color-error-content: oklch(95.127% 0.007 260.731);
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
 /* User styles */
 
 :root {

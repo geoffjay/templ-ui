@@ -171,6 +171,15 @@ browser deduplicates module scripts by `src`, so both tags coexist safely.
 - `Resolver daisyui.URLResolver` optionally rewrites all hrefs (jughead
   uses it for site-prefix-aware links).
 
+The shell is responsive with three breakpoint ranges (Tailwind `md`/`lg`):
+
+- **small** (<768px): the sidebar is hidden, the header shows a hamburger
+  button instead of the sidebar toggle, and the hamburger opens a menu that
+  expands from the top down below the header.
+- **medium** (768–1023px): the sidebar renders as a collapsed icon rail.
+- **large** (>=1024px): the sidebar renders per its persisted
+  open/collapsed/closed state.
+
 ## 5. What the components expect at runtime
 
 | Component | Requires |
