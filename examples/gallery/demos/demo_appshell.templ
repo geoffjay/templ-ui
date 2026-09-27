@@ -32,10 +32,25 @@ templ appshellBody() {
 		StorageKey: "appshell-demo.theme",
 	},
 })`, appshellDemoFrame())
-	@gallery.Section("Sidebar sections", `NavSections: []containers.NavSection{
-	{Title: "Main", Items: []daisyui.MenuItem{...}},
-	{Title: "Admin", Items: []daisyui.MenuItem{...}},
-}`, appshellDemoFrame())
+	@gallery.Section("Sidebar sections", `@containers.AppShell(containers.AppShellConfig{
+	Title: "My App",
+	NavSections: []containers.NavSection{
+		{Title: "Main", Items: []daisyui.MenuItem{
+			{Label: "Dashboard", Href: "#dashboard", Icon: icons.House(icons.Props{Size: "20", Variant: icons.Regular})},
+			{Label: "Components", Href: "#components", Icon: icons.Cube(icons.Props{Size: "20", Variant: icons.Regular})},
+		}},
+		{Title: "Admin", Items: []daisyui.MenuItem{
+			{Label: "Analytics", Href: "#analytics", Icon: icons.ChartBar(icons.Props{Size: "20", Variant: icons.Regular})},
+			{Label: "Settings", Href: "#settings", Icon: icons.Gear(icons.Props{Size: "20", Variant: icons.Regular})},
+		}},
+	},
+	Content: appshellDemoContent(),
+	Theme: containers.ThemeConfig{
+		LightTheme: "nord",
+		DarkTheme:  "nord-dark",
+		StorageKey: "appshell-demo.theme",
+	},
+})`, appshellSectionsDemoFrame())
 }
 
 // appshellDemoFrame embeds a live AppShell in a bordered, scaled frame so
@@ -48,6 +63,36 @@ templ appshellDemoFrame() {
 				TitleHref: "#",
 				MenuItems: appshellDemoMenu(),
 				Content:   appshellDemoContent(),
+				Theme: containers.ThemeConfig{
+					LightTheme: "nord",
+					DarkTheme:  "nord-dark",
+					StorageKey: "appshell-demo.theme",
+				},
+			})
+		</div>
+	</div>
+}
+
+// appshellSectionsDemoFrame embeds a live AppShell configured with
+// NavSections (grouped sidebar navigation) inside the same bordered, scaled
+// preview frame as appshellDemoFrame.
+templ appshellSectionsDemoFrame() {
+	<div class="border border-base-300 rounded-box overflow-hidden h-[32rem] relative">
+		<div class="absolute inset-0 [&>div]:!h-full">
+			@containers.AppShell(containers.AppShellConfig{
+				Title:     "My App",
+				TitleHref: "#",
+				NavSections: []containers.NavSection{
+					{Title: "Main", Items: []daisyui.MenuItem{
+						{Label: "Dashboard", Href: "#dashboard", Icon: icons.House(icons.Props{Size: "20", Variant: icons.Regular})},
+						{Label: "Components", Href: "#components", Icon: icons.Cube(icons.Props{Size: "20", Variant: icons.Regular})},
+					}},
+					{Title: "Admin", Items: []daisyui.MenuItem{
+						{Label: "Analytics", Href: "#analytics", Icon: icons.ChartBar(icons.Props{Size: "20", Variant: icons.Regular})},
+						{Label: "Settings", Href: "#settings", Icon: icons.Gear(icons.Props{Size: "20", Variant: icons.Regular})},
+					}},
+				},
+				Content: appshellDemoContent(),
 				Theme: containers.ThemeConfig{
 					LightTheme: "nord",
 					DarkTheme:  "nord-dark",

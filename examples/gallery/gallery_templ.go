@@ -245,7 +245,7 @@ func Section(title, code string, body templ.Component) templ.Component {
 			Lang:  "templ",
 			Theme: "nord",
 			Code:  strings.TrimSpace(code),
-			Class: "border border-1 border-base-300 rounded-box p-4",
+			Class: "overflow-x-auto border border-1 border-base-300 rounded-box p-4",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

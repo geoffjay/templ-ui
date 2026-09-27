@@ -65,10 +65,25 @@ func appshellBody() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = gallery.Section("Sidebar sections", `NavSections: []containers.NavSection{
-	{Title: "Main", Items: []daisyui.MenuItem{...}},
-	{Title: "Admin", Items: []daisyui.MenuItem{...}},
-}`, appshellDemoFrame()).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = gallery.Section("Sidebar sections", `@containers.AppShell(containers.AppShellConfig{
+	Title: "My App",
+	NavSections: []containers.NavSection{
+		{Title: "Main", Items: []daisyui.MenuItem{
+			{Label: "Dashboard", Href: "#dashboard", Icon: icons.House(icons.Props{Size: "20", Variant: icons.Regular})},
+			{Label: "Components", Href: "#components", Icon: icons.Cube(icons.Props{Size: "20", Variant: icons.Regular})},
+		}},
+		{Title: "Admin", Items: []daisyui.MenuItem{
+			{Label: "Analytics", Href: "#analytics", Icon: icons.ChartBar(icons.Props{Size: "20", Variant: icons.Regular})},
+			{Label: "Settings", Href: "#settings", Icon: icons.Gear(icons.Props{Size: "20", Variant: icons.Regular})},
+		}},
+	},
+	Content: appshellDemoContent(),
+	Theme: containers.ThemeConfig{
+		LightTheme: "nord",
+		DarkTheme:  "nord-dark",
+		StorageKey: "appshell-demo.theme",
+	},
+})`, appshellSectionsDemoFrame()).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -125,6 +140,65 @@ func appshellDemoFrame() templ.Component {
 	})
 }
 
+// appshellSectionsDemoFrame embeds a live AppShell configured with
+// NavSections (grouped sidebar navigation) inside the same bordered, scaled
+// preview frame as appshellDemoFrame.
+func appshellSectionsDemoFrame() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"border border-base-300 rounded-box overflow-hidden h-[32rem] relative\"><div class=\"absolute inset-0 [&>div]:!h-full\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = containers.AppShell(containers.AppShellConfig{
+			Title:     "My App",
+			TitleHref: "#",
+			NavSections: []containers.NavSection{
+				{Title: "Main", Items: []daisyui.MenuItem{
+					{Label: "Dashboard", Href: "#dashboard", Icon: icons.House(icons.Props{Size: "20", Variant: icons.Regular})},
+					{Label: "Components", Href: "#components", Icon: icons.Cube(icons.Props{Size: "20", Variant: icons.Regular})},
+				}},
+				{Title: "Admin", Items: []daisyui.MenuItem{
+					{Label: "Analytics", Href: "#analytics", Icon: icons.ChartBar(icons.Props{Size: "20", Variant: icons.Regular})},
+					{Label: "Settings", Href: "#settings", Icon: icons.Gear(icons.Props{Size: "20", Variant: icons.Regular})},
+				}},
+			},
+			Content: appshellDemoContent(),
+			Theme: containers.ThemeConfig{
+				LightTheme: "nord",
+				DarkTheme:  "nord-dark",
+				StorageKey: "appshell-demo.theme",
+			},
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
 // appshellDemoMenu builds the sidebar menu for the live AppShell preview.
 func appshellDemoMenu() []daisyui.MenuItem {
 	return []daisyui.MenuItem{
@@ -153,12 +227,12 @@ func appshellDemoContent() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"p-8 space-y-4\"><h2 class=\"text-2xl font-bold text-primary\">Dashboard</h2><p class=\"text-base-content/70\">The main content region scrolls independently behind the fixed navbar. Toggle the sidebar with the header icon; collapse it with the bottom caret; switch themes with the sun/moon toggle.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"p-8 space-y-4\"><h2 class=\"text-2xl font-bold text-primary\">Dashboard</h2><p class=\"text-base-content/70\">The main content region scrolls independently behind the fixed navbar. Toggle the sidebar with the header icon; collapse it with the bottom caret; switch themes with the sun/moon toggle.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -166,7 +240,7 @@ func appshellDemoContent() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
